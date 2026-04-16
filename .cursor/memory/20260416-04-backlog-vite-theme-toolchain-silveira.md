@@ -111,12 +111,14 @@
 **[4.1]** ✅ Estrategia hooks (raíz repo vs theme)  
 > **What to do:** Confirmar dónde está la **raíz Git** del proyecto `silveira`; documentar si `.husky` vive en raíz con scripts que `cd` al theme, o `core.hooksPath` / `package.json` en raíz. Criterio: un párrafo en documentación mínima o comentario reproducible por otro dev.  
 > **Date completed:** 2026-04-16  
-> **Work done:** **Raíz Git** = directorio del repo `silveira` (misma raíz que `docker-compose` y `package.json` de Husky). **Hooks:** `.husky/` en la raíz; `pre-commit` hace `cd` al directorio padre del hook y ejecuta `npx lint-staged` (sin `cd` manual al theme: los globs de lint-staged son rutas relativas a la raíz). **Documentación:** campo `description` en `package.json` de la raíz: clonar → `npm install` (raíz) + `npm install` en el theme + `composer install` en el theme para PHP; qué hace el pre-commit. No se usa `core.hooksPath` alternativo.
+> **Work done:** **Raíz Git** = directorio del repo `silveira` (misma raíz que `docker-compose` y `package.json` de Husky). **Hooks:** `.husky/` en la raíz; `pre-commit` hace `cd` al directorio padre del hook y ejecuta `npx lint-staged` (sin `cd` manual al theme: los globs de lint-staged son rutas relativas a la raíz). **Documentación:** campo `description` en `package.json` de la raíz: clonar → `npm install` (raíz) + `npm install` en el theme + `composer install` en el theme para PHP; qué hace el pre-commit. No se usa `core.hooksPath` alternativo.  
+> **Commit:** `12117aa`
 
 **[4.2]** ✅ Husky + `prepare` + lint-staged en `pre-commit`  
 > **What to do:** Instalar `husky`, `lint-staged`; `prepare` en el `package.json` que corresponda (raíz o theme); hook `pre-commit` que ejecute lint-staged (Prettier/ESLint en JS, Stylelint en SCSS). Criterio: commit de prueba con archivo mal formateado es rechazado o autocorregido según reglas elegidas.  
 > **Date completed:** 2026-04-16  
-> **Work done:** Raíz: `devDependencies` `husky`, `lint-staged`; script `"prepare": "husky"`. `.husky/pre-commit` → `npx lint-staged`. `lint-staged` en el `package.json` raíz: ESLint/Prettier sobre `src/**/*.{js,mjs,cjs}`, configs del theme, Stylelint + Prettier en CSS/SCSS, todo vía `npx --prefix wp-content/themes/silveira` para usar el `node_modules` del theme. Tras `npm install` en la raíz, `prepare` registra Husky.
+> **Work done:** Raíz: `devDependencies` `husky`, `lint-staged`; script `"prepare": "husky"`. `.husky/pre-commit` → `exec npx lint-staged` (sin `husky.sh` deprecado en Husky 9+, ver `82dda20`). `lint-staged` en el `package.json` raíz: ESLint/Prettier sobre `src/**/*.{js,mjs,cjs}`, configs del theme, Stylelint + Prettier en CSS/SCSS, todo vía `npx --prefix wp-content/themes/silveira` para usar el `node_modules` del theme. Tras `npm install` en la raíz, `prepare` registra Husky.  
+> **Commit:** `12117aa` (hook base), `82dda20` (pre-commit sin `husky.sh`)
 
 ---
 
@@ -125,12 +127,14 @@
 **[5.1]** ✅ `composer.json` en el theme con PHPCS + WPCS + PHPStan  
 > **What to do:** Añadir `composer.json`, dependencias de desarrollo, reglas WPCS, nivel PHPStan bajo; scripts `composer lint` / `composer analyse`. Criterio: comandos documentados y ejecutables donde haya PHP/Composer.  
 > **Date completed:** 2026-04-16  
-> **Work done:** `wp-content/themes/silveira/composer.json`: `require-dev` PHPCS, WPCS 3.x, PHPStan 2.x, `phpstan/extension-installer`, `szepeviktor/phpstan-wordpress` **^2.0** (compatible con PHPStan 2; la 1.x chocaba con `phpstan/phpstan` ^2). Scripts `composer run lint` → `phpcs`, `composer run analyse` → `phpstan analyse`. `phpcs.xml.dist` (regla `WordPress`, ficheros del theme). `phpstan.neon.dist`: nivel 0, paths `functions.php`, plantillas; **sin** `includes` manual a `extension.neon` de phpstan-wordpress (lo instala `phpstan/extension-installer`; duplicarlo avisaba). `composer.lock` generado. Verificación en agente: `docker run ... composer:2 composer update` y `composer run lint` / `composer run analyse` OK.
+> **Work done:** `wp-content/themes/silveira/composer.json`: `require-dev` PHPCS, WPCS 3.x, PHPStan 2.x, `phpstan/extension-installer`, `szepeviktor/phpstan-wordpress` **^2.0** (compatible con PHPStan 2; la 1.x chocaba con `phpstan/phpstan` ^2). Scripts `composer run lint` → `phpcs`, `composer run analyse` → `phpstan analyse`. `phpcs.xml.dist` (regla `WordPress`, ficheros del theme). `phpstan.neon.dist`: nivel 0, paths `functions.php`, plantillas; **sin** `includes` manual a `extension.neon` de phpstan-wordpress (lo instala `phpstan/extension-installer`; duplicarlo avisaba). `composer.lock` generado. Verificación en agente: `docker run ... composer:2 composer update` y `composer run lint` / `composer run analyse` OK.  
+> **Commit:** `12117aa`
 
 **[5.2]** ✅ Integración PHPCS en lint-staged o exclusión de `validate`  
 > **What to do:** Según solución §PHP en `validate`: o bien `phpcs` en lint-staged para `*.php` si `vendor/bin` existe, o bien **no** incluir PHP en `validate` y documentar ejecución vía Docker/Composer manual. Criterio: decisión explícita y sin sorpresas para quien no tenga PHP local.  
 > **Date completed:** 2026-04-16  
-> **Work done:** **Decisión:** PHP **no** entra en `npm run validate` del theme (sigue siendo solo ESLint + Stylelint). **lint-staged:** `wp-content/themes/silveira/**/*.php` → `bash scripts/lint-staged-phpcs.sh`, que ejecuta `vendor/bin/phpcs` con `phpcs.xml.dist` si existe el binario; si no hay `vendor/`, imprime aviso y **exit 0** (no bloquea a quien no haya hecho `composer install`). Si `php` no está en PATH o **no arranca** (p. ej. ICU/Homebrew roto), también **exit 0** con mensaje — en ese caso usar PHPCS vía Docker/CI o reparar PHP local. `functions.php` y plantillas ajustados a WPCS; `phpstan.neon.dist` sin include duplicado.
+> **Work done:** **Decisión:** PHP **no** entra en `npm run validate` del theme (sigue siendo solo ESLint + Stylelint). **lint-staged:** `wp-content/themes/silveira/**/*.php` → `bash scripts/lint-staged-phpcs.sh`, que ejecuta `vendor/bin/phpcs` con `phpcs.xml.dist` si existe el binario; si no hay `vendor/`, imprime aviso y **exit 0** (no bloquea a quien no haya hecho `composer install`). Si `php` no está en PATH o **no arranca** (p. ej. ICU/Homebrew roto), también **exit 0** con mensaje — en ese caso usar PHPCS vía Docker/CI o reparar PHP local. `functions.php` y plantillas ajustados a WPCS; `phpstan.neon.dist` sin include duplicado.  
+> **Commit:** `12117aa`
 
 ---
 
@@ -182,6 +186,8 @@
 | Commit Vite scaffold, assets versionados, env dev | `d993e0e` |
 | Commit encolado manifest + modo dev Vite (`functions.php`) | `e366841` |
 | Commit ESLint, Prettier, Stylelint, prebuild (Fase 3) | `9da27d8` |
+| Commit Husky, lint-staged, Composer PHP tools (Fases 4–5) | `12117aa` |
+| Commit pre-commit Husky sin husky.sh deprecado | `82dda20` |
 | Solución Vite | `20260416-03-solution-vite-theme-classic-silveira.md` |
 
 ## Desviaciones respecto al plan
