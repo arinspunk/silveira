@@ -62,40 +62,44 @@
 > **What to do:** Funciones PHP (o clase mínima) para localizar `manifest.json`, resolver claves de entrada (`main` o nombre acordado) y devolver rutas públicas bajo el theme. Criterio: sin warnings PHP en `WP_DEBUG` al cargar front con build existente.  
 > **Date completed:** 2026-04-16  
 > **Work done:** Constante `SILVEIRA_VITE_ENTRY`; `silveira_vite_manifest_path()`, `silveira_vite_get_manifest()` (estático), `silveira_vite_asset_url()` / `silveira_vite_asset_path()`, `silveira_vite_theme_base_path()` para modo dev. Manifest: `assets/.vite/manifest.json`.
+> **Commit:** `e366841` feat(theme): enqueue Vite assets from manifest and dev server
 
 **[2.2]** ✅ Encolado modo **producción** (manifest + versión)  
 > **What to do:** Si modo dev desactivado: `wp_enqueue_style` / `wp_enqueue_script` desde manifest; versión con `filemtime()` del manifest o del asset. Criterio: vista fuente del front muestra URLs bajo `/wp-content/themes/silveira/assets/...` y carga sin 404.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `silveira_enqueue_vite_prod()` en `wp_enqueue_scripts`: lee entrada `SILVEIRA_VITE_ENTRY`, encola cada CSS del array y el JS; `ver` = `filemtime` del asset o del manifest. Comprobado: HTML incluye `.../assets/css/main-*.css` y `.../assets/js/main-*.js`.
+> **Commit:** `e366841` feat(theme): enqueue Vite assets from manifest and dev server
 
 **[2.3]** ✅ Encolado modo **desarrollo** (Vite client + entrada)  
 > **What to do:** Si modo dev activo: encolar `@vite/client` y script tipo módulo apuntando al origen del servidor Vite (`VITE_DEV_SERVER_URL` o default `http://localhost:5173`). Criterio: con `npm run dev` + WP en Docker, HMR o recarga funcional al editar `src/`.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `silveira_enqueue_vite_dev()`: URLs `{origin}{base}/@vite/client` y `{origin}{base}/src/main.js` con `silveira_vite_dev_server_url()`. Filtro `script_loader_tag` → `type="module"` para handles `silveira-vite-client` y `silveira-main`. HMR: activar `SILVEIRA_VITE_DEV=1` en `.env`, `docker compose up -d`, `npm run dev` en el theme.
+> **Commit:** `e366841` feat(theme): enqueue Vite assets from manifest and dev server
 
 **[2.4]** ✅ Prueba manual extremo a extremo  
 > **What to do:** Abrir `http://silveira.localhost` con build y con dev server; comprobar admin no rompe (al menos sin errores fatales en consola por scripts del theme en páginas públicas). Criterio: checklist breve anotado en backlog o comentario.  
 > **Date completed:** 2026-04-16  
 > **Work done:** **Producción (sin Vite dev):** `curl` al front con `Host: silveira.localhost` devuelve enlaces a CSS/JS bajo `wp-content/themes/silveira/assets/`. **Admin:** los assets del theme se encolan solo en `wp_enqueue_scripts` (front público); no se añadió `admin_enqueue_scripts` para estos bundles. **Modo dev:** validar en navegador con `.env` + `npm run dev` cuando haga falta.
+> **Commit:** `e366841` feat(theme): enqueue Vite assets from manifest and dev server
 
 ---
 
 ## Fase 3 — Lint, formato y `prebuild`
 
-**[3.1]** ⏳ ESLint (flat) + Prettier + `eslint-config-prettier`  
+**[3.1]** ✅ ESLint (flat) + Prettier + `eslint-config-prettier`  
 > **What to do:** Configurar ESLint y Prettier para `src/`; script `npm run lint` y `format` / `format:check`. Criterio: `npm run lint` pasa en código base del theme.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `eslint.config.js` (flat): `@eslint/js` recommended, `globals` (browser para `src/`, node para configs), `eslint-config-prettier`. Scripts: `lint` sobre `src`, `vite.config.js`, configs; `format` / `format:check` con Prettier; `.prettierrc.json`, `.prettierignore` (excluye `assets/`, `node_modules/`).
 
-**[3.2]** ⏳ Stylelint (+ SCSS si aplica)  
+**[3.2]** ✅ Stylelint (+ SCSS si aplica)  
 > **What to do:** Configurar Stylelint para `src/**/*.scss` (y CSS si existe); script `npm run lint:css`. Criterio: `npm run lint:css` pasa.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `stylelint.config.js` con `stylelint-config-standard-scss`, `ignoreFiles` para `assets/` y `node_modules/`. Script `npm run lint:css` en `src/**/*.{css,scss}`.
 
-**[3.3]** ⏳ Script `validate` y hook `prebuild`  
+**[3.3]** ✅ Script `validate` y hook `prebuild`  
 > **What to do:** Agregar `validate` que ejecute al menos `lint` + `lint:css`; `"prebuild": "npm run validate"` y `build` que llame a `vite build`. Criterio: `npm run build` falla si se introduce error de lint intencional; convención documentada: no usar `vite build` solo para builds “oficiales”.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `validate` → `lint && lint:css`; `prebuild` → `validate`; `build` → `vite build` (npm ejecuta `prebuild` antes de `build`). `description` en `package.json` recuerda usar `npm run build` completo. Verificado: `npm run build` completa lint + Vite sin error.
 
 ---
 
@@ -146,8 +150,8 @@
 | Métrica | Valor |
 |---------|--------|
 | **Total tareas** | 15 |
-| **Completadas** | 9 |
-| **Progreso** | 60% |
+| **Completadas** | 12 |
+| **Progreso** | 80% |
 
 ---
 
@@ -173,6 +177,7 @@
 | Remoto Git | `git@github.com:arinspunk/silveira.git` |
 | Commit inicial (planificación + Docker + theme esqueleto) | `8f4b49b` |
 | Commit Vite scaffold, assets versionados, env dev | `d993e0e` |
+| Commit encolado manifest + modo dev Vite (`functions.php`) | `e366841` |
 | Solución Vite | `20260416-03-solution-vite-theme-classic-silveira.md` |
 
 ## Desviaciones respecto al plan

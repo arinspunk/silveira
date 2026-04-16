@@ -2,16 +2,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 
-const __dirname = path.dirname( fileURLToPath( import.meta.url ) );
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig( {
+export default defineConfig({
 	base: '/wp-content/themes/silveira/',
 	build: {
 		outDir: 'assets',
 		emptyOutDir: true,
 		manifest: true,
 		rollupOptions: {
-			input: path.resolve( __dirname, 'src/main.js' ),
+			input: path.resolve(__dirname, 'src/main.js'),
 			output: {
 				assetFileNames: 'css/[name]-[hash][extname]',
 				chunkFileNames: 'js/[name]-[hash].js',
@@ -29,4 +29,4 @@ export default defineConfig( {
 		origin: 'http://silveira.localhost',
 		cors: true,
 	},
-} );
+});
