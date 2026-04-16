@@ -146,10 +146,11 @@
 > **Work done:** **Raíz:** `.env`, `node_modules/`, `vendor/`, `.DS_Store`; comentario explícito de que **`assets/` y `assets/.vite/manifest.json` del theme no** se ignoran (política **[0.1]**), con puntero al `.gitignore` del theme para cachés de tooling. **Theme:** `node_modules/`, `/vendor/`, `.phpstan.result.cache`, `.phpcs-cache`, `.eslintcache`, `.stylelintcache`; comentario de que **no** se ignoran `assets/` ni el manifest. **Verificación:** `npm run build` en el theme sin generar basura rastreable (solo artefactos versionados en `assets/`); sin cambios extra en `git status` salvo ediciones intencionadas en `src/`.  
 > **Commit:** `2cfbf4f`
 
-**[6.2]** ⏳ Documentación mínima de uso  
+**[6.2]** ✅ Documentación mínima de uso  
 > **What to do:** Instrucciones breves: `npm install`, `npm run dev` (HMR), `npm run build`, hooks, URL `http://silveira.localhost` (y variables env del theme si las hay). Criterio: nuevo dev puede seguir la lista sin preguntar por Slack.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** **`README.md`** en la raíz (inglés): prerequisitos, setup (`.env`, Docker, `npm install` raíz + theme, Composer), tabla `SILVEIRA_VITE_DEV` / `VITE_DEV_SERVER_URL`, desarrollo con Vite, aviso de no usar solo `:5173` como sitio, troubleshooting (dev off, `docker compose up` tras `.env`, `127.0.0.1` vs `host.docker.internal`, `type="module"`), `npm run build`, Husky, PHPCS/PHPStan, layout del repo, WP-CLI opcional.  
+> **Commit:** `b751daa`
 
 ---
 
@@ -158,8 +159,8 @@
 | Métrica | Valor |
 |---------|--------|
 | **Total tareas** | 18 |
-| **Completadas** | 17 |
-| **Progreso** | 94% |
+| **Completadas** | 18 |
+| **Progreso** | 100% |
 
 ---
 
@@ -190,6 +191,7 @@
 | Commit Husky, lint-staged, Composer PHP tools (Fases 4–5) | `12117aa` |
 | Commit pre-commit Husky sin husky.sh deprecado | `82dda20` |
 | Commit `.gitignore` cachés + política assets (Fase 6.1) | `2cfbf4f` |
+| Commit README + fix Vite module URL (Fase 6.2 / theme) | `b751daa` |
 | Solución Vite | `20260416-03-solution-vite-theme-classic-silveira.md` |
 
 ## Desviaciones respecto al plan
