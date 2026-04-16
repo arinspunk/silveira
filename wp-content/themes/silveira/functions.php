@@ -7,6 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/** Clave de entrada en manifest.json (Vite) y ruta lógica en modo dev. */
+define( 'SILVEIRA_VITE_ENTRY', 'src/main.js' );
+
 add_theme_support( 'title-tag' );
 
 /**
@@ -37,4 +40,163 @@ function silveira_vite_dev_server_url() {
 		return untrailingslashit( trim( $url ) );
 	}
 	return 'http://host.docker.internal:5173';
+}
+
+/**
+ * Ruta absoluta al manifest de Vite.
+ *
+ * @return string
+ */
+function silveira_vite_manifest_path() {
+	return trailingslashit( get_stylesheet_directory() ) . 'assets/.vite/manifest.json';
+}
+
+/**
+ * Manifest decodificado o false si falta o es inválido.
+ *
+ * @return array<string, mixed>|false
+ */
+function silveira_vite_get_manifest() {
+	static $manifest = null;
+	if ( null !== $manifest ) {
+		return $manifest;
+	}
+	$path = silveira_vite_manifest_path();
+	if ( ! is_readable( $path ) ) {
+		$manifest = false;
+		return $manifest;
+	}
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- fichero local del theme.
+	$json = file_get_contents( $path );
+	$data = json_decode( $json, true );
+	$manifest = is_array( $data ) ? $data : false;
+	return $manifest;
+}
+
+/**
+ * URL pública a un fichero bajo assets/ del theme.
+ *
+ * @param string $relative Ruta relativa dentro de assets/ (p. ej. js/main-xxx.js).
+ * @return string
+ */
+function silveira_vite_asset_url( $relative ) {
+	return trailingslashit( get_stylesheet_directory_uri() ) . 'assets/' . ltrim( $relative, '/' );
+}
+
+/**
+ * Ruta del sistema a un fichero bajo assets/ del theme.
+ *
+ * @param string $relative Ruta relativa dentro de assets/.
+ * @return string
+ */
+function silveira_vite_asset_path( $relative ) {
+	return trailingslashit( get_stylesheet_directory() ) . 'assets/' . ltrim( $relative, '/' );
+}
+
+/**
+ * Base de URL del theme en el servidor de Vite (debe coincidir con vite.config base).
+ *
+ * @return string Con barra inicial, sin barra final.
+ */
+function silveira_vite_theme_base_path() {
+	return '/wp-content/themes/' . get_stylesheet();
+}
+
+/**
+ * Scripts que deben cargarse como ES modules.
+ *
+ * @return string[]
+ */
+function silveira_vite_module_script_handles() {
+	return array( 'silveira-vite-client', 'silveira-main' );
+}
+
+add_action( 'wp_enqueue_scripts', 'silveira_enqueue_vite_assets', 20 );
+
+/**
+ * Encola CSS/JS del theme: Vite dev o build según entorno.
+ */
+function silveira_enqueue_vite_assets() {
+	if ( silveira_is_vite_dev() ) {
+		silveira_enqueue_vite_dev();
+		return;
+	}
+	silveira_enqueue_vite_prod();
+}
+
+/**
+ * Modo desarrollo: @vite/client + entrada (HMR).
+ */
+function silveira_enqueue_vite_dev() {
+	$origin = silveira_vite_dev_server_url();
+	$base   = silveira_vite_theme_base_path();
+	$client = $origin . $base . '/@vite/client';
+	$entry  = $origin . $base . '/' . SILVEIRA_VITE_ENTRY;
+
+	wp_enqueue_script( 'silveira-vite-client', $client, array(), null, true );
+	wp_enqueue_script( 'silveira-main', $entry, array( 'silveira-vite-client' ), null, true );
+}
+
+/**
+ * Modo producción: manifest + filemtime.
+ */
+function silveira_enqueue_vite_prod() {
+	$manifest = silveira_vite_get_manifest();
+	$key      = SILVEIRA_VITE_ENTRY;
+	if ( ! is_array( $manifest ) || empty( $manifest[ $key ] ) || ! is_array( $manifest[ $key ] ) ) {
+		return;
+	}
+
+	$entry = $manifest[ $key ];
+	$mtime = @filemtime( silveira_vite_manifest_path() );
+	$ver   = $mtime ? (string) $mtime : wp_get_theme()->get( 'Version' );
+
+	if ( ! empty( $entry['css'] ) && is_array( $entry['css'] ) ) {
+		foreach ( $entry['css'] as $i => $css_rel ) {
+			$css_rel = (string) $css_rel;
+			$handle  = ( 0 === (int) $i ) ? 'silveira-main' : 'silveira-main-' . (int) $i;
+			$path    = silveira_vite_asset_path( $css_rel );
+			$css_ver = is_readable( $path ) ? (string) filemtime( $path ) : $ver;
+			wp_enqueue_style(
+				$handle,
+				silveira_vite_asset_url( $css_rel ),
+				array(),
+				$css_ver
+			);
+		}
+	}
+
+	if ( ! empty( $entry['file'] ) ) {
+		$js_rel = (string) $entry['file'];
+		$path   = silveira_vite_asset_path( $js_rel );
+		$js_ver = is_readable( $path ) ? (string) filemtime( $path ) : $ver;
+		wp_enqueue_script(
+			'silveira-main',
+			silveira_vite_asset_url( $js_rel ),
+			array(),
+			$js_ver,
+			true
+		);
+	}
+}
+
+add_filter( 'script_loader_tag', 'silveira_vite_script_module_type', 10, 3 );
+
+/**
+ * Marca scripts del theme como type="module" (Vite).
+ *
+ * @param string $tag    HTML del script.
+ * @param string $handle Handle registrado.
+ * @param string $src    URL del script.
+ * @return string
+ */
+function silveira_vite_script_module_type( $tag, $handle, $src ) {
+	unset( $src );
+	if ( ! in_array( $handle, silveira_vite_module_script_handles(), true ) ) {
+		return $tag;
+	}
+	if ( false !== strpos( $tag, 'type=' ) ) {
+		return $tag;
+	}
+	return str_replace( '<script ', '<script type="module" ', $tag );
 }

@@ -24,11 +24,13 @@
 > **What to do:** Decidir (y documentar) si los compilados bajo `assets/` se **commitean** o se **ignoran** (`.gitignore`) y cada clon/CI debe ejecutar `npm run build`. Criterio: decisión escrita en comentario de `package.json`, fragmento en `.gitignore`, o nota acordada por el equipo.  
 > **Date completed:** 2026-04-16  
 > **Work done:** **Versión compilada en Git:** `wp-content/themes/silveira/assets/` (salida de Vite) se **versiona** en el repo para poder desplegar en servidores **sin Node** en principio. Convención: tras cambios en `src/`, ejecutar `npm run build` y commitear `assets/` + manifest. Nota en `.gitignore` (raíz del repo). Repetir aviso en `package.json` del theme cuando exista ([1.1]).
+> **Commit:** `d993e0e` feat(theme): add Vite scaffold and env-based dev toggle
 
 **[0.2]** ✅ Modo “Vite dev” en PHP (constante / env)  
 > **What to do:** Elegir mecanismo explícito (**no** basar solo en `WP_DEBUG`): p. ej. `SILVEIRA_VITE_DEV`, `VITE_DEV_SERVER_URL` en `.env` del theme o constante en `wp-config` vía Docker. Criterio: documentado qué valor activa HMR en front/admin.  
 > **Date completed:** 2026-04-16  
 > **Work done:** **Decisión:** variables de entorno en el contenedor `wordpress` (y `wpcli`) vía `docker-compose` + `.env`: `SILVEIRA_VITE_DEV` (por defecto `0`) y `VITE_DEV_SERVER_URL` (por defecto `http://host.docker.internal:5173` para alcanzar Vite en el host desde Docker Desktop). Helpers `silveira_is_vite_dev()` y `silveira_vite_dev_server_url()` en `functions.php`. Documentado en `.env.example`. Encolado real de `@vite/client` en **[2.3]**.
+> **Commit:** `d993e0e` feat(theme): add Vite scaffold and env-based dev toggle
 
 ---
 
@@ -38,40 +40,43 @@
 > **What to do:** Crear `package.json` en `wp-content/themes/silveira/` con scripts `dev` y `build` que invoquen Vite; instalar `vite` y plugin SCSS si aplica. Criterio: `npm run dev` y `npm run build` ejecutan sin error en el theme.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `package.json` con `type: module`, scripts `dev`/`build`, `devDependencies`: `vite@6.4.x`, `sass`. Campo `description` recuerda commitear `assets/`. `wp-content/themes/silveira/.gitignore` con `node_modules/`. `npm install` y `npm run build` OK; `npm run dev` arranca Vite (verificado en host; en sandbox puede fallar por interfaces de red).
+> **Commit:** `d993e0e` feat(theme): add Vite scaffold and env-based dev toggle
 
 **[1.2]** ✅ `vite.config` (base, outDir, manifest, server)  
 > **What to do:** Configurar `base: '/wp-content/themes/silveira/'`, `build.outDir: 'assets'`, `build.manifest: true`, bloque `server` alineado con `http://silveira.localhost` y HMR/CORS según solución §URL. Criterio: build genera `manifest` bajo `assets/` (ruta exacta según versión de Vite verificada en disco).  
 > **Date completed:** 2026-04-16  
 > **Work done:** `vite.config.js`: `base`, `outDir: assets`, `manifest: true`, `rollupOptions.output` con `js/` y `css/` para evitar carpeta `assets/assets/`. `server`: `host: 0.0.0.0`, `port: 5173`, `origin: http://silveira.localhost`, `cors: true`. Manifest generado en **`assets/.vite/manifest.json`** (Vite 6).
+> **Commit:** `d993e0e` feat(theme): add Vite scaffold and env-based dev toggle
 
 **[1.3]** ✅ Entradas `src/`  
 > **What to do:** Añadir `src/main.js` que importe `src/scss/main.scss`; contenido mínimo comprobable en front (p. ej. clase o variable CSS). Criterio: tras `npm run build`, existen CSS/JS referenciados en el manifest.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `src/main.js` importa `./scss/main.scss`. `src/scss/main.scss` con `:root { --silveira-accent }` y estilos base. Build produce p. ej. `js/main-*.js`, `css/main-*.css`; manifest referencia entrada `src/main.js` con `css` y `file` JS.
+> **Commit:** `d993e0e` feat(theme): add Vite scaffold and env-based dev toggle
 
 ---
 
 ## Fase 2 — Integración WordPress (`functions.php`)
 
-**[2.1]** ⏳ Helpers lectura manifest / URLs del theme  
+**[2.1]** ✅ Helpers lectura manifest / URLs del theme  
 > **What to do:** Funciones PHP (o clase mínima) para localizar `manifest.json`, resolver claves de entrada (`main` o nombre acordado) y devolver rutas públicas bajo el theme. Criterio: sin warnings PHP en `WP_DEBUG` al cargar front con build existente.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** Constante `SILVEIRA_VITE_ENTRY`; `silveira_vite_manifest_path()`, `silveira_vite_get_manifest()` (estático), `silveira_vite_asset_url()` / `silveira_vite_asset_path()`, `silveira_vite_theme_base_path()` para modo dev. Manifest: `assets/.vite/manifest.json`.
 
-**[2.2]** ⏳ Encolado modo **producción** (manifest + versión)  
+**[2.2]** ✅ Encolado modo **producción** (manifest + versión)  
 > **What to do:** Si modo dev desactivado: `wp_enqueue_style` / `wp_enqueue_script` desde manifest; versión con `filemtime()` del manifest o del asset. Criterio: vista fuente del front muestra URLs bajo `/wp-content/themes/silveira/assets/...` y carga sin 404.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `silveira_enqueue_vite_prod()` en `wp_enqueue_scripts`: lee entrada `SILVEIRA_VITE_ENTRY`, encola cada CSS del array y el JS; `ver` = `filemtime` del asset o del manifest. Comprobado: HTML incluye `.../assets/css/main-*.css` y `.../assets/js/main-*.js`.
 
-**[2.3]** ⏳ Encolado modo **desarrollo** (Vite client + entrada)  
+**[2.3]** ✅ Encolado modo **desarrollo** (Vite client + entrada)  
 > **What to do:** Si modo dev activo: encolar `@vite/client` y script tipo módulo apuntando al origen del servidor Vite (`VITE_DEV_SERVER_URL` o default `http://localhost:5173`). Criterio: con `npm run dev` + WP en Docker, HMR o recarga funcional al editar `src/`.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `silveira_enqueue_vite_dev()`: URLs `{origin}{base}/@vite/client` y `{origin}{base}/src/main.js` con `silveira_vite_dev_server_url()`. Filtro `script_loader_tag` → `type="module"` para handles `silveira-vite-client` y `silveira-main`. HMR: activar `SILVEIRA_VITE_DEV=1` en `.env`, `docker compose up -d`, `npm run dev` en el theme.
 
-**[2.4]** ⏳ Prueba manual extremo a extremo  
+**[2.4]** ✅ Prueba manual extremo a extremo  
 > **What to do:** Abrir `http://silveira.localhost` con build y con dev server; comprobar admin no rompe (al menos sin errores fatales en consola por scripts del theme en páginas públicas). Criterio: checklist breve anotado en backlog o comentario.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** **Producción (sin Vite dev):** `curl` al front con `Host: silveira.localhost` devuelve enlaces a CSS/JS bajo `wp-content/themes/silveira/assets/`. **Admin:** los assets del theme se encolan solo en `wp_enqueue_scripts` (front público); no se añadió `admin_enqueue_scripts` para estos bundles. **Modo dev:** validar en navegador con `.env` + `npm run dev` cuando haga falta.
 
 ---
 
@@ -99,7 +104,7 @@
 **[4.1]** ⏳ Estrategia hooks (raíz repo vs theme)  
 > **What to do:** Confirmar dónde está la **raíz Git** del proyecto `silveira`; documentar si `.husky` vive en raíz con scripts que `cd` al theme, o `core.hooksPath` / `package.json` en raíz. Criterio: un párrafo en documentación mínima o comentario reproducible por otro dev.  
 > **Date completed:** -  
-> **Work done:** Raíz Git = directorio del proyecto `silveira` (coincide con raíz del repo); `origin` = `git@github.com:arinspunk/silveira.git`; commit inicial `8f4b49b`. Pendiente: documentar Husky/lint-staged cuando exista `package.json` en el theme (o `prepare` en raíz).
+> **Work done:** Raíz Git = directorio del proyecto `silveira` (coincide con raíz del repo); `origin` = `git@github.com:arinspunk/silveira.git`; commit inicial `8f4b49b`. `package.json` del theme añadido en `d993e0e`. Pendiente: documentar Husky/lint-staged y hook `prepare`.
 
 **[4.2]** ⏳ Husky + `prepare` + lint-staged en `pre-commit`  
 > **What to do:** Instalar `husky`, `lint-staged`; `prepare` en el `package.json` que corresponda (raíz o theme); hook `pre-commit` que ejecute lint-staged (Prettier/ESLint en JS, Stylelint en SCSS). Criterio: commit de prueba con archivo mal formateado es rechazado o autocorregido según reglas elegidas.  
@@ -127,7 +132,7 @@
 **[6.1]** ⏳ `.gitignore` y exclusiones  
 > **What to do:** Asegurar `node_modules/`, `vendor/`, cachés de linters; aplicar política de **[0.1]** sobre `assets/`. Criterio: `git status` limpio tras build según política elegida.  
 > **Date completed:** -  
-> **Work done:** Política **[0.1]**: `assets/` **no** se ignoran (se commitean). Raíz: `.gitignore` con `.env`, `node_modules/`, `vendor/` y comentario sobre `assets/`. Pendiente: al añadir Vite, valorar ignorar cachés del bundler bajo el theme (p. ej. `.vite/` si aplica) sin tocar `assets/` generados.
+> **Work done:** Política **[0.1]**: `assets/` **no** se ignoran (se commitean). Raíz: `.gitignore` con `.env`, `node_modules/`, `vendor/` y comentario sobre `assets/`. Theme: `.gitignore` con `node_modules/`; primer commit de `assets/` en `d993e0e`. Pendiente: ignorar solo cachés de tooling bajo el theme si molestan (sin excluir `assets/.vite/manifest.json` ni CSS/JS generados).
 
 **[6.2]** ⏳ Documentación mínima de uso  
 > **What to do:** Instrucciones breves: `npm install`, `npm run dev` (HMR), `npm run build`, hooks, URL `http://silveira.localhost` (y variables env del theme si las hay). Criterio: nuevo dev puede seguir la lista sin preguntar por Slack.  
@@ -141,8 +146,8 @@
 | Métrica | Valor |
 |---------|--------|
 | **Total tareas** | 15 |
-| **Completadas** | 5 |
-| **Progreso** | ~33% |
+| **Completadas** | 9 |
+| **Progreso** | 60% |
 
 ---
 
@@ -167,6 +172,7 @@
 | URL sitio (doc actual) | `http://silveira.localhost` |
 | Remoto Git | `git@github.com:arinspunk/silveira.git` |
 | Commit inicial (planificación + Docker + theme esqueleto) | `8f4b49b` |
+| Commit Vite scaffold, assets versionados, env dev | `d993e0e` |
 | Solución Vite | `20260416-03-solution-vite-theme-classic-silveira.md` |
 
 ## Desviaciones respecto al plan
