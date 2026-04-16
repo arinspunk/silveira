@@ -140,10 +140,11 @@
 
 ## Fase 6 — Cierre y contexto
 
-**[6.1]** ⏳ `.gitignore` y exclusiones  
+**[6.1]** ✅ `.gitignore` y exclusiones  
 > **What to do:** Asegurar `node_modules/`, `vendor/`, cachés de linters; aplicar política de **[0.1]** sobre `assets/`. Criterio: `git status` limpio tras build según política elegida.  
-> **Date completed:** -  
-> **Work done:** Política **[0.1]**: `assets/` **no** se ignoran (se commitean). Raíz: `.gitignore` con `.env`, `node_modules/`, `vendor/` y comentario sobre `assets/`. Theme: `.gitignore` con `node_modules/`; primer commit de `assets/` en `d993e0e`. Pendiente: ignorar solo cachés de tooling bajo el theme si molestan (sin excluir `assets/.vite/manifest.json` ni CSS/JS generados).
+> **Date completed:** 2026-04-16  
+> **Work done:** **Raíz:** `.env`, `node_modules/`, `vendor/`, `.DS_Store`; comentario explícito de que **`assets/` y `assets/.vite/manifest.json` del theme no** se ignoran (política **[0.1]**), con puntero al `.gitignore` del theme para cachés de tooling. **Theme:** `node_modules/`, `/vendor/`, `.phpstan.result.cache`, `.phpcs-cache`, `.eslintcache`, `.stylelintcache`; comentario de que **no** se ignoran `assets/` ni el manifest. **Verificación:** `npm run build` en el theme sin generar basura rastreable (solo artefactos versionados en `assets/`); sin cambios extra en `git status` salvo ediciones intencionadas en `src/`.  
+> **Commit:** (tras `git commit`)
 
 **[6.2]** ⏳ Documentación mínima de uso  
 > **What to do:** Instrucciones breves: `npm install`, `npm run dev` (HMR), `npm run build`, hooks, URL `http://silveira.localhost` (y variables env del theme si las hay). Criterio: nuevo dev puede seguir la lista sin preguntar por Slack.  
@@ -157,8 +158,8 @@
 | Métrica | Valor |
 |---------|--------|
 | **Total tareas** | 18 |
-| **Completadas** | 16 |
-| **Progreso** | 89% |
+| **Completadas** | 17 |
+| **Progreso** | 94% |
 
 ---
 

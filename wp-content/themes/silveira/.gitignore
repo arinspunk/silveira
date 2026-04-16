@@ -1,3 +1,12 @@
 node_modules/
 /vendor/
+
+# PHP (Composer): no versionar dependencias ni cachés de análisis
 .phpstan.result.cache
+.phpcs-cache
+
+# Linters (por si se activa --cache en ESLint / Stylelint)
+.eslintcache
+.stylelintcache
+
+# Política [0.1]: NO ignorar assets/ ni assets/.vite/manifest.json (build versionado en Git).
