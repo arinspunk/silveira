@@ -32,7 +32,7 @@ function silveira_is_vite_dev() {
 }
 
 /**
- * URL base del servidor Vite (desde PHP dentro de Docker: host del equipo = host.docker.internal en Docker Desktop).
+ * URL base del servidor Vite (la usa el navegador en <script src>; misma máquina que el dev → 127.0.0.1).
  *
  * @return string Sin barra final.
  */
@@ -41,7 +41,7 @@ function silveira_vite_dev_server_url() {
 	if ( is_string( $url ) && '' !== trim( $url ) ) {
 		return untrailingslashit( trim( $url ) );
 	}
-	return 'http://host.docker.internal:5173';
+	return 'http://127.0.0.1:5173';
 }
 
 /**
@@ -199,8 +199,13 @@ function silveira_vite_script_module_type( $tag, $handle, $src ) {
 	if ( ! in_array( $handle, silveira_vite_module_script_handles(), true ) ) {
 		return $tag;
 	}
-	if ( false !== strpos( $tag, 'type=' ) ) {
+	// WordPress defaults to type="text/javascript"; Vite entries must load as ES modules.
+	if ( preg_match( '/type\s*=\s*([\'"])module\1/i', $tag ) ) {
 		return $tag;
 	}
-	return str_replace( '<script ', '<script type="module" ', $tag );
+	$tag = preg_replace( '/\stype=([\'"])text\/javascript\1/i', ' type=$1module$1', $tag, 1 );
+	if ( ! preg_match( '/\stype\s*=/i', $tag ) ) {
+		return str_replace( '<script ', '<script type="module" ', $tag );
+	}
+	return $tag;
 }
