@@ -99,7 +99,7 @@
 **[4.1]** ⏳ Estrategia hooks (raíz repo vs theme)  
 > **What to do:** Confirmar dónde está la **raíz Git** del proyecto `silveira`; documentar si `.husky` vive en raíz con scripts que `cd` al theme, o `core.hooksPath` / `package.json` en raíz. Criterio: un párrafo en documentación mínima o comentario reproducible por otro dev.  
 > **Date completed:** -  
-> **Work done:** -
+> **Work done:** Raíz Git = directorio del proyecto `silveira` (coincide con raíz del repo); `origin` = `git@github.com:arinspunk/silveira.git`; commit inicial `8f4b49b`. Pendiente: documentar Husky/lint-staged cuando exista `package.json` en el theme (o `prepare` en raíz).
 
 **[4.2]** ⏳ Husky + `prepare` + lint-staged en `pre-commit`  
 > **What to do:** Instalar `husky`, `lint-staged`; `prepare` en el `package.json` que corresponda (raíz o theme); hook `pre-commit` que ejecute lint-staged (Prettier/ESLint en JS, Stylelint en SCSS). Criterio: commit de prueba con archivo mal formateado es rechazado o autocorregido según reglas elegidas.  
@@ -127,7 +127,7 @@
 **[6.1]** ⏳ `.gitignore` y exclusiones  
 > **What to do:** Asegurar `node_modules/`, `vendor/`, cachés de linters; aplicar política de **[0.1]** sobre `assets/`. Criterio: `git status` limpio tras build según política elegida.  
 > **Date completed:** -  
-> **Work done:** -
+> **Work done:** En raíz del repo, `.gitignore` ya incluye `.env`, `node_modules/`, `vendor/` (commit `8f4b49b`). Pendiente: reglas para `assets/` compilados y cachés de linters según **[0.1]**.
 
 **[6.2]** ⏳ Documentación mínima de uso  
 > **What to do:** Instrucciones breves: `npm install`, `npm run dev` (HMR), `npm run build`, hooks, URL `http://silveira.localhost` (y variables env del theme si las hay). Criterio: nuevo dev puede seguir la lista sin preguntar por Slack.  
@@ -165,6 +165,8 @@
 |------|------------|
 | Theme | `wp-content/themes/silveira/` |
 | URL sitio (doc actual) | `http://silveira.localhost` |
+| Remoto Git | `git@github.com:arinspunk/silveira.git` |
+| Commit inicial (planificación + Docker + theme esqueleto) | `8f4b49b` |
 | Solución Vite | `20260416-03-solution-vite-theme-classic-silveira.md` |
 
 ## Desviaciones respecto al plan

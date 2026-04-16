@@ -101,6 +101,14 @@
 | **Completadas** | 10 |
 | **Progreso** | 100% |
 
+### Versionado Git (estado reflejado en repo)
+
+| Campo | Valor |
+|--------|--------|
+| **Commit** | `8f4b49b` |
+| **Mensaje** | `chore(repo): add docker setup, silveira theme, and project docs` |
+| **Remoto** | `git@github.com:arinspunk/silveira.git` |
+
 ---
 
 ## Dependencias y camino crítico
@@ -119,8 +127,8 @@
 | Tipo | Referencia |
 |------|------------|
 | Documento fuente | `20260416-01-docker-wordpress-theme-silveira.md` |
-| URL canónica | `http://silveira.localhost:8070` |
-| Puerto host | `8070` |
+| URL canónica | `http://silveira.localhost` (mapeo host **80:80** en `docker-compose`; antes se usó `:8070` en iteraciones locales) |
+| Puerto host | `80` |
 | WP-CLI (perfil) | `docker compose --profile tools run --rm wpcli wp ...` |
 
 ## Desviaciones respecto al plan original
