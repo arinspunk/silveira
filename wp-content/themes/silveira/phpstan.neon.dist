@@ -1,0 +1,12 @@
+parameters:
+	level: 0
+	paths:
+		- functions.php
+		- index.php
+		- header.php
+		- footer.php
+	excludePaths:
+		analyse:
+			- vendor
+			- node_modules
+			- assets

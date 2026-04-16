@@ -1,3 +1,11 @@
+<?php
+/**
+ * Cabecera del theme.
+ *
+ * @package Silveira
+ */
+
+?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>

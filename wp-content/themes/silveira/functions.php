@@ -1,6 +1,8 @@
 <?php
 /**
  * Funciones del theme silveira.
+ *
+ * @package Silveira
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -67,8 +69,8 @@ function silveira_vite_get_manifest() {
 		return $manifest;
 	}
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- fichero local del theme.
-	$json = file_get_contents( $path );
-	$data = json_decode( $json, true );
+	$json     = file_get_contents( $path );
+	$data     = json_decode( $json, true );
 	$manifest = is_array( $data ) ? $data : false;
 	return $manifest;
 }
@@ -132,9 +134,10 @@ function silveira_enqueue_vite_dev() {
 	$base   = silveira_vite_theme_base_path();
 	$client = $origin . $base . '/@vite/client';
 	$entry  = $origin . $base . '/' . SILVEIRA_VITE_ENTRY;
+	$ver    = wp_get_theme()->get( 'Version' );
 
-	wp_enqueue_script( 'silveira-vite-client', $client, array(), null, true );
-	wp_enqueue_script( 'silveira-main', $entry, array( 'silveira-vite-client' ), null, true );
+	wp_enqueue_script( 'silveira-vite-client', $client, array(), $ver, true );
+	wp_enqueue_script( 'silveira-main', $entry, array( 'silveira-vite-client' ), $ver, true );
 }
 
 /**
@@ -147,9 +150,10 @@ function silveira_enqueue_vite_prod() {
 		return;
 	}
 
-	$entry = $manifest[ $key ];
-	$mtime = @filemtime( silveira_vite_manifest_path() );
-	$ver   = $mtime ? (string) $mtime : wp_get_theme()->get( 'Version' );
+	$entry         = $manifest[ $key ];
+	$manifest_path = silveira_vite_manifest_path();
+	$mtime         = is_readable( $manifest_path ) ? filemtime( $manifest_path ) : false;
+	$ver           = false !== $mtime ? (string) $mtime : wp_get_theme()->get( 'Version' );
 
 	if ( ! empty( $entry['css'] ) && is_array( $entry['css'] ) ) {
 		foreach ( $entry['css'] as $i => $css_rel ) {

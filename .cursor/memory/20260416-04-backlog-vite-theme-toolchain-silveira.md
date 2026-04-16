@@ -90,44 +90,47 @@
 > **What to do:** Configurar ESLint y Prettier para `src/`; script `npm run lint` y `format` / `format:check`. Criterio: `npm run lint` pasa en código base del theme.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `eslint.config.js` (flat): `@eslint/js` recommended, `globals` (browser para `src/`, node para configs), `eslint-config-prettier`. Scripts: `lint` sobre `src`, `vite.config.js`, configs; `format` / `format:check` con Prettier; `.prettierrc.json`, `.prettierignore` (excluye `assets/`, `node_modules/`).
+> **Commit:** `9da27d8` chore(theme): add eslint, prettier, stylelint and prebuild validation
 
 **[3.2]** ✅ Stylelint (+ SCSS si aplica)  
 > **What to do:** Configurar Stylelint para `src/**/*.scss` (y CSS si existe); script `npm run lint:css`. Criterio: `npm run lint:css` pasa.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `stylelint.config.js` con `stylelint-config-standard-scss`, `ignoreFiles` para `assets/` y `node_modules/`. Script `npm run lint:css` en `src/**/*.{css,scss}`.
+> **Commit:** `9da27d8` chore(theme): add eslint, prettier, stylelint and prebuild validation
 
 **[3.3]** ✅ Script `validate` y hook `prebuild`  
 > **What to do:** Agregar `validate` que ejecute al menos `lint` + `lint:css`; `"prebuild": "npm run validate"` y `build` que llame a `vite build`. Criterio: `npm run build` falla si se introduce error de lint intencional; convención documentada: no usar `vite build` solo para builds “oficiales”.  
 > **Date completed:** 2026-04-16  
 > **Work done:** `validate` → `lint && lint:css`; `prebuild` → `validate`; `build` → `vite build` (npm ejecuta `prebuild` antes de `build`). `description` en `package.json` recuerda usar `npm run build` completo. Verificado: `npm run build` completa lint + Vite sin error.
+> **Commit:** `9da27d8` chore(theme): add eslint, prettier, stylelint and prebuild validation
 
 ---
 
 ## Fase 4 — Husky y raíz Git
 
-**[4.1]** ⏳ Estrategia hooks (raíz repo vs theme)  
+**[4.1]** ✅ Estrategia hooks (raíz repo vs theme)  
 > **What to do:** Confirmar dónde está la **raíz Git** del proyecto `silveira`; documentar si `.husky` vive en raíz con scripts que `cd` al theme, o `core.hooksPath` / `package.json` en raíz. Criterio: un párrafo en documentación mínima o comentario reproducible por otro dev.  
-> **Date completed:** -  
-> **Work done:** Raíz Git = directorio del proyecto `silveira` (coincide con raíz del repo); `origin` = `git@github.com:arinspunk/silveira.git`; commit inicial `8f4b49b`. `package.json` del theme añadido en `d993e0e`. Pendiente: documentar Husky/lint-staged y hook `prepare`.
+> **Date completed:** 2026-04-16  
+> **Work done:** **Raíz Git** = directorio del repo `silveira` (misma raíz que `docker-compose` y `package.json` de Husky). **Hooks:** `.husky/` en la raíz; `pre-commit` hace `cd` al directorio padre del hook y ejecuta `npx lint-staged` (sin `cd` manual al theme: los globs de lint-staged son rutas relativas a la raíz). **Documentación:** campo `description` en `package.json` de la raíz: clonar → `npm install` (raíz) + `npm install` en el theme + `composer install` en el theme para PHP; qué hace el pre-commit. No se usa `core.hooksPath` alternativo.
 
-**[4.2]** ⏳ Husky + `prepare` + lint-staged en `pre-commit`  
+**[4.2]** ✅ Husky + `prepare` + lint-staged en `pre-commit`  
 > **What to do:** Instalar `husky`, `lint-staged`; `prepare` en el `package.json` que corresponda (raíz o theme); hook `pre-commit` que ejecute lint-staged (Prettier/ESLint en JS, Stylelint en SCSS). Criterio: commit de prueba con archivo mal formateado es rechazado o autocorregido según reglas elegidas.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** Raíz: `devDependencies` `husky`, `lint-staged`; script `"prepare": "husky"`. `.husky/pre-commit` → `npx lint-staged`. `lint-staged` en el `package.json` raíz: ESLint/Prettier sobre `src/**/*.{js,mjs,cjs}`, configs del theme, Stylelint + Prettier en CSS/SCSS, todo vía `npx --prefix wp-content/themes/silveira` para usar el `node_modules` del theme. Tras `npm install` en la raíz, `prepare` registra Husky.
 
 ---
 
 ## Fase 5 — PHP estático (opcional, según [0.x] / equipo)
 
-**[5.1]** ⏳ `composer.json` en el theme con PHPCS + WPCS + PHPStan  
+**[5.1]** ✅ `composer.json` en el theme con PHPCS + WPCS + PHPStan  
 > **What to do:** Añadir `composer.json`, dependencias de desarrollo, reglas WPCS, nivel PHPStan bajo; scripts `composer lint` / `composer analyse`. Criterio: comandos documentados y ejecutables donde haya PHP/Composer.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `wp-content/themes/silveira/composer.json`: `require-dev` PHPCS, WPCS 3.x, PHPStan 2.x, `phpstan/extension-installer`, `szepeviktor/phpstan-wordpress` **^2.0** (compatible con PHPStan 2; la 1.x chocaba con `phpstan/phpstan` ^2). Scripts `composer run lint` → `phpcs`, `composer run analyse` → `phpstan analyse`. `phpcs.xml.dist` (regla `WordPress`, ficheros del theme). `phpstan.neon.dist`: nivel 0, paths `functions.php`, plantillas; **sin** `includes` manual a `extension.neon` de phpstan-wordpress (lo instala `phpstan/extension-installer`; duplicarlo avisaba). `composer.lock` generado. Verificación en agente: `docker run ... composer:2 composer update` y `composer run lint` / `composer run analyse` OK.
 
-**[5.2]** ⏳ Integración PHPCS en lint-staged o exclusión de `validate`  
+**[5.2]** ✅ Integración PHPCS en lint-staged o exclusión de `validate`  
 > **What to do:** Según solución §PHP en `validate`: o bien `phpcs` en lint-staged para `*.php` si `vendor/bin` existe, o bien **no** incluir PHP en `validate` y documentar ejecución vía Docker/Composer manual. Criterio: decisión explícita y sin sorpresas para quien no tenga PHP local.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** **Decisión:** PHP **no** entra en `npm run validate` del theme (sigue siendo solo ESLint + Stylelint). **lint-staged:** `wp-content/themes/silveira/**/*.php` → `bash scripts/lint-staged-phpcs.sh`, que ejecuta `vendor/bin/phpcs` con `phpcs.xml.dist` si existe el binario; si no hay `vendor/`, imprime aviso y **exit 0** (no bloquea a quien no haya hecho `composer install`). Si `php` no está en PATH o **no arranca** (p. ej. ICU/Homebrew roto), también **exit 0** con mensaje — en ese caso usar PHPCS vía Docker/CI o reparar PHP local. `functions.php` y plantillas ajustados a WPCS; `phpstan.neon.dist` sin include duplicado.
 
 ---
 
@@ -149,9 +152,9 @@
 
 | Métrica | Valor |
 |---------|--------|
-| **Total tareas** | 15 |
-| **Completadas** | 12 |
-| **Progreso** | 80% |
+| **Total tareas** | 18 |
+| **Completadas** | 16 |
+| **Progreso** | 89% |
 
 ---
 
@@ -178,6 +181,7 @@
 | Commit inicial (planificación + Docker + theme esqueleto) | `8f4b49b` |
 | Commit Vite scaffold, assets versionados, env dev | `d993e0e` |
 | Commit encolado manifest + modo dev Vite (`functions.php`) | `e366841` |
+| Commit ESLint, Prettier, Stylelint, prebuild (Fase 3) | `9da27d8` |
 | Solución Vite | `20260416-03-solution-vite-theme-classic-silveira.md` |
 
 ## Desviaciones respecto al plan

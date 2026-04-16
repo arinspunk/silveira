@@ -1,0 +1,26 @@
+{
+	"name": "silveira",
+	"private": true,
+	"description": "Repo root: Husky + lint-staged. After clone: npm install (root), npm install in wp-content/themes/silveira, and composer install in the theme for PHPCS/PHPStan. Pre-commit runs npx lint-staged from the repo root.",
+	"scripts": {
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"husky": "^9.1.7",
+		"lint-staged": "^15.4.3"
+	},
+	"lint-staged": {
+		"wp-content/themes/silveira/src/**/*.{js,mjs,cjs}": [
+			"npx --prefix wp-content/themes/silveira eslint --fix",
+			"npx --prefix wp-content/themes/silveira prettier --write"
+		],
+		"wp-content/themes/silveira/vite.config.js": "npx --prefix wp-content/themes/silveira eslint --fix",
+		"wp-content/themes/silveira/eslint.config.js": "npx --prefix wp-content/themes/silveira eslint --fix",
+		"wp-content/themes/silveira/stylelint.config.js": "npx --prefix wp-content/themes/silveira eslint --fix",
+		"wp-content/themes/silveira/**/*.{css,scss}": [
+			"npx --prefix wp-content/themes/silveira stylelint --fix",
+			"npx --prefix wp-content/themes/silveira prettier --write"
+		],
+		"wp-content/themes/silveira/**/*.php": "bash scripts/lint-staged-phpcs.sh"
+	}
+}

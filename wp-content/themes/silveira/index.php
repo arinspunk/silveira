@@ -1,6 +1,8 @@
 <?php
 /**
  * Plantilla principal mínima — proyecto silveira.
+ *
+ * @package Silveira
  */
 
 get_header();
