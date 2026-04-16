@@ -1,3 +1,6 @@
 .env
 node_modules/
 vendor/
+
+# Theme silveira (Vite): la salida compilada en wp-content/themes/silveira/assets/ se VERSIONA
+# para despliegues sin Node en el servidor. No añadir assets/ aquí.

@@ -1,0 +1,14 @@
+{
+  "name": "silveira-theme",
+  "private": true,
+  "type": "module",
+  "description": "Vite build outputs to assets/ (committed for deploy without Node on server). Run npm run build after src/ changes.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0",
+    "vite": "^6.0.0"
+  }
+}

@@ -20,34 +20,34 @@
 
 ## Fase 0 — Decisiones de producto / repo
 
-**[0.1]** ⏳ Política de `assets/` en Git  
+**[0.1]** ✅ Política de `assets/` en Git  
 > **What to do:** Decidir (y documentar) si los compilados bajo `assets/` se **commitean** o se **ignoran** (`.gitignore`) y cada clon/CI debe ejecutar `npm run build`. Criterio: decisión escrita en comentario de `package.json`, fragmento en `.gitignore`, o nota acordada por el equipo.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** **Versión compilada en Git:** `wp-content/themes/silveira/assets/` (salida de Vite) se **versiona** en el repo para poder desplegar en servidores **sin Node** en principio. Convención: tras cambios en `src/`, ejecutar `npm run build` y commitear `assets/` + manifest. Nota en `.gitignore` (raíz del repo). Repetir aviso en `package.json` del theme cuando exista ([1.1]).
 
-**[0.2]** ⏳ Modo “Vite dev” en PHP (constante / env)  
+**[0.2]** ✅ Modo “Vite dev” en PHP (constante / env)  
 > **What to do:** Elegir mecanismo explícito (**no** basar solo en `WP_DEBUG`): p. ej. `SILVEIRA_VITE_DEV`, `VITE_DEV_SERVER_URL` en `.env` del theme o constante en `wp-config` vía Docker. Criterio: documentado qué valor activa HMR en front/admin.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** **Decisión:** variables de entorno en el contenedor `wordpress` (y `wpcli`) vía `docker-compose` + `.env`: `SILVEIRA_VITE_DEV` (por defecto `0`) y `VITE_DEV_SERVER_URL` (por defecto `http://host.docker.internal:5173` para alcanzar Vite en el host desde Docker Desktop). Helpers `silveira_is_vite_dev()` y `silveira_vite_dev_server_url()` en `functions.php`. Documentado en `.env.example`. Encolado real de `@vite/client` en **[2.3]**.
 
 ---
 
 ## Fase 1 — Scaffold Vite en el theme
 
-**[1.1]** ⏳ `package.json` y dependencias Vite  
+**[1.1]** ✅ `package.json` y dependencias Vite  
 > **What to do:** Crear `package.json` en `wp-content/themes/silveira/` con scripts `dev` y `build` que invoquen Vite; instalar `vite` y plugin SCSS si aplica. Criterio: `npm run dev` y `npm run build` ejecutan sin error en el theme.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `package.json` con `type: module`, scripts `dev`/`build`, `devDependencies`: `vite@6.4.x`, `sass`. Campo `description` recuerda commitear `assets/`. `wp-content/themes/silveira/.gitignore` con `node_modules/`. `npm install` y `npm run build` OK; `npm run dev` arranca Vite (verificado en host; en sandbox puede fallar por interfaces de red).
 
-**[1.2]** ⏳ `vite.config` (base, outDir, manifest, server)  
+**[1.2]** ✅ `vite.config` (base, outDir, manifest, server)  
 > **What to do:** Configurar `base: '/wp-content/themes/silveira/'`, `build.outDir: 'assets'`, `build.manifest: true`, bloque `server` alineado con `http://silveira.localhost` y HMR/CORS según solución §URL. Criterio: build genera `manifest` bajo `assets/` (ruta exacta según versión de Vite verificada en disco).  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `vite.config.js`: `base`, `outDir: assets`, `manifest: true`, `rollupOptions.output` con `js/` y `css/` para evitar carpeta `assets/assets/`. `server`: `host: 0.0.0.0`, `port: 5173`, `origin: http://silveira.localhost`, `cors: true`. Manifest generado en **`assets/.vite/manifest.json`** (Vite 6).
 
-**[1.3]** ⏳ Entradas `src/`  
+**[1.3]** ✅ Entradas `src/`  
 > **What to do:** Añadir `src/main.js` que importe `src/scss/main.scss`; contenido mínimo comprobable en front (p. ej. clase o variable CSS). Criterio: tras `npm run build`, existen CSS/JS referenciados en el manifest.  
-> **Date completed:** -  
-> **Work done:** -
+> **Date completed:** 2026-04-16  
+> **Work done:** `src/main.js` importa `./scss/main.scss`. `src/scss/main.scss` con `:root { --silveira-accent }` y estilos base. Build produce p. ej. `js/main-*.js`, `css/main-*.css`; manifest referencia entrada `src/main.js` con `css` y `file` JS.
 
 ---
 
@@ -127,7 +127,7 @@
 **[6.1]** ⏳ `.gitignore` y exclusiones  
 > **What to do:** Asegurar `node_modules/`, `vendor/`, cachés de linters; aplicar política de **[0.1]** sobre `assets/`. Criterio: `git status` limpio tras build según política elegida.  
 > **Date completed:** -  
-> **Work done:** En raíz del repo, `.gitignore` ya incluye `.env`, `node_modules/`, `vendor/` (commit `8f4b49b`). Pendiente: reglas para `assets/` compilados y cachés de linters según **[0.1]**.
+> **Work done:** Política **[0.1]**: `assets/` **no** se ignoran (se commitean). Raíz: `.gitignore` con `.env`, `node_modules/`, `vendor/` y comentario sobre `assets/`. Pendiente: al añadir Vite, valorar ignorar cachés del bundler bajo el theme (p. ej. `.vite/` si aplica) sin tocar `assets/` generados.
 
 **[6.2]** ⏳ Documentación mínima de uso  
 > **What to do:** Instrucciones breves: `npm install`, `npm run dev` (HMR), `npm run build`, hooks, URL `http://silveira.localhost` (y variables env del theme si las hay). Criterio: nuevo dev puede seguir la lista sin preguntar por Slack.  
@@ -141,8 +141,8 @@
 | Métrica | Valor |
 |---------|--------|
 | **Total tareas** | 15 |
-| **Completadas** | 0 |
-| **Progreso** | 0% |
+| **Completadas** | 5 |
+| **Progreso** | ~33% |
 
 ---
 
@@ -171,4 +171,4 @@
 
 ## Desviaciones respecto al plan
 
-- Ninguna aún; registrar aquí si se elige monorepo, Node en Docker, o no commitear Husky por política del host.
+- **[0.1]** Se opta por **commitear `assets/`** (despliegue posible sin Node en servidor); la solución Vite listaba también ignorar `assets/` como alternativa — aquí prima el artefacto compilado en Git.

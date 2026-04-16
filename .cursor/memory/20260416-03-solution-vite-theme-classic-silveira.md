@@ -100,7 +100,7 @@ Extensiones alineadas con las reglas del repo; “format on save” opcional. La
 
 ## Aclaraciones pendientes (producto / equipo)
 
-- **Política de `assets/`:** ¿versionar compilados o solo fuentes + build en CI?
+- **Política de `assets/`:** **cerrada (2026-04-16)** — versionar compilados en `wp-content/themes/silveira/assets/` en Git para permitir despliegue sin Node en servidor; convención: `npm run build` antes de commit cuando cambie `src/`.
 - **HTTPS local** (Vite + WP): si algún día es obligatorio, afecta `server.https` y cookies; hoy el doc asume HTTP en `silveira.localhost`.
 - **PHP en `validate`:** ¿solo Docker, Composer local, o ambos documentados?
 
