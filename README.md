@@ -43,6 +43,8 @@ WordPress project with a classic theme in `wp-content/themes/silveira/`, **Vite*
    npm install
    ```
 
+   **Why two `node_modules`?** The **repository root** only installs **Husky** and **lint-staged** (Git runs hooks from the root). The **theme** installs **Vite**, ESLint, Prettier, Stylelint, etc. Pre-commit runs ESLint/Prettier/Stylelint with `npx --prefix wp-content/themes/silveira`, so those tools use the **theme’s** `node_modules` without duplicating them at the root. This split is intentional.
+
 4. **Install PHP dev tools (theme)**
 
    ```bash
@@ -135,7 +137,8 @@ docker run --rm -v "$PWD":/app -w /app composer:2 composer run analyse
 |------|-------------|
 | `docker-compose.yml` | WordPress, MariaDB, optional `wpcli` (`tools` profile) |
 | `wp-content/themes/silveira/` | Theme: Vite entry `src/main.js`, build output `assets/` |
-| `package.json` (root) | Husky + lint-staged |
+| `package.json` (root) | Husky + lint-staged only → **`node_modules/` at repo root** |
+| `wp-content/themes/silveira/package.json` | Vite + linters + build scripts → **`node_modules/` under the theme** |
 | `scripts/lint-staged-phpcs.sh` | PHPCS helper for lint-staged |
 
 ## WP-CLI (optional)
