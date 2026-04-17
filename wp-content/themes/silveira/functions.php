@@ -209,3 +209,23 @@ function silveira_vite_script_module_type( $tag, $handle, $src ) {
 	}
 	return $tag;
 }
+
+/**
+ * Include Custom Post Types and Taxonomies
+ */
+require_once get_template_directory() . '/inc/tax-shared.php';
+require_once get_template_directory() . '/inc/cpt-projetos.php';
+require_once get_template_directory() . '/inc/cpt-eventos.php';
+require_once get_template_directory() . '/inc/cpt-recursos.php';
+
+/**
+ * Flush rewrite rules on theme switch/activation (Temporary logic for dev)
+ */
+add_action( 'after_switch_theme', 'silveira_rewrite_flush' );
+function silveira_rewrite_flush() {
+	silveira_register_shared_taxonomies();
+	silveira_register_cpt_projeto();
+	silveira_register_cpt_evento();
+	silveira_register_cpt_recurso();
+	flush_rewrite_rules();
+}

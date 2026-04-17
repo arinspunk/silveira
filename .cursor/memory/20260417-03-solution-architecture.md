@@ -1,43 +1,43 @@
 # Solution: Site Architecture & Custom Post Types
 
-**Goal:** Establish the foundational architecture for the WP Classic Theme based on the "A Silveira Sitemap v02", defining which entities will be Custom Post Types, Taxonomies, and standard Pages, including their rewrite rules (URL slugs).
+**Goal:** Establish the foundational architecture for the WP Classic Theme based on the "A Silveira Sitemap v02", defining which entities will be Custom Post Types, Taxonomies, and standard Pages. Features advanced shared taxonomies for mapping and filtering.
 
-## Analysis of the Sitemap
+## Analysis of the Sitemap & Data
 
-Based on the boxes and the stacked icons (which represent multiple records/entries), we can deduce the following entity models:
+### 1. Shared Taxonomies (for filtering and mapping)
+Since locations (Comarca -> Concello) and categorization (Modalidade) apply to multiple models, they will be registered independently and associated with arrays of post types:
+- **Territorio (`territorio`)**: Taxonomía jerárquica para reflejar Comarca (Parent) -> Localidade/Concello (Child). Ej: `Terra Chá` -> `Vilalba`. Vinculada a `projeto` y `evento`.
+- **Modalidade (`modalidade`)**: Taxonomía jerárquica (Formal, Nom formal, Informal). Vinculada a `projeto` (y posiblemente a `evento` a futuro).
 
-### 1. Custom Post Types (CPTs)
+### 2. Custom Post Types (CPTs)
 - **Projeto (Projects)**
-  - **URL Base:** `/projeto` (Archive)
-  - **Single Slug:** `/projeto/%postname%`
-  - **WP Registration:** CPT `projeto`.
+  - **Archive:** `/projeto` | **Single:** `/projeto/%postname%`
+  - Usa taxonomías: `territorio`, `modalidade`.
 - **Evento (Events)**
-  - **URL Base:** `/agenda` (Archive)
-  - **Single Slug:** `/agenda/%postname%`
-  - **WP Registration:** CPT `evento` with `rewrite => ['slug' => 'agenda']`.
+  - **Archive:** `/agenda` | **Single:** `/agenda/%postname%`
+  - **Rewrite:** `'slug' => 'agenda'`
+  - Usa taxonomías: `territorio`.
 - **Recurso (Resources)**
-  - **URL Base:** `/recursos` (Archive)
-  - **Taxonomy Structure:** Needs a custom taxonomy (e.g., `categoria_recurso`) to handle the sub-levels: "Famílias", "Docentes", "Agentes".
-  - **Single Slug:** `/recursos/%categoria_recurso%/%postname%` (e.g., `/recursos/familias/exemplo`).
-  - **WP Registration:** CPT `recurso` with advanced rewrite rules, plus taxonomy `categoria_recurso`.
+  - **Taxonomy:** `categoria_recurso` (Famílias, Docentes, Agentes)
+  - **Single Slug:** `/recursos/%categoria_recurso%/%postname%`
+  - Requisito de filtro en `post_type_link` avanzado.
 
-### 2. Standard Pages (Hierarchical)
-The following don't seem to require CPTs and can be managed natively via WP Pages (with Parent -> Child relationships) to generate their URLs:
+### 3. Template Hierarchy Strategy
+To keep the theme maintainable and modular (KISS), we will follow the standard hierarchy but abstract the loop logic:
+- **Archives:** `archive-{post_type}.php` (projeto, evento, recurso).
+- **Singles:** `single-{post_type}.php` (projeto, evento, recurso).
+- **Taxonomies:** `taxonomy-{taxonomy}.php` (territorio, categoria_recurso, modalidade_projeto).
+- **Partials:** Use `template-parts/content-{post_type}.php` for the loop items to separate "The Loop" logic from the container structure.
+
+### 4. Standard Pages
+Se usarán sub-páginas nativas de WP para URLs estáticas como:
 - **Início** (`/`)
-- **Nós** (`/nos`)
-  - **Nota imprensa** (`/nos/nota-imprensa`) - *Unless press releases are many, in which case it should be a CPT, but the diagram doesn't show it stacked.*
-- **Contato** (`/contato`)
-  - **Parte da rede** (`/contato/parte-rede`)
-  - **Publicar evento** (`/contato/publicar-evento`)
-  - **Sugestons** (`/contato/sugestons`)
+- **Nós** (`/nos`) -> **Nota imprensa** (`/nos/nota-imprensa`)
+- **Contato** (`/contato`) -> **Parte da rede** (`/contato/parte-rede`), **Publicar evento** (`/contato/publicar-evento`), **Sugestons** (`/contato/sugestons`)
 
 ## Implementation Proposed (KISS)
-1. Delete the "interactive map" standalone backlog and integrate it into the global architecture (e.g., the map will display "Projetos" or whatever CPT you specify).
-2. Create modular files in `/inc/` for each CPT:
-   - `inc/cpt-projeto.php`
-   - `inc/cpt-evento.php`
-   - `inc/cpt-recurso.php` (contains both CPT and Taxonomy, plus the rewrite rule filter for `%categoria_recurso%`).
-3. Load them in `functions.php`.
-
-## Trade-offs
-- Setting up `/recursos/%categoria_recurso%/%postname%` requires a `post_type_link` filter in WP and manual flush of rewrite rules. It's standard but slightly more complex than the default `/recursos/%postname%`.
+1. Modulizar cada tipo de dato por separado en la carpeta `/inc/`.
+2. Crear los archivos de plantilla base en la raíz del tema.
+3. Archivos a crear (Lógica):
+   - `inc/tax-shared.php`, `inc/cpt-projetos.php`, `inc/cpt-eventos.php`, `inc/cpt-recursos.php`.
+4. Incluir todos los archivos desde el `functions.php` central.
