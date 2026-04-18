@@ -31,7 +31,10 @@
 // Column Generation Loop
 @each $breakpoint, $width in tokens.$breakpoints {
 	@media (min-width: $width) {
-		$infix: if($breakpoint == "xs", "", "-#{$breakpoint}");
+		$infix: "";
+		@if $breakpoint != "xs" {
+			$infix: "-#{$breakpoint}";
+		}
 
 		@for $i from 1 through tokens.$grid-columns {
 			.o-col#{$infix}-#{$i} {
