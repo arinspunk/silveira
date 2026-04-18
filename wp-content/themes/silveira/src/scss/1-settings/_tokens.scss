@@ -1,0 +1,44 @@
+@use "colors" as *;
+@use "typography" as *;
+
+/**
+ * 1-SETTINGS / TOKENS
+ * Exposes SCSS variables as CSS Custom Properties for runtime use.
+ */
+
+// Grid Tokens
+$grid-columns: 12 !default;
+$grid-gutter: 20px !default;
+
+// Standard Breakpoints (Bootstrap 5 based)
+$breakpoints: (
+	"xs": 0,
+	"sm": 576px,
+	"md": 768px,
+	"lg": 992px,
+	"xl": 1200px,
+	"xxl": 1400px,
+) !default;
+
+:root {
+	// Color Tokens
+	@each $name, $shades in $palettes {
+		@each $shade, $value in $shades {
+			--sil-#{$name}-#{$shade}: #{$value};
+		}
+	}
+
+	// Typography Tokens
+	--sil-font-primary: #{$font-primary};
+	--sil-font-mono: #{$font-mono};
+	--sil-fs-xs: #{$font-size-xs};
+	--sil-fs-sm: #{$font-size-sm};
+	--sil-fs-base: #{$font-size-base};
+	--sil-fs-md: #{$font-size-md};
+	--sil-fs-lg: #{$font-size-lg};
+	--sil-fs-xl: #{$font-size-xl};
+
+	// Grid Tokens
+	--sil-gutter: #{$grid-gutter};
+	--sil-offset: 30px;
+}

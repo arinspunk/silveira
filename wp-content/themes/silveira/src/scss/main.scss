@@ -1,12 +1,37 @@
 /**
- * Silveira — estilos de entrada Vite.
+ * Silveira — ITCSS Entry Point
+ * 
+ * Hierarchy:
+ * 1. Settings - Variables, tokens, maps.
+ * 2. Tools    - Mixins, functions.
+ * 3. Generic  - Reset, normalize, box-sizing.
+ * 4. Elements - Unclassed HTML elements.
+ * 5. Objects  - Non-cosmetic UI structures.
+ * 6. Components - UI components (BEM).
+ * 7. Utilities - Helpers and overrides.
  */
 
-:root {
-	--silveira-accent: #2c5282;
-}
+// 1. Settings
+@forward "1-settings/colors";
+@forward "1-settings/typography";
+@forward "1-settings/tokens";
 
-body {
-	color: #fff;
-	background-color: var(--silveira-accent);
-}
+// 2. Tools
+@forward "2-tools/mixins";
+
+// 3. Generic
+@use "3-generic/reset";
+
+// 4. Elements
+@use "4-elements/base";
+@use "4-elements/headings";
+
+// 5. Objects
+@use "5-objects/container";
+@use "5-objects/row";
+@use "5-objects/column";
+
+// 6. Components
+@use "6-components/buttons";
+
+// 7. Utilities (Coming soon)

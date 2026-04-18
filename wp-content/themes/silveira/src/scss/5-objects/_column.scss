@@ -1,0 +1,50 @@
+@use "sass:math";
+@use "../1-settings/tokens" as tokens;
+
+/**
+ * 5-OBJECTS / COLUMN
+ * Grid columns logic using Flexbox and percentage widths.
+ */
+
+// Base column styles
+.o-col,
+[class*="o-col-"] {
+	position: relative;
+	width: 100%;
+	padding-right: math.div(tokens.$grid-gutter, 2);
+	padding-left: math.div(tokens.$grid-gutter, 2);
+	min-height: 1px;
+}
+
+.o-col {
+	flex-basis: 0;
+	flex-grow: 1;
+	max-width: 100%;
+}
+
+.o-col-auto {
+	flex: 0 0 auto;
+	width: auto;
+	max-width: 100%;
+}
+
+// Column Generation Loop
+@each $breakpoint, $width in tokens.$breakpoints {
+	@media (min-width: $width) {
+		$infix: if($breakpoint == "xs", "", "-#{$breakpoint}");
+
+		@for $i from 1 through tokens.$grid-columns {
+			.o-col#{$infix}-#{$i} {
+				flex: 0 0 math.percentage(math.div($i, tokens.$grid-columns));
+				max-width: math.percentage(math.div($i, tokens.$grid-columns));
+			}
+		}
+
+		// Offset support
+		@for $i from 0 through (tokens.$grid-columns - 1) {
+			.o-offset#{$infix}-#{$i} {
+				margin-left: math.percentage(math.div($i, tokens.$grid-columns));
+			}
+		}
+	}
+}

@@ -1,0 +1,26 @@
+@use "../1-settings/tokens" as tokens;
+
+/**
+ * 5-OBJECTS / ROW
+ * Flexbox row container for the grid system.
+ * Uses negative margins to offset column padding.
+ */
+
+.o-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: calc(tokens.$grid-gutter / -2);
+	margin-left: calc(tokens.$grid-gutter / -2);
+
+	// No-gutters variant
+	&--no-gutters {
+		margin-right: 0;
+		margin-left: 0;
+
+		> .o-col,
+		> [class*="o-col-"] {
+			padding-right: 0;
+			padding-left: 0;
+		}
+	}
+}

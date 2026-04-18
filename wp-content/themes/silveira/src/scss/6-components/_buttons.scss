@@ -1,0 +1,116 @@
+/**
+ * 6-COMPONENTS / BUTTONS
+ * Button library following BEM (.c-btn).
+ */
+
+.c-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px; // Standard spacing for icons
+	border: 1px solid transparent;
+	background-color: transparent;
+	font-family: var(--sil-font-primary);
+	font-weight: 400;
+	text-align: center;
+	cursor: pointer;
+	text-decoration: none;
+	transition: all 0.2s ease-in-out;
+	white-space: nowrap;
+
+	// Reset for <button>
+	padding: 0;
+
+	// Default size (XL based on Figma commonality)
+	padding: 0 24px;
+	height: 50px;
+	font-size: var(--sil-fs-base);
+	border-radius: 5px;
+
+	// Variants
+	&--primary {
+		background-color: var(--sil-violeta-100);
+		border-color: var(--sil-violeta-200);
+		color: var(--sil-violeta-800);
+
+		&:disabled {
+			background-color: var(--sil-violeta-050);
+			border-color: var(--sil-violeta-100);
+			color: var(--sil-violeta-200);
+		}
+
+		&:hover:not(:disabled) {
+			background-color: var(--sil-violeta-200);
+			border-color: var(--sil-violeta-300);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--sil-violeta-200);
+			border-color: var(--sil-violeta-300);
+		}
+	}
+
+	&--secondary {
+		background-color: var(--sil-branco);
+		border-color: var(--sil-violeta-700);
+		color: var(--sil-violeta-700);
+
+		&:disabled {
+			background-color: var(--sil-branco);
+			border-color: var(--sil-violeta-200);
+			color: var(--sil-violeta-200);
+		}
+
+		&:hover:not(:disabled) {
+			background-color: var(--sil-violeta-050);
+		}
+
+		&:active:not(:disabled) {
+			background-color: var(--sil-violeta-050);
+			border-color: var(--sil-violeta-700);
+		}
+	}
+
+	// Sizes
+	&--xl {
+		height: 50px;
+		font-size: var(--sil-fs-base);
+		border-radius: 5px;
+	}
+
+	&--l {
+		height: 30px;
+		font-size: var(--sil-fs-sm);
+		border-radius: 3px;
+		padding: 0 16px;
+	}
+
+	// Icon modifier (can be handled by gap but added for specific adjustments)
+	&--has-icon {
+		.c-btn__icon {
+			display: flex;
+			align-items: center;
+			width: 16px;
+			height: 16px;
+
+			svg, img {
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	// States
+	&:disabled {
+		cursor: not-allowed;
+	}
+
+	&:active {
+		outline: none;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--sil-violeta-700);
+		outline-offset: 2px;
+	}
+}

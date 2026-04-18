@@ -1,0 +1,13 @@
+/**
+ * 5-OBJECTS / CONTAINER
+ * A center-aligned container that provides the max-width and layout gutter.
+ */
+
+.o-container {
+	width: 100%;
+	margin-right: auto;
+	margin-left: auto;
+	padding-right: var(--sil-offset, 30px);
+	padding-left: var(--sil-offset, 30px);
+	max-width: 1440px; // Responsive max-width can be added later if needed
+}

@@ -1,0 +1,110 @@
+/**
+ * 1-SETTINGS / COLORS
+ * Design tokens for the color palettes from Figma.
+ */
+
+// Green Palette
+$verde-050: #f1f7e5;
+$verde-100: #d9f3b9;
+$verde-200: #c2ec8e;
+$verde-300: #abdf62;
+$verde-400: #93dd36;
+$verde-500: #78be20;
+$verde-600: #5e9515;
+$verde-700: #426912;
+$verde-800: #273d0a;
+$verde-900: #0b1103;
+
+// Red Palette (Vermelho)
+$vermelho-050: #ffe6ec;
+$vermelho-100: #ffb3c7;
+$vermelho-200: #ff80a1;
+$vermelho-300: #ff4d7b;
+$vermelho-400: #ff1a56;
+$vermelho-500: #e6003c;
+$vermelho-600: #b3002f;
+$vermelho-700: #800021;
+$vermelho-800: #4d0014;
+$vermelho-900: #1a0007;
+
+// Yellow Palette (Amarelo)
+$amarelo-050: #fffef2;
+$amarelo-100: #fffbd3;
+$amarelo-200: #fff999;
+$amarelo-300: #fff666;
+$amarelo-400: #fff333;
+$amarelo-500: #fff000;
+$amarelo-600: #ccc000;
+$amarelo-700: #999000;
+$amarelo-800: #666000;
+$amarelo-900: #333000;
+
+// Violet Palette
+$violeta-050: #ede6ff;
+$violeta-100: #dbccff;
+$violeta-200: #b899ff;
+$violeta-300: #9666ff;
+$violeta-400: #7233ff;
+$violeta-500: #4f00ff;
+$violeta-600: #3f00cc;
+$violeta-700: #2f0099;
+$violeta-800: #200066;
+$violeta-900: #100033;
+
+// White
+$branco: #fff;
+
+// Semantic Map (Internal)
+$palettes: (
+	"verde": (
+		"050": $verde-050,
+		"100": $verde-100,
+		"200": $verde-200,
+		"300": $verde-300,
+		"400": $verde-400,
+		"500": $verde-500,
+		"600": $verde-600,
+		"700": $verde-700,
+		"800": $verde-800,
+		"900": $verde-900,
+	),
+	"vermelho": (
+		"050": $vermelho-050,
+		"100": $vermelho-100,
+		"200": $vermelho-200,
+		"300": $vermelho-300,
+		"400": $vermelho-400,
+		"500": $vermelho-500,
+		"600": $vermelho-600,
+		"700": $vermelho-700,
+		"800": $vermelho-800,
+		"900": $vermelho-900,
+	),
+	"amarelo": (
+		"050": $amarelo-050,
+		"100": $amarelo-100,
+		"200": $amarelo-200,
+		"300": $amarelo-300,
+		"400": $amarelo-400,
+		"500": $amarelo-500,
+		"600": $amarelo-600,
+		"700": $amarelo-700,
+		"800": $amarelo-800,
+		"900": $amarelo-900,
+	),
+	"violeta": (
+		"050": $violeta-050,
+		"100": $violeta-100,
+		"200": $violeta-200,
+		"300": $violeta-300,
+		"400": $violeta-400,
+		"500": $violeta-500,
+		"600": $violeta-600,
+		"700": $violeta-700,
+		"800": $violeta-800,
+		"900": $violeta-900,
+	),
+	"pure": (
+		"white": $branco,
+	),
+);

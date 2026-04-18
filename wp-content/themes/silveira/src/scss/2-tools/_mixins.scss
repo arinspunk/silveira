@@ -1,0 +1,17 @@
+/**
+ * 2-TOOLS / MIXINS
+ * Global mixins for the project.
+ */
+
+@mixin font-isaac {
+	font-family: var(--sil-font-primary);
+}
+
+@mixin font-mono {
+	font-family: var(--sil-font-mono);
+}
+
+@mixin heading-xl {
+	font-size: var(--sil-fs-xl);
+	line-height: 1.2;
+}

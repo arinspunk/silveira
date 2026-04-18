@@ -1,0 +1,27 @@
+/**
+ * 4-ELEMENTS / HEADINGS
+ */
+
+h1, .h1 {
+	font-size: var(--sil-fs-xl);
+	font-weight: normal;
+	margin-bottom: 2rem;
+}
+
+h2, .h2 {
+	font-size: 2rem; // 32px based on scale
+	font-weight: normal;
+	margin-bottom: 1.5rem;
+}
+
+h3, .h3 {
+	font-size: var(--sil-fs-lg);
+	font-weight: normal;
+	margin-bottom: 1.25rem;
+}
+
+h4, .h4 {
+	font-size: var(--sil-fs-md);
+	font-weight: normal;
+	margin-bottom: 1rem;
+}
