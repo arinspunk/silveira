@@ -52,6 +52,12 @@
 
 **[3.3]** ⏳ Layer: Components (Cards)
 
+**[3.4]** ⏳ Layer: Components (Forms)
+> **What to do:** Implement decoupled `.c-select` and `.c-checkbox` custom inputs based on Figma map filters design, storing them in `6-components/_forms.scss`.
+
+**[3.5]** ⏳ Layer: Components (Filter Bar)
+> **What to do:** Implement `.c-filter-bar` structural layout for the filters container in `6-components/_filter-bar.scss`.
+
 ---
 
 ## Phase 4: Tooling & Documentation

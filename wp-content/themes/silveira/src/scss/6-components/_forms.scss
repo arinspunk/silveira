@@ -1,0 +1,132 @@
+/**
+ * 6-COMPONENTS / FORMS
+ * UI elements for data input (selects, checkboxes, dropdowns).
+ */
+
+// Custom Select Component
+.c-select {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 1px;
+	height: 50px;
+	padding: 0 15px;
+	background-color: var(--sil-pure-white);
+	border: 1px solid var(--sil-violeta-700);
+	border-radius: 5px;
+	cursor: pointer;
+	user-select: none;
+	width: 100%;
+	transition: all 0.2s ease;
+
+	&:hover,
+	&--active {
+		background-color: var(--sil-violeta-050);
+	}
+
+	&__label {
+		display: block;
+		font-family: var(--sil-font-primary);
+		font-size: 12px;
+		line-height: 120%;
+		color: var(--sil-violeta-800);
+	}
+
+	&__value {
+		display: block;
+		font-family: var(--sil-font-primary);
+		font-size: 14px;
+		line-height: 120%;
+		color: var(--sil-violeta-400);
+		text-align: left;
+	}
+
+	// Dropdown container attached to the select
+	&__dropdown {
+		position: absolute;
+		top: 100%;
+		left: -1px; // Align to compensate border
+		width: calc(100% + 2px);
+		margin-top: 4px;
+		z-index: 10;
+		background-color: var(--sil-pure-white);
+		border: 1px solid var(--sil-violeta-700);
+		border-radius: 5px;
+		padding: 10px 0;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		display: none; // Hidden by default, toggled via JS or modifier
+
+		&--open {
+			display: block;
+		}
+	}
+}
+
+// Custom Checkbox Component (List Item)
+.c-checkbox {
+	display: flex;
+	align-items: center;
+	height: 40px;
+	padding: 0 16px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--sil-violeta-050);
+	}
+
+	&__input {
+		// Visually hide the native checkbox but keep it accessible
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+
+		// Focus state for accessibility
+		&:focus-visible ~ .c-checkbox__box {
+			outline: 2px solid var(--sil-violeta-700);
+			outline-offset: 2px;
+		}
+	}
+
+	&__box {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		border: 1px solid var(--sil-violeta-600);
+		border-radius: 2px;
+		background-color: var(--sil-branco);
+		margin-right: 12px;
+		transition: all 0.2s ease;
+		position: relative; // Avoid stylelint position conflict if inner icon relies on it
+	}
+
+	// Active State
+	&__input:checked ~ &__box {
+		background-color: var(--sil-violeta-600);
+		border-color: var(--sil-violeta-600);
+
+		// Simple pseudo-element checkmark
+		&::after {
+			content: "";
+			position: absolute;
+			left: 5px;
+			top: 2px;
+			width: 6px;
+			height: 10px;
+			border: solid var(--sil-branco);
+			border-width: 0 2px 2px 0;
+			transform: rotate(45deg);
+		}
+	}
+
+	&__label {
+		font-family: var(--sil-font-primary);
+		font-size: 16px;
+		color: var(--sil-violeta-800);
+	}
+}

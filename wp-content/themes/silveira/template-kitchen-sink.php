@@ -101,6 +101,56 @@ get_header(); ?>
         </div>
     </section>
 
+    <!-- MAP FILTERS / FORMS -->
+    <section class="sg-section">
+        <h2 class="sg-section__title">Forms & Map Filters</h2>
+        
+        <div class="c-filter-bar">
+            <!-- Select 1: Modalidade -->
+            <div class="c-filter-bar__item">
+                <div class="c-select">
+                    <span class="c-select__label">Modalidade educativa</span>
+                    <span class="c-select__value">Que procuras?</span>
+                    
+                    <!-- Simulating open dropdown state for the first item -->
+                    <div class="c-select__dropdown c-select__dropdown--open">
+                        <label class="c-checkbox">
+                            <input type="checkbox" class="c-checkbox__input">
+                            <span class="c-checkbox__box"></span>
+                            <span class="c-checkbox__label">Formal</span>
+                        </label>
+                        <label class="c-checkbox">
+                            <input type="checkbox" class="c-checkbox__input" checked>
+                            <span class="c-checkbox__box"></span>
+                            <span class="c-checkbox__label">Nom formal</span>
+                        </label>
+                        <label class="c-checkbox">
+                            <input type="checkbox" class="c-checkbox__input">
+                            <span class="c-checkbox__box"></span>
+                            <span class="c-checkbox__label">Informal</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select 2: Comarca -->
+            <div class="c-filter-bar__item">
+                <div class="c-select">
+                    <span class="c-select__label">Comarca</span>
+                    <span class="c-select__value">Em que zona?</span>
+                </div>
+            </div>
+
+            <!-- Select 3: Localidade -->
+            <div class="c-filter-bar__item">
+                <div class="c-select">
+                    <span class="c-select__label">Localidade</span>
+                    <span class="c-select__value">Em que vila?</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- BUTTONS -->
     <section class="sg-section">
         <h2 class="sg-section__title">Buttons</h2>

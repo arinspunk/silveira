@@ -1,0 +1,27 @@
+/**
+ * 6-COMPONENTS / FILTER BAR
+ * Structural layout for the map filters container.
+ */
+
+.c-filter-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 20px;
+	background-color: var(--sil-violeta-050);
+	border: 1px solid var(--sil-violeta-300);
+	border-radius: 0; // Assuming block full width style, can add modifier if rounded is needed
+	padding: 10px 20px;
+
+	// Responsive handling
+	@media (max-width: 767px) {
+		flex-direction: column;
+		align-items: stretch;
+		padding: 20px;
+	}
+
+	&__item {
+		flex: 1 1 200px; // Grow and shrink naturally but keep a base width
+		min-width: 0; // Fix Flexbox truncation issue
+	}
+}
