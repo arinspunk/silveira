@@ -217,6 +217,7 @@ require_once get_template_directory() . '/inc/tax-shared.php';
 require_once get_template_directory() . '/inc/cpt-projetos.php';
 require_once get_template_directory() . '/inc/cpt-eventos.php';
 require_once get_template_directory() . '/inc/cpt-recursos.php';
+require_once get_template_directory() . '/inc/assets.php';
 
 /**
  * Flush rewrite rules on theme switch/activation (Temporary logic for dev)
