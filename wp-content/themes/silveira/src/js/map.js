@@ -56,7 +56,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateFilters = () => {
-        // Get all active checkboxes
+        // Dependent Dropdown Logic (Comarcas -> Localidades)
+        const comarcaCheckboxes = document.querySelectorAll('.js-filter-comarca');
+        const selectedComarcas = Array.from(comarcaCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+        
+        const localidadeCheckboxes = document.querySelectorAll('.js-filter-localidade');
+        
+        localidadeCheckboxes.forEach(cb => {
+            const parentLabel = cb.closest('.c-checkbox');
+            const parentComarca = parentLabel.dataset.parentComarca;
+            
+            if (selectedComarcas.length === 0 || selectedComarcas.includes(parentComarca)) {
+                parentLabel.style.display = 'flex';
+            } else {
+                parentLabel.style.display = 'none';
+                cb.checked = false; // Prevent filtering by a hidden localidade
+            }
+        });
+
+        // Get all currently active checkboxes
         const checkboxes = document.querySelectorAll('.c-checkbox__input');
         filters.modalidade = [];
         filters.territorio = [];
@@ -115,5 +133,93 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.c-select__dropdown').forEach(d => {
         d.addEventListener('click', (e) => e.stopPropagation());
     });
+
+    // 6. Map Scroll UX Optimization (Wheel & Touch Events)
+    const mapWrapper = document.querySelector('.c-map');
+    const hero = document.querySelector('.c-hero');
+    const mainWrapper = document.querySelector('.l-main--map');
+    let isMapLocked = true;
+    let isAnimating = false;
+
+    if (mapWrapper && hero && mainWrapper) {
+        
+        // Prevent scroll restoration on page reload
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+
+        // Ensure body doesn't scroll natively
+        document.body.style.overflow = 'hidden';
+
+        const slideUp = () => {
+            if (!isMapLocked || isAnimating) return;
+            isAnimating = true;
+            mainWrapper.classList.add('is-scrolled');
+            
+            setTimeout(() => {
+                mapWrapper.classList.remove('is-locked');
+                isMapLocked = false;
+                isAnimating = false;
+                map.invalidateSize(); // Ensure leaflet recalculates bounds
+            }, 800);
+        };
+
+        const slideDown = () => {
+            if (isMapLocked || isAnimating) return;
+            isAnimating = true;
+            mapWrapper.classList.add('is-locked');
+            mainWrapper.classList.remove('is-scrolled');
+            
+            setTimeout(() => {
+                isMapLocked = true;
+                isAnimating = false;
+            }, 800);
+        };
+
+        // Track touch events for mobile swipe
+        let touchStartY = 0;
+        
+        window.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isAnimating) return;
+            
+            const touchEndY = e.touches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            
+            // Swipe Up (Scroll Down)
+            if (diff > 10 && isMapLocked) {
+                slideUp();
+            }
+            // Swipe Down (Scroll Up)
+            else if (diff < -10 && !isMapLocked) {
+                // Must be on filter bar or header
+                if (e.target.closest('.c-filter-bar') || e.target.closest('.c-header')) {
+                    slideDown();
+                }
+            }
+        }, { passive: false });
+
+        // Desktop Wheel
+        window.addEventListener('wheel', (e) => {
+            if (isAnimating) return;
+
+            // Scrolling down
+            if (e.deltaY > 5 && isMapLocked) {
+                slideUp();
+            }
+            // Scrolling up
+            else if (e.deltaY < -5 && !isMapLocked) {
+                if (e.target.closest('.c-filter-bar') || e.target.closest('.c-header')) {
+                    slideDown();
+                }
+            }
+        }, { passive: true });
+    }
+
+
 
 });

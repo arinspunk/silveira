@@ -14,12 +14,8 @@
 	border-bottom: 1px solid var(--sil-violeta-300);
 	border-radius: 0;
 	padding: 10px 20px;
-	width: 100vw;
-	position: relative;
-	left: 50%;
-	right: 50%;
-	margin-left: -50vw;
-	margin-right: -50vw;
+	width: 100%;
+	z-index: 101;
 
 	// Responsive handling
 	@media (max-width: 767px) {
@@ -31,6 +27,6 @@
 	&__item {
 		flex: 1 1 200px; // Grow and shrink naturally but keep a base width
 		min-width: 0; // Fix Flexbox truncation issue
-		max-width: 215px;
+		max-width: 260px;
 	}
 }

@@ -87,7 +87,7 @@ if ( $projects_query->have_posts() ) {
 					$comarcas = get_terms( array( 'taxonomy' => 'territorio', 'parent' => 0, 'hide_empty' => true ) );
 					foreach ( $comarcas as $comarca ) : ?>
 						<label class="c-checkbox">
-							<input type="checkbox" class="c-checkbox__input" value="<?php echo esc_attr( $comarca->slug ); ?>" data-filter="territorio">
+							<input type="checkbox" class="c-checkbox__input js-filter-comarca" value="<?php echo esc_attr( $comarca->slug ); ?>" data-filter="territorio">
 							<span class="c-checkbox__box"></span>
 							<span class="c-checkbox__label"><?php echo esc_html( $comarca->name ); ?></span>
 						</label>
@@ -106,9 +106,12 @@ if ( $projects_query->have_posts() ) {
 				<div class="c-select__dropdown">
 					<?php
 					$localidades = get_terms( array( 'taxonomy' => 'territorio', 'childless' => true, 'hide_empty' => true ) );
-					foreach ( $localidades as $loc ) : ?>
-						<label class="c-checkbox">
-							<input type="checkbox" class="c-checkbox__input" value="<?php echo esc_attr( $loc->slug ); ?>" data-filter="territorio">
+					foreach ( $localidades as $loc ) : 
+						$parent_term = get_term( $loc->parent, 'territorio' );
+						$parent_slug = ( ! is_wp_error( $parent_term ) && $parent_term ) ? $parent_term->slug : '';
+					?>
+						<label class="c-checkbox" data-parent-comarca="<?php echo esc_attr( $parent_slug ); ?>">
+							<input type="checkbox" class="c-checkbox__input js-filter-localidade" value="<?php echo esc_attr( $loc->slug ); ?>" data-filter="territorio">
 							<span class="c-checkbox__box"></span>
 							<span class="c-checkbox__label"><?php echo esc_html( $loc->name ); ?></span>
 						</label>
@@ -120,9 +123,10 @@ if ( $projects_query->have_posts() ) {
 	</div>
 
 	<!-- Map Container -->
-	<div class="c-map">
+	<div class="c-map is-locked">
 		<div id="map" class="c-map__container"></div>
 	</div>
+
 
 </main>
 

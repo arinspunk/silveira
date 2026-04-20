@@ -1,0 +1,16 @@
+/**
+ * 5-OBJECTS / MAIN
+ * Structural layout wrapper for page content.
+ */
+
+.l-main {
+	&--map {
+		transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+		
+		// When scrolled, move entire container up by hero height
+		&.is-scrolled {
+			transform: translateY(-231px);
+		}
+	}
+}
+
