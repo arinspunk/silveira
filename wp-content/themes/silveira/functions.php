@@ -283,12 +283,7 @@ function silveira_nav_menu_link_class( $atts, $item, $args, $depth ) {
 /**
  * Filter: Add BEM classes to the custom logo and its link.
  */
-add_filter( 'get_custom_logo', 'silveira_custom_logo_class' );
-function silveira_custom_logo_class( $html ) {
-	$html = str_replace( 'class="custom-logo"', 'class="custom-logo c-header__logo-img"', $html );
-	$html = str_replace( 'class="custom-logo-link"', 'class="custom-logo-link c-header__logo-link"', $html );
-	return $html;
-}
+
 
 /**
  * Filter: ACF Local JSON save path.

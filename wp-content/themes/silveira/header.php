@@ -20,17 +20,15 @@
 	<div class="o-container">
 		<div class="o-row c-header__inner">
 			<div class="o-col-6 c-header__logo-wrapper">
-				<?php
-				if ( has_custom_logo() ) {
-					the_custom_logo();
-				} else {
+				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="c-header__logo-link">
+					<?php 
+					if ( has_custom_logo() ) {
+						$logo_id = get_theme_mod( 'custom_logo' );
+						echo wp_get_attachment_image( $logo_id, 'full', false, array( 'class' => 'c-header__logo-img' ) );
+					}
 					?>
-					<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="c-header__logo-link">
-						<span class="c-header__logo-text"><?php bloginfo( 'name' ); ?></span>
-					</a>
-					<?php
-				}
-				?>
+					<span class="c-header__logo-text"><?php bloginfo( 'name' ); ?></span>
+				</a>
 			</div>
 
 			<div class="o-col-6 c-header__nav-wrapper">
