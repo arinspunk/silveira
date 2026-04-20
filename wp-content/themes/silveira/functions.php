@@ -12,7 +12,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Clave de entrada en manifest.json (Vite) y ruta lógica en modo dev. */
 define( 'SILVEIRA_VITE_ENTRY', 'src/main.js' );
 
-add_theme_support( 'title-tag' );
+add_action( 'after_setup_theme', 'silveira_setup' );
+/**
+ * Setup del theme: soportes y menús.
+ */
+function silveira_setup() {
+	add_theme_support( 'title-tag' );
+	add_theme_support( 'custom-logo' );
+
+	register_nav_menus(
+		array(
+			'main' => esc_html__( 'Main Menu', 'silveira' ),
+		)
+	);
+}
+
 
 /**
  * ¿Cargar assets desde el servidor de desarrollo de Vite (HMR)?
@@ -229,4 +243,97 @@ function silveira_rewrite_flush() {
 	silveira_register_cpt_evento();
 	silveira_register_cpt_recurso();
 	flush_rewrite_rules();
+}
+
+/**
+ * Filter: Add BEM classes to <li> items in the main menu.
+ */
+add_filter( 'nav_menu_css_class', 'silveira_nav_menu_item_class', 10, 4 );
+function silveira_nav_menu_item_class( $classes, $item, $args, $depth ) {
+	if ( isset( $args->theme_location ) && 'main' === $args->theme_location ) {
+		$classes[] = 'c-header__menu-item';
+	}
+	return $classes;
+}
+
+/**
+ * Filter: Add BEM classes to <a> links in the main menu.
+ */
+add_filter( 'nav_menu_link_attributes', 'silveira_nav_menu_link_class', 10, 4 );
+function silveira_nav_menu_link_class( $atts, $item, $args, $depth ) {
+	if ( isset( $args->theme_location ) && 'main' === $args->theme_location ) {
+		if ( ! isset( $atts['class'] ) ) {
+			$atts['class'] = '';
+		}
+		$atts['class'] .= ' c-header__menu-link';
+		$atts['class'] = trim( $atts['class'] );
+	}
+	return $atts;
+}
+
+/**
+ * Filter: Add BEM classes to the custom logo and its link.
+ */
+add_filter( 'get_custom_logo', 'silveira_custom_logo_class' );
+function silveira_custom_logo_class( $html ) {
+	$html = str_replace( 'class="custom-logo"', 'class="custom-logo c-header__logo-img"', $html );
+	$html = str_replace( 'class="custom-logo-link"', 'class="custom-logo-link c-header__logo-link"', $html );
+	return $html;
+}
+
+/**
+ * Filter: ACF Local JSON save path.
+ */
+add_filter( 'acf/settings/save_json', 'silveira_acf_json_save_point' );
+function silveira_acf_json_save_point( $path ) {
+	return get_stylesheet_directory() . '/acf-json';
+}
+
+/**
+ * Filter: ACF Local JSON load path.
+ */
+add_filter( 'acf/settings/load_json', 'silveira_acf_json_load_point' );
+function silveira_acf_json_load_point( $paths ) {
+	unset( $paths[0] );
+	$paths[] = get_stylesheet_directory() . '/acf-json';
+	return $paths;
+}
+
+/**
+ * Helper to render the hero component with context-aware defaults
+ */
+function silveira_hero() {
+	$title    = '';
+	$subtitle = 'Um ecosistema para o galego'; // Default from Figma
+	$image    = '';
+
+	if ( is_archive() ) {
+		$title = get_the_archive_title();
+		// Strip "Archive:" etc if needed
+		$title = str_replace( array( 'Archivo: ', 'Archive: ', 'Território: ' ), '', $title );
+		
+		if ( is_tax() || is_category() || is_tag() ) {
+			$subtitle = get_the_archive_description();
+			// Strip tags if needed, or keep them if you want. Let's strip for simplicity in hero.
+			$subtitle = wp_strip_all_tags( $subtitle );
+		}
+	} elseif ( is_search() ) {
+
+		$title = sprintf( esc_html__( 'Resultados para: %s', 'silveira' ), get_search_query() );
+	} elseif ( is_singular() ) {
+		$title = get_the_title();
+		$image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+	} elseif ( is_home() ) {
+		$title = get_the_title( get_option( 'page_for_posts' ) );
+	}
+
+	get_template_part(
+		'template-parts/content',
+		'hero',
+		array(
+			'title'    => $title,
+			'subtitle' => $subtitle,
+			'image'    => $image ? $image : '', // Fallback to empty if no image
+		)
+	);
 }

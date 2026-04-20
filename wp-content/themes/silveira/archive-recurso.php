@@ -9,11 +9,10 @@ get_header();
 ?>
 
 <main id="primary" class="l-main l-main--archive-recurso">
-	<header class="l-main__header">
-		<h1 class="l-main__title"><?php post_type_archive_title(); ?></h1>
-	</header>
+	<?php silveira_hero(); ?>
 
-	<div class="l-main__content l-grid">
+	<div class="o-container">
+
 		<?php
 		if ( have_posts() ) :
 			while ( have_posts() ) :
