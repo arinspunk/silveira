@@ -332,6 +332,43 @@ function silveira_hero() {
 	} elseif ( is_singular() ) {
 		$title = get_the_title();
 		$image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+		
+		if ( is_singular( 'projeto' ) ) {
+			$post_id = get_the_ID();
+			$modalidades = get_the_terms( $post_id, 'modalidade_projeto' );
+			$territorios = get_the_terms( $post_id, 'territorio' );
+			
+			$mod_part = ! empty( $modalidades ) ? implode( ', ', wp_list_pluck( $modalidades, 'name' ) ) : '';
+			
+			$loc_names = array();
+			$com_names = array();
+			
+			if ( ! empty( $territorios ) && ! is_wp_error( $territorios ) ) {
+				foreach ( $territorios as $term ) {
+					if ( $term->parent != 0 ) {
+						$loc_names[] = $term->name;
+						$parent = get_term( $term->parent, 'territorio' );
+						if ( $parent && ! is_wp_error( $parent ) ) {
+							$com_names[] = $parent->name;
+						}
+					} else {
+						$com_names[] = $term->name;
+					}
+				}
+			}
+			
+			$loc_part = implode( ', ', array_unique( $loc_names ) );
+			$com_part = implode( ', ', array_unique( $com_names ) );
+			
+			$parts = array();
+			if ( $mod_part ) $parts[] = $mod_part;
+			if ( $loc_part ) $parts[] = $loc_part;
+			
+			$subtitle = implode( ' – ', $parts );
+			if ( $com_part ) {
+				$subtitle .= ' (' . $com_part . ')';
+			}
+		}
 	} elseif ( is_home() ) {
 		$title = get_the_title( get_option( 'page_for_posts' ) );
 	}

@@ -6,6 +6,8 @@
  */
 
 get_header();
+
+silveira_hero();
 ?>
 
 <main id="primary" class="l-main l-main--single-projeto">
