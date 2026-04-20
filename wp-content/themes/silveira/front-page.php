@@ -26,13 +26,37 @@ if ( $projects_query->have_posts() ) {
 			// Get categories for filtering
 			$modalidades = wp_get_post_terms( get_the_ID(), 'modalidade_projeto', array( 'fields' => 'slugs' ) );
 			$territorios = wp_get_post_terms( get_the_ID(), 'territorio', array( 'fields' => 'id=>slug' ) );
+			$modalidades_obj = get_the_terms( get_the_ID(), 'modalidade_projeto' );
+			$mod_name = ( $modalidades_obj && ! is_wp_error( $modalidades_obj ) ) ? $modalidades_obj[0]->name : '';
+
+			$territorios_obj = get_the_terms( get_the_ID(), 'territorio' );
+			$localidade_name = '';
+			$comarca_name = '';
+			if ( $territorios_obj && ! is_wp_error( $territorios_obj ) ) {
+				foreach ( $territorios_obj as $term ) {
+					if ( $term->parent == 0 ) {
+						$comarca_name = $term->name;
+					} else {
+						$localidade_name = $term->name;
+					}
+				}
+			}
+
+			$overline_parts = array();
+			if ( $mod_name ) $overline_parts[] = $mod_name;
+			if ( $localidade_name ) $overline_parts[] = 'em ' . $localidade_name;
+			if ( $comarca_name ) $overline_parts[] = '(' . $comarca_name . ')';
+			$overline = implode( ' ', $overline_parts );
 			
 			$map_points[] = array(
 				'id'          => get_the_ID(),
 				'title'       => get_the_title(),
+				'excerpt'     => get_the_excerpt(),
+				'overline'    => $overline,
 				'lat'         => (float) $lat,
 				'lng'         => (float) $lng,
 				'url'         => get_permalink(),
+				'lema'        => get_field('projeto_lema'),
 				'modalidades' => $modalidades,
 				'territorios' => array_values($territorios),
 			);
@@ -59,7 +83,7 @@ if ( $projects_query->have_posts() ) {
 			<div class="c-select" id="filter-modalidade">
 				<span class="c-select__label"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
 				<span class="c-select__value"><?php esc_html_e( 'Que procuras?', 'silveira' ); ?></span>
-				<span class="c-select__action o-icon">expand_more</span>
+				<span class="c-select__action o-icon o-icon--sm">expand_more</span>
 				
 				<div class="c-select__dropdown">
 					<?php
@@ -80,7 +104,7 @@ if ( $projects_query->have_posts() ) {
 			<div class="c-select" id="filter-comarca">
 				<span class="c-select__label"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
 				<span class="c-select__value"><?php esc_html_e( 'Em que zona?', 'silveira' ); ?></span>
-				<span class="c-select__action o-icon">expand_more</span>
+				<span class="c-select__action o-icon o-icon--sm">expand_more</span>
 				
 				<div class="c-select__dropdown">
 					<?php
@@ -101,7 +125,7 @@ if ( $projects_query->have_posts() ) {
 			<div class="c-select" id="filter-localidade">
 				<span class="c-select__label"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
 				<span class="c-select__value"><?php esc_html_e( 'Em que vila?', 'silveira' ); ?></span>
-				<span class="c-select__action o-icon">expand_more</span>
+				<span class="c-select__action o-icon o-icon--sm">expand_more</span>
 				
 				<div class="c-select__dropdown">
 					<?php
@@ -125,6 +149,19 @@ if ( $projects_query->have_posts() ) {
 	<!-- Map Container -->
 	<div class="c-map is-locked">
 		<div id="map" class="c-map__container"></div>
+		
+		<!-- Floating toggle button -->
+		<button class="c-btn c-btn--secondary c-btn--l c-btn--has-icon c-btn--map-toggle" id="map-list-toggle" style="opacity: 0; visibility: hidden;">
+			<span class="c-btn__icon o-icon o-icon--xs">arrow_back</span>
+			Ver a lista
+		</button>
+		
+		<!-- Slide out panel -->
+		<div class="c-map-panel" id="map-project-list" style="transform: translateX(100%);">
+			<ul class="c-project-list">
+				<!-- Injected via map.js -->
+			</ul>
+		</div>
 	</div>
 
 

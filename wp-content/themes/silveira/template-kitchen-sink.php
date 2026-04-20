@@ -154,7 +154,7 @@ get_header(); ?>
                 <div class="c-select">
                     <span class="c-select__label">Modalidade educativa</span>
                     <span class="c-select__value">Que procuras?</span>
-                    <span class="c-select__action o-icon">expand_more</span>
+                    <span class="c-select__action o-icon o-icon--sm">expand_more</span>
                     
                     <!-- Simulating open dropdown state for the first item -->
                     <div class="c-select__dropdown c-select__dropdown--open">
@@ -182,7 +182,7 @@ get_header(); ?>
                 <div class="c-select">
                     <span class="c-select__label">Comarca</span>
                     <span class="c-select__value">Em que zona?</span>
-                    <span class="c-select__action o-icon">expand_more</span>
+                    <span class="c-select__action o-icon o-icon--sm">expand_more</span>
                 </div>
             </div>
 
@@ -191,7 +191,7 @@ get_header(); ?>
                 <div class="c-select">
                     <span class="c-select__label">Localidade</span>
                     <span class="c-select__value">Em que vila?</span>
-                    <span class="c-select__action o-icon">expand_more</span>
+                    <span class="c-select__action o-icon o-icon--sm">expand_more</span>
                 </div>
             </div>
         </div>

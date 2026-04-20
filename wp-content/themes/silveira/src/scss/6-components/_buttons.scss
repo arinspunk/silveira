@@ -51,12 +51,12 @@
 	}
 
 	&--secondary {
-		background-color: var(--sil-branco);
+		background-color: var(--sil-pure-white);
 		border-color: var(--sil-violeta-700);
 		color: var(--sil-violeta-700);
 
 		&:disabled {
-			background-color: var(--sil-branco);
+			background-color: var(--sil-pure-white);
 			border-color: var(--sil-violeta-200);
 			color: var(--sil-violeta-200);
 		}
@@ -90,13 +90,6 @@
 		.c-btn__icon {
 			display: flex;
 			align-items: center;
-			width: 16px;
-			height: 16px;
-
-			svg, img {
-				width: 100%;
-				height: 100%;
-			}
 		}
 	}
 
@@ -112,5 +105,34 @@
 	&:focus-visible {
 		outline: 2px solid var(--sil-violeta-700);
 		outline-offset: 2px;
+	}
+
+	/**
+	* List Toggle Button (re-using .c-btn classes from _buttons.scss)
+	*/
+	&--map-toggle {
+		position: absolute;
+		right: 20px;
+		top: 20px;
+		z-index: 1000;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition: 
+			all 0.2s ease-in-out, 
+			right 0.2s ease-in-out, 
+			opacity 0.2s ease-in-out, 
+			visibility 0.2s ease-in-out;
+		
+		&.is-visible {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+
+		&.is-open {
+			// Se mueve hacia la izquierda la misma distancia que ocupa la lista
+			right: calc(min(100%, 476px) + 20px);
+		}
 	}
 }

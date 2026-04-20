@@ -25,13 +25,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let markers = [];
     const points = window.silveiraMapPoints || [];
 
+    const projectListContainer = document.querySelector('.c-project-list');
+
     const renderMarkers = (filteredPoints) => {
         // Clear existing markers
         markers.forEach(m => map.removeLayer(m));
         markers = [];
 
+        // Clear list container
+        if (projectListContainer) {
+            projectListContainer.innerHTML = '';
+        }
+
+        // Define custom icon using Material Symbol
+        const customIcon = L.divIcon({
+            html: '<span class="o-icon o-icon--lg o-icon--filled" style="color: var(--sil-violeta-500); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">location_on</span>',
+            className: 'c-map-marker',
+            iconSize: [24, 24],
+            iconAnchor: [12, 24],
+            popupAnchor: [0, -24]
+        });
+
         filteredPoints.forEach(point => {
-            const marker = L.marker([point.lat, point.lng]).addTo(map);
+            const marker = L.marker([point.lat, point.lng], { icon: customIcon }).addTo(map);
             
             const popupContent = `
                 <div class="c-map-popup">
@@ -44,6 +60,28 @@ document.addEventListener('DOMContentLoaded', () => {
             
             marker.bindPopup(popupContent);
             markers.push(marker);
+
+            // Populate side list
+            if (projectListContainer) {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a href="${point.url}" class="c-project-list-item">
+                        <div class="c-project-list-item__leading">
+                            <span class="o-icon o-icon--filled">location_on</span>
+                        </div>
+                        <div class="c-project-list-item__content">
+                            <p class="c-project-list-item__overline">${point.overline || ''}</p>
+                            <h3 class="c-project-list-item__title">${point.title}</h3>
+                            <p class="c-project-list-item__lema">${point.lema || ''}</p>
+                            <p class="c-project-list-item__supporting">${point.excerpt || ''}</p>
+                        </div>
+                        <div class="c-project-list-item__trailing">
+                            <span class="o-icon">arrow_forward</span>
+                        </div>
+                    </a>
+                `;
+                projectListContainer.appendChild(li);
+            }
         });
     };
 
@@ -56,24 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateFilters = () => {
-        // Dependent Dropdown Logic (Comarcas -> Localidades)
-        const comarcaCheckboxes = document.querySelectorAll('.js-filter-comarca');
-        const selectedComarcas = Array.from(comarcaCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
-        
-        const localidadeCheckboxes = document.querySelectorAll('.js-filter-localidade');
-        
-        localidadeCheckboxes.forEach(cb => {
-            const parentLabel = cb.closest('.c-checkbox');
-            const parentComarca = parentLabel.dataset.parentComarca;
-            
-            if (selectedComarcas.length === 0 || selectedComarcas.includes(parentComarca)) {
-                parentLabel.style.display = 'flex';
-            } else {
-                parentLabel.style.display = 'none';
-                cb.checked = false; // Prevent filtering by a hidden localidade
-            }
-        });
-
         // Get all currently active checkboxes
         const checkboxes = document.querySelectorAll('.c-checkbox__input');
         filters.modalidade = [];
@@ -103,41 +123,27 @@ document.addEventListener('DOMContentLoaded', () => {
         cb.addEventListener('change', updateFilters);
     });
 
-    // 5. UI Helpers: Dropdowns
-    const selects = document.querySelectorAll('.c-select');
-    
-    selects.forEach(select => {
-        const action = select.querySelector('.c-select__action');
-        const value = select.querySelector('.c-select__value');
-        
-        const toggle = (e) => {
-            e.stopPropagation();
-            // Close others
-            selects.forEach(s => {
-                if (s !== select) s.querySelector('.c-select__dropdown').classList.remove('c-select__dropdown--open');
-            });
-            select.querySelector('.c-select__dropdown').classList.toggle('c-select__dropdown--open');
-        };
-
-        select.addEventListener('click', toggle);
-    });
-
-    // Close dropdowns on outside click
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.c-select__dropdown').forEach(d => {
-            d.classList.remove('c-select__dropdown--open');
-        });
-    });
-
-    // Prevent closing when clicking inside dropdown
-    document.querySelectorAll('.c-select__dropdown').forEach(d => {
-        d.addEventListener('click', (e) => e.stopPropagation());
-    });
-
     // 6. Map Scroll UX Optimization (Wheel & Touch Events)
     const mapWrapper = document.querySelector('.c-map');
     const hero = document.querySelector('.c-hero');
     const mainWrapper = document.querySelector('.l-main--map');
+    
+    const listToggleBtn = document.getElementById('map-list-toggle');
+    const listPanel = document.getElementById('map-project-list');
+
+    if (listToggleBtn && listPanel) {
+        listToggleBtn.addEventListener('click', () => {
+            const isOpen = listPanel.classList.toggle('is-open');
+            listToggleBtn.classList.toggle('is-open', isOpen);
+            
+            if (isOpen) {
+                listToggleBtn.innerHTML = `Acochar a lista <span class="c-btn__icon o-icon o-icon--xs">arrow_forward</span>`;
+            } else {
+                listToggleBtn.innerHTML = `<span class="c-btn__icon o-icon o-icon--xs">arrow_back</span> Ver a lista`;
+            }
+        });
+    }
+
     let isMapLocked = true;
     let isAnimating = false;
 
@@ -159,6 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             setTimeout(() => {
                 mapWrapper.classList.remove('is-locked');
+                if (listToggleBtn) {
+                    listToggleBtn.removeAttribute('style');
+                    listToggleBtn.classList.add('is-visible');
+                }
+                if (listPanel) {
+                    listPanel.removeAttribute('style');
+                }
                 isMapLocked = false;
                 isAnimating = false;
                 map.invalidateSize(); // Ensure leaflet recalculates bounds
@@ -171,6 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
             mapWrapper.classList.add('is-locked');
             mainWrapper.classList.remove('is-scrolled');
             
+            if (listToggleBtn) {
+                listToggleBtn.classList.remove('is-visible');
+                listToggleBtn.classList.remove('is-open');
+                listToggleBtn.innerHTML = `<span class="c-btn__icon o-icon o-icon--xs">arrow_back</span> Ver a lista`;
+            }
+            if (listPanel) listPanel.classList.remove('is-open');
+
             setTimeout(() => {
                 isMapLocked = true;
                 isAnimating = false;

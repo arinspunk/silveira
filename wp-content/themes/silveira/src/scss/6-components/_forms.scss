@@ -48,13 +48,9 @@
 		right: 15px;
 		top: 50%;
 		transform: translateY(-50%);
-		transition: transform 0.3s ease;
+		transition: color 0.3s ease;
 		color: var(--sil-violeta-700);
 		pointer-events: none;
-
-		.c-select--active & {
-			transform: translateY(-50%) rotate(180deg);
-		}
 	}
 
 	// Dropdown container attached to the select

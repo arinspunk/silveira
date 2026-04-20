@@ -61,3 +61,28 @@
 		}
 	}
 }
+
+/**
+ * Map Panel
+ */
+.c-map-panel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	max-width: 476px; // Same as width in Figma "476"
+	background-color: #ffffff;
+	padding: 30px 20px;
+	box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+	z-index: 1010;
+	overflow-y: auto;
+	
+	// hidden state
+	transform: translateX(100%);
+	transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+	
+	&.is-open {
+		transform: translateX(0);
+	}
+}

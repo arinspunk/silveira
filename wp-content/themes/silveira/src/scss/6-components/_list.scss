@@ -1,0 +1,92 @@
+/**
+ * Project List Component
+ */
+
+.c-project-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.c-project-list-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 20px;
+	background-color: transparent;
+	transition: opacity 0.2s ease;
+	text-decoration: none;
+	color: inherit;
+	border: 1px solid transparent;
+	border-radius: 10px;
+	transition: border-color 0.2s ease;
+
+	&:hover {
+		opacity: 1;
+		border-color: var(--sil-violeta-300);
+	}
+
+	&__leading {
+		flex: 0 0 24px;
+		margin-right: 16px;
+		color: var(--sil-verde-500);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-top: 2px;
+	}
+
+	&__content {
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__overline {
+		font-family: var(--sil-font-primary);
+		font-size: 13px;
+		font-weight: 400;
+		line-height: 1.235;
+		color: var(--sil-verde-700);
+		margin: 0;
+	}
+
+	&__title {
+		font-family: var(--sil-font-primary);
+		font-size: 24px;
+		font-weight: 400;
+		line-height: 150%;
+		color: var(--sil-verde-800);
+		margin: 0;
+	}
+
+	&__lema {
+		font-family: var(--sil-font-primary);
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 130%;
+		color: var(--sil-verde-700);
+		margin: 0;
+	}
+
+	&__supporting {
+		font-family: var(--sil-font-primary);
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.4;
+		color: var(--sil-verde-700);
+		margin: 0;
+	}
+
+	&__trailing {
+		flex: 0 0 24px;
+		margin-left: 16px;
+		color: var(--sil-violeta-600);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

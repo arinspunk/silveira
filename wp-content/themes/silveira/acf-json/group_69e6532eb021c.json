@@ -3,6 +3,27 @@
     "title": "Projeto",
     "fields": [
         {
+            "key": "field_69e6956067e44",
+            "label": "Lema",
+            "name": "projeto_lema",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_69e6532ecc663",
             "label": "Endereço do projeto",
             "name": "projeto_endereco",
@@ -91,5 +112,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1776702464
+    "modified": 1776719246
 }

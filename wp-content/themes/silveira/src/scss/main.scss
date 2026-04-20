@@ -35,14 +35,13 @@
 
 
 // 6. Components
+@use "6-components/buttons";
+@use "6-components/filter-bar";
+@use "6-components/forms";
 @use "6-components/header";
 @use "6-components/hero";
-// @use "6-components/cards";
-
-
-@use "6-components/forms";
-@use "6-components/filter-bar";
 @use '6-components/map';
+@use '6-components/list';
 
 
 // 7. Utilities (Coming soon)
