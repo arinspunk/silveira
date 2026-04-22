@@ -41,10 +41,17 @@
 	padding: 15px;
 
 	&__title {
-		margin: 0 0 10px;
+		margin: 0 0 5px;
 		font-size: 18px;
 		color: var(--sil-verde-800);
 		font-family: var(--sil-font-main);
+	}
+
+	&__lema {
+		margin: 0 0 15px;
+		font-size: 14px;
+		color: var(--sil-verde-700);
+		font-style: italic;
 	}
 
 	&__link {

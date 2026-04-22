@@ -1,0 +1,17 @@
+/**
+ * 6-COMPONENTS / TAGS
+ */
+
+.c-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: var(--sil-verde-100);
+    color: var(--sil-verde-800);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    white-space: nowrap;
+}

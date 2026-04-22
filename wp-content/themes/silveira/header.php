@@ -38,7 +38,7 @@
 						array(
 							'theme_location' => 'main',
 							'container'      => false,
-							'menu_class'     => 'c-header__menu',
+							'menu_class'     => 'c-main-nav',
 							'fallback_cb'    => false,
 							'depth'          => 1,
 						)

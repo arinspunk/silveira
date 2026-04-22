@@ -42,6 +42,11 @@
 @use "6-components/hero";
 @use '6-components/map';
 @use '6-components/list';
+@use '6-components/project-single';
+@use '6-components/tags';
+@use '6-components/main-nav';
+@use '6-components/footer';
 
 
-// 7. Utilities (Coming soon)
+// 7. Utilities
+@use "7-utilities/themes";

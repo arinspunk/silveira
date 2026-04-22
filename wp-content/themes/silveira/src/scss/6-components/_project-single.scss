@@ -1,0 +1,91 @@
+/**
+ * 6-COMPONENTS / PROJECT SINGLE
+ */
+
+.c-project-single {
+    padding: 60px 0;
+
+    &__header {
+        margin-bottom: 40px;
+    }
+
+    &__meta {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    &__title {
+        font-family: var(--sil-font-primary);
+        font-size: 48px;
+        line-height: 1.1;
+        color: var(--sil-verde-800);
+        margin: 0 0 16px;
+    }
+
+    &__lema {
+        font-family: var(--sil-font-primary);
+        font-size: 24px;
+        line-height: 1.3;
+        color: var(--sil-verde-700);
+        font-style: italic;
+        margin: 0;
+    }
+
+    &__content {
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--sil-verde-800);
+
+        p {
+            margin-bottom: 1.5em;
+        }
+    }
+
+    &__sidebar {
+        background-color: var(--sil-verde-050);
+        padding: 30px;
+        border-radius: 12px;
+        position: sticky;
+        top: 100px;
+    }
+}
+
+.c-project-info-block {
+    margin-bottom: 30px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &__title {
+        font-family: var(--sil-font-primary);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--sil-verde-600);
+        margin: 0 0 12px;
+    }
+
+    &__text {
+        font-size: 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin: 0;
+
+        .o-icon {
+            color: var(--sil-verde-500);
+        }
+    }
+
+    &__tags {
+        a {
+            color: var(--sil-verde-700);
+            text-decoration: underline;
+            &:hover {
+                color: var(--sil-verde-900);
+            }
+        }
+    }
+}

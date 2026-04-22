@@ -35,9 +35,11 @@
 		font-family: var(--sil-font-primary);
 		font-size: var(--sil-fs-xxl);
 		line-height: 100%;
-		color: var(--sil-verde-800);
 		margin: 0;
 		font-weight: 400;
+		.home & {
+			text-transform: lowercase;
+		}
 	}
 
 	&__subtitle {

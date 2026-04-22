@@ -1,0 +1,48 @@
+@use "../1-settings/typography" as *;
+@use "../2-tools/mixins" as *;
+
+/**
+ * 6-COMPONENTS / MAIN NAV
+ * Shared navigation menu component used in both header and footer.
+ */
+
+.c-main-nav {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 40px;
+
+	.menu-item {
+		padding: 0;
+
+		&.current-menu-item,
+		&.current-page-ancestor {
+			a {
+				text-decoration: underline;
+			}
+		}
+
+		a {
+			display: block;
+			text-decoration: none;
+			font-family: var(--sil-font-primary);
+			font-size: var(--sil-fs-md); // 20px
+			color: inherit;
+			line-height: normal;
+			transition: opacity 0.2s ease;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+// Tablet and mobile adjustments
+@media (max-width: 768px) {
+	.c-main-nav {
+		flex-direction: column;
+		gap: 15px;
+	}
+}

@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const popupContent = `
                 <div class="c-map-popup">
                     <h3 class="c-map-popup__title">${point.title}</h3>
+                    ${point.lema ? `<p class="c-map-popup__lema">${point.lema}</p>` : ''}
                     <a href="${point.url}" class="c-map-popup__link">
                         Ver projeto <span class="o-icon">arrow_forward</span>
                     </a>
@@ -72,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="c-project-list-item__content">
                             <p class="c-project-list-item__overline">${point.overline || ''}</p>
                             <h3 class="c-project-list-item__title">${point.title}</h3>
-                            <p class="c-project-list-item__lema">${point.lema || ''}</p>
+                            ${point.lema ? `<p class="c-project-list-item__lema">${point.lema}</p>` : ''}
                             <p class="c-project-list-item__supporting">${point.excerpt || ''}</p>
                         </div>
                         <div class="c-project-list-item__trailing">

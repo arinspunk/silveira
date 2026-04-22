@@ -1,0 +1,75 @@
+@use "../1-settings/colors" as *;
+
+/**
+ * 7-UTILITIES / THEMES
+ * Descriptive color combinations for components (background and text).
+ * 
+ * Naming convention: .u-theme--[base]-[weight]
+ * - bold: Dark background with high contrast light text.
+ * - vibrant: Brand/Vibrant background with contrasting dark/brand text.
+ * - soft: Pale background with dark text for subtle sections.
+ */
+
+// Green Theme (Verde)
+.u-theme--verde-bold {
+	background-color: $verde-800;
+	color: $amarelo-400;
+}
+
+.u-theme--verde-vibrant {
+	background-color: $verde-400;
+	color: $amarelo-900;
+}
+
+.u-theme--verde-soft {
+	background-color: $verde-100;
+	color: $amarelo-900;
+}
+
+// Violet Theme (Violeta)
+.u-theme--violeta-bold {
+	background-color: $violeta-800;
+	color: $vermelho-200;
+}
+
+.u-theme--violeta-vibrant {
+	background-color: $violeta-200;
+	color: $vermelho-900;
+}
+
+.u-theme--violeta-soft {
+	background-color: $violeta-100;
+	color: $vermelho-800;
+}
+
+// Red Theme (Vermelho / Rojo)
+.u-theme--vermelho-bold {
+	background-color: $vermelho-800;
+	color: $violeta-100;
+}
+
+.u-theme--vermelho-vibrant {
+	background-color: $vermelho-200;
+	color: $violeta-800;
+}
+
+.u-theme--vermelho-soft {
+	background-color: $vermelho-050;
+	color: $violeta-600;
+}
+
+// Yellow Theme (Amarelo / Amarillo)
+.u-theme--amarelo-bold {
+	background-color: $amarelo-900;
+	color: $verde-300;
+}
+
+.u-theme--amarelo-vibrant {
+	background-color: $amarelo-500;
+	color: $verde-800;
+}
+
+.u-theme--amarelo-soft {
+	background-color: $amarelo-050;
+	color: $verde-800;
+}
