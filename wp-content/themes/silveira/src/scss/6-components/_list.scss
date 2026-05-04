@@ -27,12 +27,16 @@
 	&:hover {
 		opacity: 1;
 		border-color: var(--sil-violeta-300);
+
+		.c-project-list-item__trailing {
+			transform: translateX(5px);
+		}
 	}
 
 	&__leading {
 		flex: 0 0 24px;
 		margin-right: 16px;
-		color: var(--sil-verde-500);
+		color: var(--sil-violeta-500);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -88,5 +92,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		transition: transform 0.2s ease;
 	}
 }

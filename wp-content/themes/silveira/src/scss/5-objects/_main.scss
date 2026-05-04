@@ -3,14 +3,21 @@
  * Structural layout wrapper for page content.
  */
 
+.l-site-content {
+	transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+	
+	&.is-scrolled {
+		transform: translateY(-231px);
+	}
+
+	&.is-footer-open {
+		transform: translateY(calc(-231px - (var(--sil-footer-height, 400px) - 40px)));
+	}
+}
+
 .l-main {
 	&--map {
-		transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-		
-		// When scrolled, move entire container up by hero height
-		&.is-scrolled {
-			transform: translateY(-231px);
-		}
+		// Individual main styles if needed
 	}
 }
 

@@ -30,10 +30,21 @@ if ( $projects_query->have_posts() ) {
 			$mod_name = ( $modalidades_obj && ! is_wp_error( $modalidades_obj ) ) ? $modalidades_obj[0]->name : '';
 
 			$territorios_obj = get_the_terms( get_the_ID(), 'territorio' );
+			$territorio_slugs = array();
 			$localidade_name = '';
 			$comarca_name = '';
+
 			if ( $territorios_obj && ! is_wp_error( $territorios_obj ) ) {
 				foreach ( $territorios_obj as $term ) {
+					$territorio_slugs[] = $term->slug;
+					// Also add parents if they exist
+					if ($term->parent != 0) {
+						$parent = get_term($term->parent, 'territorio');
+						if ($parent && !is_wp_error($parent)) {
+							$territorio_slugs[] = $parent->slug;
+						}
+					}
+
 					if ( $term->parent == 0 ) {
 						$comarca_name = $term->name;
 					} else {
@@ -41,6 +52,7 @@ if ( $projects_query->have_posts() ) {
 					}
 				}
 			}
+			$territorio_slugs = array_unique($territorio_slugs);
 
 			$overline_parts = array();
 			if ( $mod_name ) $overline_parts[] = $mod_name;
@@ -57,8 +69,9 @@ if ( $projects_query->have_posts() ) {
 				'lng'         => (float) $lng,
 				'url'         => get_permalink(),
 				'lema'        => get_field('projeto_lema'),
+				'image'       => get_the_post_thumbnail_url( get_the_ID(), 'large' ),
 				'modalidades' => $modalidades,
-				'territorios' => array_values($territorios),
+				'territorios' => array_values($territorio_slugs),
 			);
 		}
 	}

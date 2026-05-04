@@ -62,6 +62,6 @@
 
 	<?php wp_footer(); ?>
 </footer>
-
+</div><!-- .l-site-content -->
 </body>
 </html>

@@ -50,13 +50,43 @@
 **[3.2]** ✅ Layer: Components (Buttons)
 > **Date completed:** 2026-04-18
 
-**[3.3]** ⏳ Layer: Components (Cards)
+**[3.3]** ✅ Layer: Components (Cards)
+> **What to do:** Implement card styles for project listings.
+> **Date completed:** 2026-05-04 (Updated)
+> **Work done:** 
+> - Created `_stacked-card.scss` following Figma specs (Isaac font, Material specs).
+> - Created `_map-card.scss` optimized for Leaflet popups with compact padding.
+> - Standardized Shadow Tokens (`sm`, `md`, `lg`) in `_tokens.scss`.
+> - Refactored `_cards.scss` to use global shadow tokens.
 
-**[3.4]** ⏳ Layer: Components (Forms)
+**[3.4]** ✅ Layer: Components (Forms)
 > **What to do:** Implement decoupled `.c-select` and `.c-checkbox` custom inputs based on Figma map filters design, storing them in `6-components/_forms.scss`.
+> **Date completed:** 2026-05-04
+> **Work done:** Implemented custom select dropdowns and BEM-styled checkboxes for the map filtering system.
 
-**[3.5]** ⏳ Layer: Components (Filter Bar)
+**[3.5]** ✅ Layer: Components (Filter Bar)
 > **What to do:** Implement `.c-filter-bar` structural layout for the filters container in `6-components/_filter-bar.scss`.
+> **Date completed:** 2026-05-04
+
+**[3.6]** ✅ Layer: Components (Footer)
+> **Date completed:** 2026-04-22
+> **Work done:** Implemented `.c-footer` with brand and collaborative sections.
+> **Commit:** `20ce3cd` feat(theme): refactor navigation, implement project template and polish UI
+
+**[3.7]** ✅ Layer: Components (Navigation)
+> **Date completed:** 2026-04-22
+> **Work done:** Created `.c-main-nav` component to unify header and footer navigation styles.
+> **Commit:** `20ce3cd` feat(theme): refactor navigation, implement project template and polish UI
+
+**[3.8]** ✅ Layer: Components (Project Single)
+> **Date completed:** 2026-04-22
+> **Work done:** Implemented styles for single project view in `_project-single.scss`.
+> **Commit:** `20ce3cd` feat(theme): refactor navigation, implement project template and polish UI
+
+**[3.9]** ✅ Layer: Utilities (Themes)
+> **Date completed:** 2026-04-22
+> **Work done:** Added brand color utility themes in `7-utilities/_themes.scss`.
+> **Commit:** `20ce3cd` feat(theme): refactor navigation, implement project template and polish UI
 
 ---
 

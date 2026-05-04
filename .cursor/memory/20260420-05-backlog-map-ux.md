@@ -30,3 +30,12 @@
 > - Enable pointer events on `.c-map` once docked.
 > - Allow scrolling back up smoothly.
 
+---
+
+## Phase 3: Popups & Content
+**[3.1]** ✅ Enhance Map Popups
+> **What to do:** Show project `projeto_lema` in the Leaflet popups.
+> **Date completed:** 2026-04-22
+> **Work done:** Updated `map.js` to include project lema in popup HTML and refined styles.
+> **Commit:** `20ce3cd` feat(theme): refactor navigation, implement project template and polish UI
+

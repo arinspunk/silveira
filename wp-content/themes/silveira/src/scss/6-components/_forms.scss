@@ -65,7 +65,7 @@
 		border: 1px solid var(--sil-violeta-700);
 		border-radius: 5px;
 		padding: 10px 0;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		box-shadow: var(--sil-shadow-sm);
 		display: none; // Hidden by default, toggled via JS or modifier
 
 		&--open {

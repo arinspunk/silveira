@@ -60,8 +60,9 @@
 
 **[4.1]** ✅ Projeto Templates (Archive/Single)
 > **What to do:** Create `archive-projeto.php` and `single-projeto.php` with a basic loop structure using BEM classes and Google Fonts as per design guidelines.
-> **Date completed:** 2026-04-17
-> **Work done:** Created archive and single templates for projects using get_template_part.
+> **Date completed:** 2026-04-22
+> **Work done:** Created archive and single templates. Implemented `template-parts/content-projeto.php` with metadata (lema, endereco, territories) and responsive layout.
+> **Commit:** `20ce3cd` feat(theme): refactor navigation, implement project template and polish UI
 
 **[4.2]** ✅ Evento Templates (Archive/Single)
 > **What to do:** Create `archive-evento.php` and `single-evento.php` for the Agenda views.
