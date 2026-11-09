@@ -4,12 +4,12 @@
 
 ## 1. Desbloquear el build de frontend (antes de `harden-map-output`)
 
-- [ ] 1.1 Añadir `L: 'readonly'` a los globals de `src/**/*.js` en `eslint.config.js` (design D6); verificar que `npm run lint` en el theme no reporta `no-undef` para `L`
-- [ ] 1.2 Corregir el resto de errores de `npm run validate` (ESLint + Stylelint) en `src/`; verificar que `npm run validate` termina con código 0
-- [ ] 1.3 Aplicar `npm run format` en el theme en un commit propio y añadir su hash a `.git-blame-ignore-revs`; verificar que `npm run format:check` pasa
-- [ ] 1.4 Crear `.nvmrc` (Node 22) en la raíz y `engines.node` en el `package.json` del theme (design D5); verificar que `nvm use` lo detecta y `npm ci` en el theme funciona
-- [ ] 1.5 Eliminar `stylelint.config.js` de la raíz; verificar que lint-staged sigue usando el del theme (commit de prueba con un `.scss` modificado ejecuta stylelint sin error de configuración)
-- [ ] 1.6 Ejecutar `npm run build` y commitear `assets/` regenerado; verificar que `grep -c "silveira:slide-up" assets/js/main-*.js` ≥ 1 y que un segundo `npm run build` no deja cambios en `git status assets/`
+- [x] 1.1 Añadir `L: 'readonly'` a los globals de `src/**/*.js` en `eslint.config.js` (design D6); verificar que `npm run lint` en el theme no reporta `no-undef` para `L`
+- [x] 1.2 Corregir el resto de errores de `npm run validate` (ESLint + Stylelint) en `src/`; verificar que `npm run validate` termina con código 0
+- [x] 1.3 Aplicar `npm run format` en el theme en un commit propio y añadir su hash a `.git-blame-ignore-revs`; verificar que `npm run format:check` pasa
+- [x] 1.4 Crear `.nvmrc` (Node 22) en la raíz y `engines.node` en el `package.json` del theme (design D5); verificar que `nvm use` lo detecta y `npm ci` en el theme funciona
+- [x] 1.5 Eliminar `stylelint.config.js` de la raíz; verificar que lint-staged sigue usando el del theme (commit de prueba con un `.scss` modificado ejecuta stylelint sin error de configuración)
+- [x] 1.6 Ejecutar `npm run build` y commitear `assets/` regenerado; verificar que `grep -c "silveira:slide-up" assets/js/main-*.js` ≥ 1 y que un segundo `npm run build` no deja cambios en `git status assets/`
 
 ## 2. Ampliar y limpiar el análisis PHP (después de `harden-map-output`)
 
