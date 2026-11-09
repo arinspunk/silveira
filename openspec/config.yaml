@@ -1,0 +1,39 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+context: |
+  Escribe todos los artefactos (proposal, design, specs, tasks) en castellano; los nombres de requisitos y escenarios de las specs van en inglés.
+  Los textos visibles del sitio y las etiquetas del admin van en galego reintegrado, variante "umha"/"-çom"/"nom", siempre con gettext y text domain `silveira`. La revisión lingüística es posterior y no bloquea ningún change.
+  El equipo no tiene PHP en el host: los comandos PHP (composer, PHPCS, PHPStan) se ejecutan con Docker (`composer:2`) y WP-CLI con `docker compose --profile tools run --rm wpcli`.
+  `wp-content/themes/silveira/assets/` está versionado porque el servidor de producción no tiene Node. El hook pre-commit lo regenera y la CI comprueba que coincide con `src/`; los changes no necesitan tareas propias de build.
+  Aplica los changes de uno en uno y en orden, mergeando cada uno antes de empezar el siguiente, para evitar conflictos en `assets/`.
+  Si un change modifica el marcado o el comportamiento del mapa o de la portada, debe incluir una tarea para mantener al día el smoke test de Playwright (`tests/e2e/`).
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

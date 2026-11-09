@@ -5,7 +5,7 @@
 
 .l-site-content {
 	transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-	
+
 	&.is-scrolled {
 		transform: translateY(-231px);
 	}
@@ -20,4 +20,3 @@
 		// Individual main styles if needed
 	}
 }
-

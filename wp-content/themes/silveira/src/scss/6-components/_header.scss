@@ -55,7 +55,7 @@
 	}
 
 	// Mobile hidden by default (need to implement toggle later)
-	@media (max-width: 767px) {
+	@media (width <= 767px) {
 		&__menu {
 			display: none;
 		}

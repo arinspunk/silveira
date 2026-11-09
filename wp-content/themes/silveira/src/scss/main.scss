@@ -12,34 +12,33 @@
  */
 
 // 1. Settings
-@forward "1-settings/colors";
-@forward "1-settings/typography";
-@forward "1-settings/tokens";
+@forward '1-settings/colors';
+@forward '1-settings/typography';
+@forward '1-settings/tokens';
 
 // 2. Tools
-@forward "2-tools/mixins";
+@forward '2-tools/mixins';
 
 // 3. Generic
-@use "3-generic/reset";
+@use '3-generic/reset';
 
 // 4. Elements
-@use "4-elements/base";
-@use "4-elements/icons";
-@use "4-elements/headings";
+@use '4-elements/base';
+@use '4-elements/icons';
+@use '4-elements/headings';
 
 // 5. Objects
-@use "5-objects/container";
-@use "5-objects/row";
-@use "5-objects/column";
-@use "5-objects/main";
-
+@use '5-objects/container';
+@use '5-objects/row';
+@use '5-objects/column';
+@use '5-objects/main';
 
 // 6. Components
-@use "6-components/buttons";
-@use "6-components/filter-bar";
-@use "6-components/forms";
-@use "6-components/header";
-@use "6-components/hero";
+@use '6-components/buttons';
+@use '6-components/filter-bar';
+@use '6-components/forms';
+@use '6-components/header';
+@use '6-components/hero';
 @use '6-components/map';
 @use '6-components/list';
 @use '6-components/project-single';
@@ -50,6 +49,5 @@
 @use '6-components/stacked-card';
 @use '6-components/map-card';
 
-
 // 7. Utilities
-@use "7-utilities/themes";
+@use '7-utilities/themes';

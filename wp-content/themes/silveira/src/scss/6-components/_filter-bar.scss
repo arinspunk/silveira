@@ -18,7 +18,7 @@
 	z-index: 101;
 
 	// Responsive handling
-	@media (max-width: 767px) {
+	@media (width <= 767px) {
 		flex-direction: column;
 		align-items: stretch;
 		padding: 20px;

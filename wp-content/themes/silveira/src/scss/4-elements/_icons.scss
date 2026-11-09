@@ -4,7 +4,7 @@
  */
 
 .o-icon {
-	font-family: "Material Symbols Outlined", sans-serif;
+	font-family: 'Material Symbols Outlined', sans-serif;
 	font-weight: normal;
 	font-style: normal;
 	font-size: 24px; // Default size
@@ -21,30 +21,46 @@
 
 	// Support for variable font features
 	font-variation-settings:
-		"FILL" 0,
-		"wght" 400,
-		"GRAD" 0,
-		"opsz" 24;
+		'FILL' 0,
+		'wght' 400,
+		'GRAD' 0,
+		'opsz' 24;
 
 	// Modifiers for filling icons
 	&--filled {
-		font-variation-settings: "FILL" 1;
+		font-variation-settings: 'FILL' 1;
 	}
 
 	// Size Modifiers
-	&--xs { font-size: 16px; }
-	&--sm { font-size: 20px; }
-	&--lg { font-size: 32px; }
-	&--xl { font-size: 48px; }
+	&--xs {
+		font-size: 16px;
+	}
+
+	&--sm {
+		font-size: 20px;
+	}
+
+	&--lg {
+		font-size: 32px;
+	}
+
+	&--xl {
+		font-size: 48px;
+	}
 
 	// Weight Modifiers
-	&--light { font-variation-settings: "wght" 200; }
-	&--bold { font-variation-settings: "wght" 700; }
+	&--light {
+		font-variation-settings: 'wght' 200;
+	}
+
+	&--bold {
+		font-variation-settings: 'wght' 700;
+	}
 }
 
 // Global mixin for easy usage in other components
 @mixin icon-font {
-	font-family: "Material Symbols Outlined", sans-serif;
+	font-family: 'Material Symbols Outlined', sans-serif;
 	font-variation-settings: inherit;
 	font-size: inherit;
 	display: inline-block;

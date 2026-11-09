@@ -20,7 +20,6 @@
 		}
 	}
 
-
 	// Content Group (Left 6 columns)
 	&__content {
 		display: flex;
@@ -37,6 +36,7 @@
 		line-height: 100%;
 		margin: 0;
 		font-weight: 400;
+
 		.home & {
 			text-transform: lowercase;
 		}

@@ -1,4 +1,4 @@
-@use "../1-settings/tokens" as tokens;
+@use '../1-settings/tokens' as tokens;
 
 /**
  * 5-OBJECTS / ROW
@@ -18,7 +18,7 @@
 		margin-left: 0;
 
 		> .o-col,
-		> [class*="o-col-"] {
+		> [class*='o-col-'] {
 			padding-right: 0;
 			padding-left: 0;
 		}

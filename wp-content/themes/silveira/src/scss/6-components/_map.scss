@@ -3,9 +3,7 @@
  * Styling for the Leaflet map container on the front page.
  */
 
-
 .c-map {
-
 	width: 100%;
 	height: calc(100vh - 122px - 40px); // 122px (header+filter) + 40px gap for footer
 	min-height: 460px;
@@ -23,7 +21,6 @@
 			cursor: pointer;
 		}
 	}
-
 
 	&__container {
 		width: 100%;
@@ -52,7 +49,7 @@
 		// Ensure buttons keep their brand colors
 		.c-btn--secondary {
 			color: var(--sil-violeta-700);
-			
+
 			&:hover {
 				color: var(--sil-violeta-700);
 			}
@@ -81,16 +78,16 @@
 	height: 100%;
 	width: 100%;
 	max-width: 476px; // Same as width in Figma "476"
-	background-color: #ffffff;
+	background-color: #fff;
 	padding: 30px 20px;
 	box-shadow: var(--sil-shadow-lg);
 	z-index: 1010;
 	overflow-y: auto;
-	
+
 	// hidden state
 	transform: translateX(100%);
 	transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-	
+
 	&.is-open {
 		transform: translateX(0);
 	}
