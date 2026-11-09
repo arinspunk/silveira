@@ -1,5 +1,5 @@
-@use "colors" as *;
-@use "typography" as *;
+@use 'colors' as *;
+@use 'typography' as *;
 
 /**
  * 1-SETTINGS / TOKENS
@@ -12,12 +12,12 @@ $grid-gutter: 20px !default;
 
 // Standard Breakpoints (Bootstrap 5 based)
 $breakpoints: (
-	"xs": 0,
-	"sm": 576px,
-	"md": 768px,
-	"lg": 992px,
-	"xl": 1200px,
-	"xxl": 1400px,
+	'xs': 0,
+	'sm': 576px,
+	'md': 768px,
+	'lg': 992px,
+	'xl': 1200px,
+	'xxl': 1400px,
 ) !default;
 
 :root {
@@ -38,7 +38,6 @@ $breakpoints: (
 	--sil-fs-lg: #{$font-size-lg};
 	--sil-fs-xl: #{$font-size-xl};
 	--sil-fs-xxl: #{$font-size-xxl};
-
 
 	// Grid Tokens
 	--sil-gutter: #{$grid-gutter};

@@ -1,5 +1,5 @@
-@use "sass:math";
-@use "../1-settings/tokens" as tokens;
+@use 'sass:math';
+@use '../1-settings/tokens' as tokens;
 
 /**
  * 5-OBJECTS / COLUMN
@@ -8,7 +8,7 @@
 
 // Base column styles
 .o-col,
-[class*="o-col-"] {
+[class*='o-col-'] {
 	position: relative;
 	width: 100%;
 	padding-right: math.div(tokens.$grid-gutter, 2);
@@ -31,10 +31,10 @@
 // Column Generation Loop
 @each $breakpoint, $width in tokens.$breakpoints {
 	@media (min-width: $width) {
-		$infix: "";
+		$infix: '';
 
-		@if $breakpoint != "xs" {
-			$infix: "-#{$breakpoint}";
+		@if $breakpoint != 'xs' {
+			$infix: '-#{$breakpoint}';
 		}
 
 		@for $i from 1 through tokens.$grid-columns {

@@ -121,15 +121,15 @@
 		border-color: var(--sil-violeta-600);
 
 		&::after {
-			content: "check";
-			font-family: "Material Symbols Outlined", sans-serif;
+			content: 'check';
+			font-family: 'Material Symbols Outlined', sans-serif;
 			font-size: 16px;
 			color: var(--sil-violeta-600);
 			position: absolute;
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
-			font-variation-settings: "wght" 700;
+			font-variation-settings: 'wght' 700;
 		}
 	}
 
