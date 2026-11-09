@@ -17,21 +17,11 @@
 	gap: 12px;
 	padding: 20px;
 	background-color: transparent;
-	transition: opacity 0.2s ease;
 	text-decoration: none;
 	color: inherit;
 	border: 1px solid transparent;
 	border-radius: 10px;
 	transition: border-color 0.2s ease;
-
-	&:hover {
-		opacity: 1;
-		border-color: var(--sil-violeta-300);
-
-		.c-project-list-item__trailing {
-			transform: translateX(5px);
-		}
-	}
 
 	&__leading {
 		flex: 0 0 24px;
@@ -93,5 +83,14 @@
 		align-items: center;
 		justify-content: center;
 		transition: transform 0.2s ease;
+	}
+
+	&:hover {
+		opacity: 1;
+		border-color: var(--sil-violeta-300);
+
+		.c-project-list-item__trailing {
+			transform: translateX(5px);
+		}
 	}
 }

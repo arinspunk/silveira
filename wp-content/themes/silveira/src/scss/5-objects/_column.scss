@@ -32,6 +32,7 @@
 @each $breakpoint, $width in tokens.$breakpoints {
 	@media (min-width: $width) {
 		$infix: "";
+
 		@if $breakpoint != "xs" {
 			$infix: "-#{$breakpoint}";
 		}

@@ -152,12 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const syncFilterOptions = () => {
         const checkboxes = document.querySelectorAll('.c-checkbox__input');
 
-        // 1. Get points matching each group independently
-        const matchesM = points.filter(p => filters.modalidade.length === 0 || filters.modalidade.some(m => p.modalidades.includes(m)));
-        const matchesC = points.filter(p => filters.comarca.length === 0 || filters.comarca.some(t => p.territorios.includes(t)));
-        const matchesL = points.filter(p => filters.localidade.length === 0 || filters.localidade.some(t => p.territorios.includes(t)));
-
-        // 2. Determine available options for each group
+        // 1. Determine available options for each group
         // Modalidades are restricted by Comarca AND Localidade
         const availableM = new Set();
         points.forEach(p => {
@@ -188,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 3. Update UI
+        // 2. Update UI
         checkboxes.forEach(cb => {
             const val = cb.value;
             const isM = cb.dataset.filter === 'modalidade';

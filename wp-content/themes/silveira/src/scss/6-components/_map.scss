@@ -5,7 +5,6 @@
 
 
 .c-map {
-
 	width: 100%;
 	height: calc(100vh - 122px - 40px); // 122px (header+filter) + 40px gap for footer
 	min-height: 460px;
@@ -81,7 +80,7 @@
 	height: 100%;
 	width: 100%;
 	max-width: 476px; // Same as width in Figma "476"
-	background-color: #ffffff;
+	background-color: #fff;
 	padding: 30px 20px;
 	box-shadow: var(--sil-shadow-lg);
 	z-index: 1010;

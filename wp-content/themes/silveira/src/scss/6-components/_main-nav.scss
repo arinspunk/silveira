@@ -16,13 +16,6 @@
 	.menu-item {
 		padding: 0;
 
-		&.current-menu-item,
-		&.current-page-ancestor {
-			a {
-				text-decoration: underline;
-			}
-		}
-
 		a {
 			display: block;
 			text-decoration: none;
@@ -36,11 +29,18 @@
 				text-decoration: underline;
 			}
 		}
+
+		&.current-menu-item,
+		&.current-page-ancestor {
+			a {
+				text-decoration: underline;
+			}
+		}
 	}
 }
 
 // Tablet and mobile adjustments
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	.c-main-nav {
 		flex-direction: column;
 		gap: 15px;

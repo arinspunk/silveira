@@ -92,12 +92,6 @@
 		opacity: 0;
 		width: 0;
 		height: 0;
-
-		// Focus state for accessibility
-		&:focus-visible ~ .c-checkbox__box {
-			outline: 2px solid var(--sil-violeta-700);
-			outline-offset: 2px;
-		}
 	}
 
 	&__box {
@@ -113,6 +107,12 @@
 		margin-right: 12px;
 		transition: all 0.2s ease;
 		position: relative; // Avoid stylelint position conflict if inner icon relies on it
+	}
+
+	// Focus state for accessibility
+	&__input:focus-visible ~ &__box {
+		outline: 2px solid var(--sil-violeta-700);
+		outline-offset: 2px;
 	}
 
 	// Active State

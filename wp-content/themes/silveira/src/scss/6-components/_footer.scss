@@ -73,7 +73,7 @@
 }
 
 // Tablet and mobile adjustments
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	.c-footer {
 		&__top {
 			flex-direction: column;
