@@ -3,6 +3,9 @@
 	"private": true,
 	"type": "module",
 	"description": "Vite build outputs to assets/ (committed for deploy without Node on server). Run npm run build after src/ changes. Use npm run build (not vite build alone) so lint runs via prebuild.",
+	"engines": {
+		"node": ">=22 <23"
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
