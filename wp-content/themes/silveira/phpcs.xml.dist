@@ -2,10 +2,8 @@
 <ruleset name="Silveira">
 	<description>WordPress theme silveira — PHPCS (WPCS)</description>
 
-	<file>functions.php</file>
-	<file>header.php</file>
-	<file>footer.php</file>
-	<file>index.php</file>
+	<file>.</file>
+	<arg name="extensions" value="php"/>
 
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
@@ -15,4 +13,20 @@
 	<config name="testVersion" value="8.0-"/>
 
 	<rule ref="WordPress"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="silveira"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="silveira"/>
+			</property>
+		</properties>
+	</rule>
 </ruleset>
