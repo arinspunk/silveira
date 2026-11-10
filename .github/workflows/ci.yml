@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wp-content/themes/silveira
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: wp-content/themes/silveira/package-lock.json
+
+      - run: npm ci
+      - run: npm run validate
+      - run: npm run format:check
+      - run: npm run build
+
+      - name: assets/ coincide con src/
+        run: |
+          if ! git diff --exit-code --stat -- assets/ || [ -n "$(git status --porcelain -- assets/)" ]; then
+            git status --porcelain -- assets/
+            echo "::error::assets/ no coincide con src/. Ejecuta 'npm run build' en wp-content/themes/silveira y commitea assets/ (el hook pre-commit lo hace solo si está instalado: 'npm install' en la raíz)."
+            exit 1
+          fi
+
+      - name: Subir assets/ generados (diagnóstico)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: assets-ci
+          path: wp-content/themes/silveira/assets/
+          retention-days: 7
+
+  php:
+    name: php
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wp-content/themes/silveira
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: none
+
+      - run: composer install --no-interaction --no-progress
+      - run: composer run lint
+      - run: composer run analyse -- --no-progress

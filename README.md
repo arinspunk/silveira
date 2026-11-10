@@ -5,8 +5,8 @@ WordPress project with a classic theme in `wp-content/themes/silveira/`, **Vite*
 ## Prerequisites
 
 - Docker (Docker Desktop on macOS/Windows, or Docker Engine on Linux)
-- Node.js (for the theme toolchain and repo-root Git hooks)
-- Optional: PHP + Composer on the host for PHPCS/PHPStan; otherwise use Composer via Docker (see below)
+- Node.js **22** (pinned in `.nvmrc`; run `nvm use` at the repo root) for the theme toolchain and repo-root Git hooks
+- PHP + Composer on the host are **not** required: PHPCS/PHPStan run through Docker (`composer:2`), see [PHP quality](#php-quality)
 
 ## First-time setup
 
@@ -43,7 +43,9 @@ WordPress project with a classic theme in `wp-content/themes/silveira/`, **Vite*
    npm install
    ```
 
-   **Why two `node_modules`?** The **repository root** only installs **Husky** and **lint-staged** (Git runs hooks from the root). The **theme** installs **Vite**, ESLint, Prettier, Stylelint, etc. Pre-commit runs ESLint/Prettier/Stylelint with `npx --prefix wp-content/themes/silveira`, so those tools use the **theme’s** `node_modules` without duplicating them at the root. This split is intentional.
+   **Why two `node_modules`?** The **repository root** only installs **Husky** and **lint-staged** (Git runs hooks from the root). The **theme** installs **Vite**, ESLint, Prettier, Stylelint, etc. The pre-commit tasks `cd` into the theme before running them, so they use the **theme’s** `node_modules` without duplicating them at the root. This split is intentional.
+
+   > **The root `npm install` is what installs the Git hooks.** Without it, commits run no checks at all and `assets/` is not rebuilt.
 
 4. **Install PHP dev tools (theme)**
 
@@ -109,27 +111,62 @@ cd wp-content/themes/silveira
 npm run build
 ```
 
-Output goes to **`assets/`**, including **`assets/.vite/manifest.json`**. **Commit** these files when they change so deployments do not require a Node build on the server.
+Output goes to **`assets/`**, including **`assets/.vite/manifest.json`**. These files are **committed** so deployments do not require a Node build on the server. You normally don't need to run the build by hand: the pre-commit hook rebuilds and stages `assets/` whenever a commit touches `src/`, `vite.config.js` or `package-lock.json`, and CI fails if `assets/` does not match `src/`.
 
 ## Git hooks (Husky)
 
-Hooks live at the **repository root**. After `npm install` at the root, **`pre-commit`** runs **lint-staged**: ESLint / Prettier / Stylelint via the theme’s `node_modules`, and **PHPCS** on staged PHP when `wp-content/themes/silveira/vendor/bin/phpcs` exists and the system `php` runs. If `vendor/` is missing or PHP cannot start, PHPCS is skipped with a message (fix local PHP or run checks in CI / Docker).
+Hooks live at the **repository root** and are installed by `npm install` at the root. **`pre-commit`** runs **lint-staged** (config in `lint-staged.config.mjs`) sequentially on the staged files:
 
-## PHP quality (optional)
+1. **JS / config files**: ESLint `--fix` + Prettier (theme’s `node_modules`).
+2. **CSS / SCSS**: Stylelint `--fix` + Prettier.
+3. **PHP** (`scripts/lint-staged-phpcs.sh`): PHPCS with local PHP if available; otherwise **through Docker** (`composer:2`, installs `vendor/` on first run). If neither PHP nor Docker is available it prints a visible warning and lets the commit through — CI will still block it.
+4. **Assets** (`scripts/build-assets.sh`): if the commit touches `src/**`, `vite.config.js` or `package-lock.json`, runs `npm run build` once and adds `assets/` to the same commit. Commits that don't touch those files skip the build.
 
-From `wp-content/themes/silveira`:
+Tip: `docker pull composer:2` once so the first PHP commit isn't slow.
+
+## PHP quality
+
+PHPCS (WordPress Coding Standards, text domain and prefix `silveira`) and PHPStan (level 5, WordPress + ACF stubs) cover the **whole theme** except `vendor/`, `node_modules/` and `assets/`. Both must pass with zero errors (no baseline).
+
+From `wp-content/themes/silveira`, via Docker (no PHP needed on the host):
 
 ```bash
-composer run lint      # PHPCS (WordPress Coding Standards)
-composer run analyse   # PHPStan
+docker run --rm -v "$PWD":/app -w /app composer:2 composer install
+docker run --rm -v "$PWD":/app -w /app composer:2 composer run lint      # PHPCS
+docker run --rm -v "$PWD":/app -w /app composer:2 composer run lint:fix  # PHPCBF (auto-fix)
+docker run --rm -v "$PWD":/app -w /app composer:2 composer run analyse   # PHPStan
 ```
 
-Or via Docker:
+With PHP + Composer installed locally, the same `composer run …` commands work directly.
+
+## Continuous integration
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and on pushes to `main`. Both jobs must be green:
+
+| Job | Checks |
+|-----|--------|
+| `frontend` | `npm ci`, `npm run validate` (ESLint + Stylelint), `npm run format:check` (Prettier), `npm run build`, then fails if `assets/` differs from the committed one (changed, new or deleted files). On failure it uploads the generated `assets/` as an artifact for diagnosis. |
+| `php` | PHP 8.2, `composer install`, `composer run lint` (PHPCS), `composer run analyse` (PHPStan). |
+
+To reproduce locally, from `wp-content/themes/silveira`:
 
 ```bash
-docker run --rm -v "$PWD":/app -w /app composer:2 composer run lint
-docker run --rm -v "$PWD":/app -w /app composer:2 composer run analyse
+npm ci && npm run validate && npm run format:check && npm run build
+git status --porcelain -- assets/   # must print nothing
+docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && composer run lint && composer run analyse'
 ```
+
+If the `frontend` job reports that `assets/` is out of date, run `npm run build` in the theme and commit `assets/` (or make sure the hooks are installed with `npm install` at the root).
+
+## Git blame and mass reformatting
+
+Commits that only reformat code (Prettier, phpcbf) are listed in **`.git-blame-ignore-revs`**. Tell Git to skip them in `git blame` (once per clone):
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
+GitHub's blame view applies this file automatically.
 
 ## Project layout (high level)
 
@@ -139,7 +176,12 @@ docker run --rm -v "$PWD":/app -w /app composer:2 composer run analyse
 | `wp-content/themes/silveira/` | Theme: Vite entry `src/main.js`, build output `assets/` |
 | `package.json` (root) | Husky + lint-staged only → **`node_modules/` at repo root** |
 | `wp-content/themes/silveira/package.json` | Vite + linters + build scripts → **`node_modules/` under the theme** |
-| `scripts/lint-staged-phpcs.sh` | PHPCS helper for lint-staged |
+| `lint-staged.config.mjs` | Pre-commit tasks (lint, PHPCS, assets build) |
+| `scripts/lint-staged-phpcs.sh` | PHPCS for staged PHP: local PHP → Docker → warning |
+| `scripts/build-assets.sh` | Rebuilds and stages `assets/` from the pre-commit hook |
+| `.github/workflows/ci.yml` | CI: `frontend` and `php` jobs |
+| `.nvmrc` | Node version (22) for local and CI |
+| `.git-blame-ignore-revs` | Reformatting commits hidden from `git blame` |
 
 ## WP-CLI (optional)
 

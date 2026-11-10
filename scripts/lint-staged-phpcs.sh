@@ -1,19 +1,45 @@
 #!/usr/bin/env sh
-# Runs PHPCS on staged PHP paths from repo root. Skips if Composer deps are missing.
+# PHPCS sobre los PHP staged del theme (lo llama lint-staged desde la raíz).
+# Cascada: PHP local + vendor/ -> Docker (composer:2) -> aviso visible y exit 0 (la CI bloqueará).
 set -eu
+
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PHPCS="$ROOT/wp-content/themes/silveira/vendor/bin/phpcs"
-STD="$ROOT/wp-content/themes/silveira/phpcs.xml.dist"
-if [ ! -x "$PHPCS" ]; then
-	echo "silveira: skip PHPCS (run: cd wp-content/themes/silveira && composer install)"
-	exit 0
+THEME="$ROOT/wp-content/themes/silveira"
+STD="phpcs.xml.dist"
+
+# lint-staged pasa rutas absolutas; las convertimos a relativas al theme.
+FILES=""
+for f in "$@"; do
+	case "$f" in
+		"$THEME"/*) rel="${f#"$THEME"/}" ;;
+		wp-content/themes/silveira/*) rel="${f#wp-content/themes/silveira/}" ;;
+		*) continue ;;
+	esac
+	FILES="$FILES $rel"
+done
+[ -z "$FILES" ] && exit 0
+
+# 1. PHP local.
+if command -v php >/dev/null 2>&1 && php -r 'exit(0);' >/dev/null 2>&1 && [ -x "$THEME/vendor/bin/phpcs" ]; then
+	cd "$THEME"
+	# shellcheck disable=SC2086
+	exec vendor/bin/phpcs --standard="$STD" $FILES
 fi
-if ! command -v php >/dev/null 2>&1; then
-	echo "silveira: skip PHPCS (php not in PATH)"
-	exit 0
+
+# 2. Docker.
+if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+	# shellcheck disable=SC2086
+	exec docker run --rm -v "$THEME":/app -w /app composer:2 \
+		sh -c '[ -x vendor/bin/phpcs ] || composer install -q --no-interaction; exec vendor/bin/phpcs --standard="$0" "$@"' \
+		"$STD" $FILES
 fi
-if ! php -r 'exit(0);' >/dev/null 2>&1; then
-	echo "silveira: skip PHPCS (PHP not runnable; fix local PHP or run phpcs via Docker)"
-	exit 0
-fi
-exec "$PHPCS" --standard="$STD" "$@"
+
+# 3. Ni PHP ni Docker.
+cat >&2 <<'MSG'
+
+  ⚠️  silveira: PHPCS NO se ha ejecutado (no hay PHP local ni Docker disponible).
+      El commit continúa, pero la CI fallará si hay infracciones.
+      Arranca Docker Desktop o instala PHP y vuelve a probar.
+
+MSG
+exit 0

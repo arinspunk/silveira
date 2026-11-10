@@ -1,12 +1,11 @@
 parameters:
-	level: 0
+	level: 5
 	paths:
-		- functions.php
-		- index.php
-		- header.php
-		- footer.php
+		- .
 	excludePaths:
 		analyse:
 			- vendor
-			- node_modules
+			- node_modules (?)
 			- assets
+	scanFiles:
+		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php

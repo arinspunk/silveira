@@ -12,26 +12,26 @@
 		<div class="o-row">
 			<div class="o-col-6 c-footer__brand">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="c-footer__logo">
-					<?php bloginfo( 'name' ); ?> <?php echo date( 'Y' ); ?>
+					<?php bloginfo( 'name' ); ?> <?php echo esc_html( wp_date( 'Y' ) ); ?>
 				</a>
 				
 				<div class="c-footer__colab">
 					<span class="c-footer__colab-text">
-						<?php 
+						<?php
 						echo wp_kses(
-							sprintf( 
+							sprintf(
 								/* translators: %s: Semente link */
-								__( 'Umha sebe coidada com agarimo pola %s', 'silveira' ), 
+								__( 'Umha sebe coidada com agarimo pola %s', 'silveira' ),
 								'<a href="https://semente.gal/" target="_blank" rel="noopener">' . __( 'Semente', 'silveira' ) . '</a>'
 							),
-							[
-								'a' => [
-									'href'   => [],
-									'target' => [],
-									'rel'    => [],
-								],
-							]
-						); 
+							array(
+								'a' => array(
+									'href'   => array(),
+									'target' => array(),
+									'rel'    => array(),
+								),
+							)
+						);
 						?>
 					</span>
 					<img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/logo-semente.png' ) ); ?>" alt="Semente" class="c-footer__colab-logo">
@@ -43,8 +43,8 @@
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => 'main', // Same as header
-							'container'      => false,
+							'theme_location' => 'main', // Same as header.
+							'container'      => '',
 							'menu_class'     => 'c-main-nav',
 							'fallback_cb'    => false,
 							'depth'          => 1,

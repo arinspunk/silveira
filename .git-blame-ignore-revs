@@ -3,3 +3,6 @@
 
 # style(theme): apply Prettier formatting to src and config files
 13d4a9c0bbd723e9501d27e69e9b957775182fa9
+
+# style(php): apply phpcbf (WPCS) to the whole theme
+6392f43c195e5bcc2bf8dc2872262145cb4624d3
