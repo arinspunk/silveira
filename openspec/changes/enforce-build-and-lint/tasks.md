@@ -22,8 +22,8 @@
 ## 3. Hook pre-commit
 
 - [x] 3.1 Reescribir `scripts/lint-staged-phpcs.sh` con la cascada PHP local → Docker `composer:2` → aviso visible (design D3), convirtiendo rutas a relativas al theme; verificar con un PHP con una infracción deliberada que el commit se bloquea en un equipo sin `php` pero con Docker, y que sin Docker sale el aviso
-- [ ] 3.2 Crear `scripts/build-assets.sh` y la entrada de lint-staged que lo ejecuta una vez por commit cuando hay cambios en `src/**`, `vite.config.js` o `package-lock.json` del theme (design D2); verificar que un commit que solo toca un `.scss` incluye también los ficheros actualizados de `assets/` y el `manifest.json`
-- [ ] 3.3 Verificar que un commit que no toca `src/` no ejecuta el build (tiempo del hook sin cambios apreciables)
+- [x] 3.2 Crear `scripts/build-assets.sh` y la entrada de lint-staged que lo ejecuta una vez por commit cuando hay cambios en `src/**`, `vite.config.js` o `package-lock.json` del theme (design D2); verificar que un commit que solo toca un `.scss` incluye también los ficheros actualizados de `assets/` y el `manifest.json`
+- [x] 3.3 Verificar que un commit que no toca `src/` no ejecuta el build (tiempo del hook sin cambios apreciables)
 
 ## 4. CI en GitHub Actions
 
