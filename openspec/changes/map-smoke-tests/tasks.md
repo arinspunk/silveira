@@ -6,7 +6,7 @@
 
 - [x] 1.1 Crear `docker-compose.e2e.yml` (design D1); verificar que `docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait` levanta WordPress en `http://localhost:8081` mientras el entorno de desarrollo sigue en el puerto 80 con sus datos intactos
 - [x] 1.2 Crear `scripts/e2e-seed.sh` (design D2); verificar que dos ejecuciones seguidas dejan los mismos proyectos y términos, y que ningún guardado hace peticiones a Nominatim
-- [ ] 1.3 Añadir un script de limpieza (`down -v` del proyecto `silveira-e2e`); verificar que no deja volúmenes `silveira-e2e_*` en `docker volume ls`
+- [x] 1.3 Añadir un script de limpieza (`down -v` del proyecto `silveira-e2e`); verificar que no deja volúmenes `silveira-e2e_*` en `docker volume ls`
 
 ## 2. Tests
 
@@ -17,7 +17,7 @@
 ## 3. CI y documentación
 
 - [ ] 3.1 Añadir el job `e2e` a `.github/workflows/ci.yml` (design D4); verificar en una PR que pasa en verde y que el informe se sube como artefacto en un fallo provocado
-- [ ] 3.2 Documentar en el README cómo levantar el entorno, sembrar, ejecutar y limpiar; verificar que los comandos funcionan tal cual desde un clon limpio
+- [x] 3.2 Documentar en el README cómo levantar el entorno, sembrar, ejecutar y limpiar; verificar que los comandos funcionan tal cual desde un clon limpio
 
 ## Workflow follow-up
 
