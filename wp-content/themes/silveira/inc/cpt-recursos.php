@@ -83,7 +83,7 @@ add_action( 'init', 'silveira_register_cpt_recurso', 0 );
  * @return string
  */
 function silveira_recurso_post_link( $post_link, $post ) {
-	if ( is_object( $post ) && 'recurso' === $post->post_type ) {
+	if ( 'recurso' === $post->post_type ) {
 		$terms = wp_get_object_terms( $post->ID, 'categoria_recurso' );
 		if ( $terms && ! is_wp_error( $terms ) ) {
 			return str_replace( '%categoria_recurso%', $terms[0]->slug, $post_link );
