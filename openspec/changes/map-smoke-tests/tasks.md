@@ -16,7 +16,7 @@
 
 ## 3. CI y documentación
 
-- [ ] 3.1 Añadir el job `e2e` a `.github/workflows/ci.yml` (design D4); verificar en una PR que pasa en verde y que el informe se sube como artefacto en un fallo provocado
+- [x] 3.1 Añadir el job `e2e` a `.github/workflows/ci.yml` (design D4); verificar en una PR que pasa en verde y que el informe se sube como artefacto en un fallo provocado
 - [x] 3.2 Documentar en el README cómo levantar el entorno, sembrar, ejecutar y limpiar; verificar que los comandos funcionan tal cual desde un clon limpio
 
 ## Workflow follow-up
