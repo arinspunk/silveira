@@ -3,7 +3,7 @@
  * Template part for displaying the Hero component.
  *
  * @package Silveira
- * 
+ *
  * Usage:
  * get_template_part('template-parts/content', 'hero', [
  *     'title'    => 'My Title',

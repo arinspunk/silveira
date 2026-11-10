@@ -4,7 +4,6 @@
  *
  * @package Silveira
  */
-
 function silveira_enqueue_external_assets() {
 	// Preconnect to Google Fonts domains
 	echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
