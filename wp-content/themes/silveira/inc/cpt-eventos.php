@@ -1,6 +1,12 @@
 <?php
 /**
- * Custom Post Type: Evento
+ * Custom Post Type: Evento.
+ *
+ * @package Silveira
+ */
+
+/**
+ * Registra custom post type: evento.
  */
 function silveira_register_cpt_evento() {
 	$labels = array(

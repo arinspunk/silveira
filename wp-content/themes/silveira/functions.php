@@ -133,7 +133,7 @@ add_action( 'wp_enqueue_scripts', 'silveira_enqueue_vite_assets', 20 );
  * Encola CSS/JS del theme: Vite dev o build según entorno.
  */
 function silveira_enqueue_vite_assets() {
-	// Leaflet Map Assets
+	// Leaflet Map Assets.
 	wp_register_style( 'leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', array(), '1.9.4' );
 	wp_register_script( 'leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', array(), '1.9.4', true );
 
@@ -243,10 +243,10 @@ require_once get_template_directory() . '/inc/cpt-recursos.php';
 require_once get_template_directory() . '/inc/assets.php';
 require_once get_template_directory() . '/inc/map-data.php';
 
-/**
- * Flush rewrite rules on theme switch/activation (Temporary logic for dev)
- */
 add_action( 'after_switch_theme', 'silveira_rewrite_flush' );
+/**
+ * Flush rewrite rules on theme switch/activation (Temporary logic for dev).
+ */
 function silveira_rewrite_flush() {
 	silveira_register_shared_taxonomies();
 	silveira_register_cpt_projeto();
@@ -255,22 +255,34 @@ function silveira_rewrite_flush() {
 	flush_rewrite_rules();
 }
 
+add_filter( 'nav_menu_css_class', 'silveira_nav_menu_item_class', 10, 3 );
 /**
  * Filter: Add BEM classes to <li> items in the main menu.
+ *
+ * @param string[] $classes Clases del elemento.
+ * @param WP_Post  $item    Elemento del menú.
+ * @param stdClass $args    Argumentos de wp_nav_menu().
+ * @return string[]
  */
-add_filter( 'nav_menu_css_class', 'silveira_nav_menu_item_class', 10, 4 );
-function silveira_nav_menu_item_class( $classes, $item, $args, $depth ) {
+function silveira_nav_menu_item_class( $classes, $item, $args ) {
+	unset( $item );
 	if ( isset( $args->theme_location ) && 'main' === $args->theme_location ) {
 		$classes[] = 'c-header__menu-item';
 	}
 	return $classes;
 }
 
+add_filter( 'nav_menu_link_attributes', 'silveira_nav_menu_link_class', 10, 3 );
 /**
  * Filter: Add BEM classes to <a> links in the main menu.
+ *
+ * @param array<string, string> $atts Atributos del enlace.
+ * @param WP_Post               $item Elemento del menú.
+ * @param stdClass              $args Argumentos de wp_nav_menu().
+ * @return array<string, string>
  */
-add_filter( 'nav_menu_link_attributes', 'silveira_nav_menu_link_class', 10, 4 );
-function silveira_nav_menu_link_class( $atts, $item, $args, $depth ) {
+function silveira_nav_menu_link_class( $atts, $item, $args ) {
+	unset( $item );
 	if ( isset( $args->theme_location ) && 'main' === $args->theme_location ) {
 		if ( ! isset( $atts['class'] ) ) {
 			$atts['class'] = '';
@@ -286,18 +298,25 @@ function silveira_nav_menu_link_class( $atts, $item, $args, $depth ) {
  */
 
 
+add_filter( 'acf/settings/save_json', 'silveira_acf_json_save_point' );
 /**
  * Filter: ACF Local JSON save path.
+ *
+ * @param string $path Ruta por defecto (se ignora).
+ * @return string
  */
-add_filter( 'acf/settings/save_json', 'silveira_acf_json_save_point' );
 function silveira_acf_json_save_point( $path ) {
+	unset( $path );
 	return get_stylesheet_directory() . '/acf-json';
 }
 
+add_filter( 'acf/settings/load_json', 'silveira_acf_json_load_point' );
 /**
  * Filter: ACF Local JSON load path.
+ *
+ * @param string[] $paths Rutas de carga.
+ * @return string[]
  */
-add_filter( 'acf/settings/load_json', 'silveira_acf_json_load_point' );
 function silveira_acf_json_load_point( $paths ) {
 	unset( $paths[0] );
 	$paths[] = get_stylesheet_directory() . '/acf-json';
@@ -309,21 +328,22 @@ function silveira_acf_json_load_point( $paths ) {
  */
 function silveira_hero() {
 	$title    = '';
-	$subtitle = 'Um ecosistema para o galego'; // Default from Figma
+	$subtitle = 'Um ecosistema para o galego'; // Default from Figma.
 	$image    = '';
 
 	if ( is_archive() ) {
 		$title = get_the_archive_title();
-		// Strip "Archive:" etc if needed
+		// Strip "Archive:" etc if needed.
 		$title = str_replace( array( 'Archivo: ', 'Archive: ', 'Território: ' ), '', $title );
 
 		if ( is_tax() || is_category() || is_tag() ) {
 			$subtitle = get_the_archive_description();
-			// Strip tags if needed, or keep them if you want. Let's strip for simplicity in hero.
+			// Strip tags for simplicity in hero.
 			$subtitle = wp_strip_all_tags( $subtitle );
 		}
 	} elseif ( is_search() ) {
 
+		/* translators: %s: término de búsqueda. */
 		$title = sprintf( esc_html__( 'Resultados para: %s', 'silveira' ), get_search_query() );
 	} elseif ( is_singular() ) {
 		$title = get_the_title();
@@ -341,7 +361,7 @@ function silveira_hero() {
 
 			if ( ! empty( $territorios ) && ! is_wp_error( $territorios ) ) {
 				foreach ( $territorios as $term ) {
-					if ( $term->parent != 0 ) {
+					if ( 0 !== (int) $term->parent ) {
 						$loc_names[] = $term->name;
 						$parent      = get_term( $term->parent, 'territorio' );
 						if ( $parent && ! is_wp_error( $parent ) ) {
@@ -379,17 +399,21 @@ function silveira_hero() {
 		array(
 			'title'    => $title,
 			'subtitle' => $subtitle,
-			'image'    => $image ? $image : '', // Fallback to empty if no image
+			'image'    => $image ? $image : '', // Fallback to empty if no image.
 		)
 	);
 }
 
-/**
- * Automate geocoding for Projects using Nominatim (OpenStreetMap)
- */
 add_action( 'acf/save_post', 'silveira_geocode_project', 20 );
+/**
+ * Automate geocoding for Projects using Nominatim (OpenStreetMap).
+ *
+ * Solo geocodifica si faltan latitud o longitud.
+ *
+ * @param int|string $post_id ID del post que guarda ACF.
+ */
 function silveira_geocode_project( $post_id ) {
-	// Only for 'projeto' post type
+	// Only for 'projeto' post type.
 	if ( get_post_type( $post_id ) !== 'projeto' ) {
 		return;
 	}
@@ -400,23 +424,23 @@ function silveira_geocode_project( $post_id ) {
 		return;
 	}
 
-	// Avoid infinite loop by removing action
+	// Avoid infinite loop by removing action.
 	remove_action( 'acf/save_post', 'silveira_geocode_project', 20 );
 
-	// We only Geocode if latitude/longitude are empty
+	// We only Geocode if latitude/longitude are empty.
 	$lat = get_field( 'projeto_latitude', $post_id );
 	$lng = get_field( 'projeto_longitude', $post_id );
 
 	if ( empty( $lat ) || empty( $lng ) ) {
 
-		// 1. Cleaning: Noise strings that confuse Nominatim
+		// 1. Cleaning: Noise strings that confuse Nominatim.
 		$noise         = array( 'Local', 'Bajo', 'Planta', 'Piso', 'Esquerda', 'Derecha', 'Izquierda' );
 		$clean_address = str_ireplace( $noise, '', $address );
 
-		// 2. Add Context (Galiza) to refine search
+		// 2. Add Context (Galiza) to refine search.
 		$search_query = $clean_address . ', Galiza, España';
 
-		$url = 'https://nominatim.openstreetmap.org/search?format=json&q=' . urlencode( $search_query ) . '&limit=1';
+		$url = 'https://nominatim.openstreetmap.org/search?format=json&q=' . rawurlencode( $search_query ) . '&limit=1';
 
 		$response = wp_remote_get(
 			$url,
@@ -436,6 +460,6 @@ function silveira_geocode_project( $post_id ) {
 		}
 	}
 
-	// Re-add action
+	// Re-add action.
 	add_action( 'acf/save_post', 'silveira_geocode_project', 20 );
 }

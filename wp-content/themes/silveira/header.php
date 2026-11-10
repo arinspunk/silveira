@@ -23,8 +23,8 @@
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="c-header__logo-link">
 					<?php
 					if ( has_custom_logo() ) {
-						$logo_id = get_theme_mod( 'custom_logo' );
-						echo wp_get_attachment_image( $logo_id, 'full', false, array( 'class' => 'c-header__logo-img' ) );
+						$silveira_logo_id = get_theme_mod( 'custom_logo' );
+						echo wp_get_attachment_image( $silveira_logo_id, 'full', false, array( 'class' => 'c-header__logo-img' ) );
 					}
 					?>
 					<span class="c-header__logo-text"><?php bloginfo( 'name' ); ?></span>

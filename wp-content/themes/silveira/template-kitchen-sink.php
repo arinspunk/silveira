@@ -82,20 +82,20 @@ get_header(); ?>
 		
 		<h3 style="margin-bottom: 20px;">Violeta</h3>
 		<div class="sg-color-grid">
-			<?php foreach ( array( '050', '100', '200', '300', '400', '500', '600', '700', '800', '900' ) as $shade ) : ?>
+			<?php foreach ( array( '050', '100', '200', '300', '400', '500', '600', '700', '800', '900' ) as $silveira_shade ) : ?>
 				<div class="sg-swatch">
-					<div class="sg-swatch__box" style="background-color: var(--sil-violeta-<?php echo $shade; ?>);"></div>
-					<span class="sg-swatch__label">violeta-<?php echo $shade; ?></span>
+					<div class="sg-swatch__box" style="background-color: var(--sil-violeta-<?php echo esc_attr( $silveira_shade ); ?>);"></div>
+					<span class="sg-swatch__label">violeta-<?php echo esc_html( $silveira_shade ); ?></span>
 				</div>
 			<?php endforeach; ?>
 		</div>
 		
 		<h3 style="margin-top: 40px; margin-bottom: 20px;">Verde</h3>
 		<div class="sg-color-grid">
-			<?php foreach ( array( '050', '100', '200', '300', '400', '500', '600', '700', '800', '900' ) as $shade ) : ?>
+			<?php foreach ( array( '050', '100', '200', '300', '400', '500', '600', '700', '800', '900' ) as $silveira_shade ) : ?>
 				<div class="sg-swatch">
-					<div class="sg-swatch__box" style="background-color: var(--sil-verde-<?php echo $shade; ?>);"></div>
-					<span class="sg-swatch__label">verde-<?php echo $shade; ?></span>
+					<div class="sg-swatch__box" style="background-color: var(--sil-verde-<?php echo esc_attr( $silveira_shade ); ?>);"></div>
+					<span class="sg-swatch__label">verde-<?php echo esc_html( $silveira_shade ); ?></span>
 				</div>
 			<?php endforeach; ?>
 		</div>
@@ -107,7 +107,7 @@ get_header(); ?>
 		<p>Using <code>.o-icon</code> class and the icon name inside the element.</p>
 		
 		<?php
-		$icon_categories = array(
+		$silveira_icon_categories = array(
 			'General Actions'     => array( 'search', 'add', 'delete', 'edit', 'check', 'close', 'star', 'favorite', 'settings', 'more_vert', 'more_horiz', 'refresh' ),
 			'Navigation'          => array( 'arrow_back', 'arrow_forward', 'expand_more', 'expand_less', 'chevron_right', 'chevron_left', 'menu', 'home', 'login', 'logout', 'download', 'upload' ),
 			'Mapping & Logistics' => array( 'location_on', 'map', 'navigation', 'directions', 'explore', 'push_pin', 'my_location', 'flag' ),
@@ -116,17 +116,17 @@ get_header(); ?>
 		);
 		?>
 
-		<?php foreach ( $icon_categories as $category => $icons ) : ?>
-			<h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 14px; color: var(--sil-violeta-600);"><?php echo $category; ?></h3>
+		<?php foreach ( $silveira_icon_categories as $silveira_category => $silveira_icons ) : ?>
+			<h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 14px; color: var(--sil-violeta-600);"><?php echo esc_html( $silveira_category ); ?></h3>
 			<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; text-align: center;">
-				<?php foreach ( $icons as $icon ) : ?>
+				<?php foreach ( $silveira_icons as $silveira_icon ) : ?>
 					<div style="padding: 15px; border: 1px solid #f0f0f0; border-radius: 4px; background: #fafafa;">
-						<span class="o-icon"><?php echo $icon; ?></span>
-						<p style="margin-top: 8px; margin-bottom: 0;"><code style="font-size: 10px;"><?php echo $icon; ?></code></p>
+						<span class="o-icon"><?php echo esc_html( $silveira_icon ); ?></span>
+						<p style="margin-top: 8px; margin-bottom: 0;"><code style="font-size: 10px;"><?php echo esc_html( $silveira_icon ); ?></code></p>
 					</div>
 					<div style="padding: 15px; border: 1px solid #f0f0f0; border-radius: 4px; background: #fafafa;">
-						<span class="o-icon o-icon--filled"><?php echo $icon; ?></span>
-						<p style="margin-top: 8px; margin-bottom: 0;"><code style="font-size: 10px;"><?php echo $icon; ?> (f)</code></p>
+						<span class="o-icon o-icon--filled"><?php echo esc_html( $silveira_icon ); ?></span>
+						<p style="margin-top: 8px; margin-bottom: 0;"><code style="font-size: 10px;"><?php echo esc_html( $silveira_icon ); ?> (f)</code></p>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -244,7 +244,7 @@ get_header(); ?>
 		
 		<h3 style="margin-bottom: 10px; font-size: 14px;">12 Columns (Default)</h3>
 		<div class="o-row">
-			<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+			<?php for ( $silveira_i = 1; $silveira_i <= 12; $silveira_i++ ) : ?>
 				<div class="o-col-1">
 					<div class="sg-grid-visual">1/12</div>
 				</div>

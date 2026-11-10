@@ -4,6 +4,7 @@
  *
  * @package Silveira
  */
+
 ?>
 
 <section class="no-results not-found">

@@ -12,7 +12,7 @@
 		<div class="o-row">
 			<div class="o-col-6 c-footer__brand">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="c-footer__logo">
-					<?php bloginfo( 'name' ); ?> <?php echo date( 'Y' ); ?>
+					<?php bloginfo( 'name' ); ?> <?php echo esc_html( wp_date( 'Y' ) ); ?>
 				</a>
 				
 				<div class="c-footer__colab">
@@ -43,7 +43,7 @@
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => 'main', // Same as header
+							'theme_location' => 'main', // Same as header.
 							'container'      => false,
 							'menu_class'     => 'c-main-nav',
 							'fallback_cb'    => false,

@@ -1,9 +1,15 @@
 <?php
 /**
- * Custom Post Type: Recurso
+ * Custom Post Type: Recurso.
+ *
+ * @package Silveira
+ */
+
+/**
+ * Registra custom post type: recurso.
  */
 function silveira_register_cpt_recurso() {
-	// Taxonomy: Categoria do Recurso
+	// Taxonomy: Categoria do Recurso.
 	$tax_labels = array(
 		'name'              => _x( 'Categorias de Recursos', 'Taxonomy General Name', 'silveira' ),
 		'singular_name'     => _x( 'Categoria de Recurso', 'Taxonomy Singular Name', 'silveira' ),
@@ -30,7 +36,7 @@ function silveira_register_cpt_recurso() {
 	);
 	register_taxonomy( 'categoria_recurso', array( 'recurso' ), $tax_args );
 
-	// Post Type: Recurso
+	// Post Type: Recurso.
 	$cpt_labels = array(
 		'name'               => _x( 'Recursos', 'Post Type General Name', 'silveira' ),
 		'singular_name'      => _x( 'Recurso', 'Post Type Singular Name', 'silveira' ),
@@ -62,7 +68,7 @@ function silveira_register_cpt_recurso() {
 		'has_archive'         => 'recursos',
 		'exclude_from_search' => false,
 		'publicly_queryable'  => true,
-		'rewrite'             => array( 'slug' => 'recursos/%categoria_recurso%' ), // Dynamic tag base
+		'rewrite'             => array( 'slug' => 'recursos/%categoria_recurso%' ), // Dynamic tag base.
 		'show_in_rest'        => true,
 	);
 	register_post_type( 'recurso', $cpt_args );
@@ -70,7 +76,11 @@ function silveira_register_cpt_recurso() {
 add_action( 'init', 'silveira_register_cpt_recurso', 0 );
 
 /**
- * Filter post_type_link to swap %categoria_recurso% with the actual term slug
+ * Filter post_type_link to swap %categoria_recurso% with the actual term slug.
+ *
+ * @param string  $post_link Permalink del post.
+ * @param WP_Post $post      Post.
+ * @return string
  */
 function silveira_recurso_post_link( $post_link, $post ) {
 	if ( is_object( $post ) && 'recurso' === $post->post_type ) {
@@ -78,7 +88,7 @@ function silveira_recurso_post_link( $post_link, $post ) {
 		if ( $terms && ! is_wp_error( $terms ) ) {
 			return str_replace( '%categoria_recurso%', $terms[0]->slug, $post_link );
 		} else {
-			// Fallback si el recurso no tiene categoría asignada
+			// Fallback si el recurso no tiene categoría asignada.
 			return str_replace( '%categoria_recurso%', 'geral', $post_link );
 		}
 	}

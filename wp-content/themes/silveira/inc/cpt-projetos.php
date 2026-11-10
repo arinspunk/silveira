@@ -1,9 +1,15 @@
 <?php
 /**
- * Custom Post Type: Projeto
+ * Custom Post Type: Projeto.
+ *
+ * @package Silveira
+ */
+
+/**
+ * Registra custom post type: projeto.
  */
 function silveira_register_cpt_projeto() {
-	// Exclusiva Taxonomy: Modalidade
+	// Exclusiva Taxonomy: Modalidade.
 	$tax_labels = array(
 		'name'          => _x( 'Modalidades', 'Taxonomy General Name', 'silveira' ),
 		'singular_name' => _x( 'Modalidade', 'Taxonomy Singular Name', 'silveira' ),
@@ -27,7 +33,7 @@ function silveira_register_cpt_projeto() {
 	);
 	register_taxonomy( 'modalidade_projeto', array( 'projeto' ), $tax_args );
 
-	// Post Type: Projeto
+	// Post Type: Projeto.
 	$cpt_labels = array(
 		'name'               => _x( 'Projetos', 'Post Type General Name', 'silveira' ),
 		'singular_name'      => _x( 'Projeto', 'Post Type Singular Name', 'silveira' ),

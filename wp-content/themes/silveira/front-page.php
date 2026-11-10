@@ -24,18 +24,18 @@ get_header();
 				
 				<div class="c-select__dropdown">
 					<?php
-					$terms = get_terms(
+					$silveira_terms = get_terms(
 						array(
 							'taxonomy'   => 'modalidade_projeto',
 							'hide_empty' => true,
 						)
 					);
-					foreach ( $terms as $term ) :
+					foreach ( $silveira_terms as $silveira_term ) :
 						?>
 						<label class="c-checkbox">
-							<input type="checkbox" class="c-checkbox__input" value="<?php echo esc_attr( $term->slug ); ?>" data-filter="modalidade">
+							<input type="checkbox" class="c-checkbox__input" value="<?php echo esc_attr( $silveira_term->slug ); ?>" data-filter="modalidade">
 							<span class="c-checkbox__box"></span>
-							<span class="c-checkbox__label"><?php echo esc_html( $term->name ); ?></span>
+							<span class="c-checkbox__label"><?php echo esc_html( $silveira_term->name ); ?></span>
 						</label>
 					<?php endforeach; ?>
 				</div>
@@ -51,19 +51,19 @@ get_header();
 				
 				<div class="c-select__dropdown">
 					<?php
-					$comarcas = get_terms(
+					$silveira_comarcas = get_terms(
 						array(
 							'taxonomy'   => 'territorio',
 							'parent'     => 0,
 							'hide_empty' => true,
 						)
 					);
-					foreach ( $comarcas as $comarca ) :
+					foreach ( $silveira_comarcas as $silveira_comarca ) :
 						?>
 						<label class="c-checkbox">
-							<input type="checkbox" class="c-checkbox__input js-filter-comarca" value="<?php echo esc_attr( $comarca->slug ); ?>" data-filter="territorio">
+							<input type="checkbox" class="c-checkbox__input js-filter-comarca" value="<?php echo esc_attr( $silveira_comarca->slug ); ?>" data-filter="territorio">
 							<span class="c-checkbox__box"></span>
-							<span class="c-checkbox__label"><?php echo esc_html( $comarca->name ); ?></span>
+							<span class="c-checkbox__label"><?php echo esc_html( $silveira_comarca->name ); ?></span>
 						</label>
 					<?php endforeach; ?>
 				</div>
@@ -79,21 +79,21 @@ get_header();
 				
 				<div class="c-select__dropdown">
 					<?php
-					$localidades = get_terms(
+					$silveira_localidades = get_terms(
 						array(
 							'taxonomy'   => 'territorio',
 							'childless'  => true,
 							'hide_empty' => true,
 						)
 					);
-					foreach ( $localidades as $loc ) :
-						$parent_term = get_term( $loc->parent, 'territorio' );
-						$parent_slug = ( ! is_wp_error( $parent_term ) && $parent_term ) ? $parent_term->slug : '';
+					foreach ( $silveira_localidades as $silveira_loc ) :
+						$silveira_parent_term = get_term( $silveira_loc->parent, 'territorio' );
+						$silveira_parent_slug = ( ! is_wp_error( $silveira_parent_term ) && $silveira_parent_term ) ? $silveira_parent_term->slug : '';
 						?>
-						<label class="c-checkbox" data-parent-comarca="<?php echo esc_attr( $parent_slug ); ?>">
-							<input type="checkbox" class="c-checkbox__input js-filter-localidade" value="<?php echo esc_attr( $loc->slug ); ?>" data-filter="territorio">
+						<label class="c-checkbox" data-parent-comarca="<?php echo esc_attr( $silveira_parent_slug ); ?>">
+							<input type="checkbox" class="c-checkbox__input js-filter-localidade" value="<?php echo esc_attr( $silveira_loc->slug ); ?>" data-filter="territorio">
 							<span class="c-checkbox__box"></span>
-							<span class="c-checkbox__label"><?php echo esc_html( $loc->name ); ?></span>
+							<span class="c-checkbox__label"><?php echo esc_html( $silveira_loc->name ); ?></span>
 						</label>
 					<?php endforeach; ?>
 				</div>
