@@ -4,15 +4,15 @@
 
 ## 1. Entorno y datos
 
-- [ ] 1.1 Crear `docker-compose.e2e.yml` (design D1); verificar que `docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait` levanta WordPress en `http://localhost:8081` mientras el entorno de desarrollo sigue en el puerto 80 con sus datos intactos
-- [ ] 1.2 Crear `scripts/e2e-seed.sh` (design D2); verificar que dos ejecuciones seguidas dejan los mismos proyectos y términos, y que ningún guardado hace peticiones a Nominatim
+- [x] 1.1 Crear `docker-compose.e2e.yml` (design D1); verificar que `docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait` levanta WordPress en `http://localhost:8081` mientras el entorno de desarrollo sigue en el puerto 80 con sus datos intactos
+- [x] 1.2 Crear `scripts/e2e-seed.sh` (design D2); verificar que dos ejecuciones seguidas dejan los mismos proyectos y términos, y que ningún guardado hace peticiones a Nominatim
 - [ ] 1.3 Añadir un script de limpieza (`down -v` del proyecto `silveira-e2e`); verificar que no deja volúmenes `silveira-e2e_*` en `docker volume ls`
 
 ## 2. Tests
 
-- [ ] 2.1 Añadir `@playwright/test` y el script `test:e2e` al `package.json` de la raíz, `playwright.config.js` con `baseURL` `http://localhost:8081` y los informes en `.gitignore`; verificar que `npm run test:e2e` arranca sin tests
-- [ ] 2.2 Escribir `tests/e2e/home.spec.js`: portada sin errores, 3 marcadores, lista con 3 elementos, popup al pulsar un marcador, filtro de modalidade que reduce lista y marcadores (design D3); verificar que pasa en local
-- [ ] 2.3 Añadir el caso XSS y `tests/e2e/projeto.spec.js` (design D3); verificar que pasa y que falla si se revierte temporalmente `buildPopup`/`buildListItem` a `innerHTML` en `src/js/map.js` (comprobar y descartar el cambio)
+- [x] 2.1 Añadir `@playwright/test` y el script `test:e2e` al `package.json` de la raíz, `playwright.config.js` con `baseURL` `http://localhost:8081` y los informes en `.gitignore`; verificar que `npm run test:e2e` arranca sin tests
+- [x] 2.2 Escribir `tests/e2e/home.spec.js`: portada sin errores, 4 marcadores (3 normales y el de XSS), lista con 4 elementos, popup al pulsar un marcador, filtro de modalidade que reduce lista y marcadores (design D3); verificar que pasa en local
+- [x] 2.3 Añadir el caso XSS y `tests/e2e/projeto.spec.js` (design D3); verificar que pasa y que falla si se revierte temporalmente `buildPopup`/`buildListItem` a `innerHTML` en `src/js/map.js` (comprobar y descartar el cambio)
 
 ## 3. CI y documentación
 

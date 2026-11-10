@@ -67,7 +67,21 @@ docker compose --profile tools run --rm -T wpcli wp <comando>   # WP-CLI: siempr
 
 Para cambios "sin cambio funcional" (lint, reformateo, refactor): capturar HTML normalizado (sin `?ver=`, hashes de Vite ni nonces) y capturas de pantalla de portada, ficha de proyecto, archivos, singles, taxonomía, Kitchen Sink y 404 **antes y después**, y compararlos. Capturar dos veces el "antes" para confirmar que es determinista. La portada se compara por HTML (los tiles del mapa no son deterministas). Playwright (`playwright-core` con `channel: 'chrome'`) instalado en el scratchpad, nunca en el repo.
 
-## 6. Git y GitHub
+## 6. Smoke test E2E (Playwright)
+
+Entorno aislado (proyecto Compose `silveira-e2e`, puerto **8081**, volúmenes propios, assets compilados): no necesita el puerto 80 ni toca la base de datos de desarrollo.
+
+```bash
+npm run e2e:up && npm run e2e:seed && npm run test:e2e   # desde la raíz
+npm run e2e:down                                         # al terminar (borra sus volúmenes)
+```
+
+- El test usa `assets/` compilado: tras cambiar `src/`, `npm run build` en el theme antes de ejecutarlo.
+- Si un change modifica el marcado o el comportamiento del mapa o de la portada, actualizar `tests/e2e/` (y el seed si hace falta) en el mismo change.
+- Para comprobar que un test detecta una regresión: introducirla temporalmente, recompilar, ver el fallo y restaurar `src/` y `assets/` desde `HEAD` (`git restore --source=HEAD` + `git clean` de los `assets/` nuevos).
+- `tests/e2e/helpers.js` tiene una excepción temporal (`KNOWN_MISSING`) para los 404 de las fuentes del diseño; la quita `self-hosted-fonts`.
+
+## 7. Git y GitHub
 
 - Merges a `main` siempre con merge commit (`--no-ff` o "Create a merge commit"); nunca squash ni rebase (rompería `.git-blame-ignore-revs`).
 - `main` está protegida: exige los checks `frontend` y `php`; el admin puede saltársela para merges locales.

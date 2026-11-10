@@ -10,6 +10,7 @@
 
 - [ ] 2.1 Copiar a `src/fonts/` los ficheros de Isaac y Akkurat-Mono (convertirlos a `woff2` si hace falta, design D2) y anotar en el README su origen y dónde están guardadas las licencias web; verificar que solo hay `woff2` en `src/fonts/`
 - [ ] 2.2 Corregir las rutas `@font-face` (un bloque por peso/estilo disponible) y añadir `font-display: swap` (design D2); verificar "Body text" y "Monospaced text" en las herramientas de desarrollo (Fuentes renderizadas) y que el build emite las fuentes con hash en `assets/`
+- [ ] 2.3 Quitar de `tests/e2e/helpers.js` la excepción `KNOWN_MISSING` de los 404 de Isaac y Akkurat-Mono (añadida en `map-smoke-tests`); verificar que `npm run test:e2e` pasa sin ella
 
 ## 3. Cierre
 
