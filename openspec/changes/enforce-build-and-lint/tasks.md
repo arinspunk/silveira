@@ -29,7 +29,7 @@
 
 - [x] 4.1 Crear `.github/workflows/ci.yml` con el job `frontend` (`npm ci`, `validate`, `format:check`, `build`, `git diff --exit-code` + `git status --porcelain` sobre `assets/`, mensaje explícito al fallar) (design D1); verificar en una PR que el job pasa en verde
 - [x] 4.2 Añadir el job `php` (setup-php 8.2, `composer install`, `composer run lint`, `composer run analyse`); verificar en la misma PR que pasa en verde
-- [ ] 4.3 Comprobar el bloqueo: en una rama de prueba, modificar un `.scss` y commitear con `--no-verify` sin recompilar; verificar que el job `frontend` falla por diferencias en `assets/`; descartar la rama
+- [x] 4.3 Comprobar el bloqueo: en una rama de prueba, modificar un `.scss` y commitear con `--no-verify` sin recompilar; verificar que el job `frontend` falla por diferencias en `assets/`; descartar la rama
 - [x] 4.4 Comprobar reproducibilidad: comparar el `assets/` generado en local con el de CI (si falla 4.1 por diferencias sin cambios en `src/`, investigar antes de continuar)
 
 ## 5. Documentación
