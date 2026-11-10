@@ -6,3 +6,8 @@ vendor/
 # Theme silveira (Vite): la salida compilada en wp-content/themes/silveira/assets/ se VERSIONA
 # para despliegues sin Node en el servidor. No añadir assets/ ni assets/.vite/manifest.json aquí.
 # Cachés de linters/análisis concretos del theme: wp-content/themes/silveira/.gitignore
+# Playwright (smoke test E2E)
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/

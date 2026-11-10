@@ -1,0 +1,17 @@
+# Entorno aislado para el smoke test E2E (Playwright).
+# Uso: docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
+# Volúmenes propios (proyecto silveira-e2e), puerto 8081 y assets compilados (sin Vite dev).
+
+services:
+  wordpress:
+    ports: !override
+      - "8081:80"
+    environment:
+      SILVEIRA_VITE_DEV: "0"
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://localhost:8081');
+        define('WP_SITEURL', 'http://localhost:8081');
+
+  wpcli:
+    environment:
+      SILVEIRA_VITE_DEV: "0"

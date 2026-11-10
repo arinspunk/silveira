@@ -147,6 +147,7 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and on pu
 |-----|--------|
 | `frontend` | `npm ci`, `npm run validate` (ESLint + Stylelint), `npm run format:check` (Prettier), `npm run build`, then fails if `assets/` differs from the committed one (changed, new or deleted files). On failure it uploads the generated `assets/` as an artifact for diagnosis. |
 | `php` | PHP 8.2, `composer install`, `composer run lint` (PHPCS), `composer run analyse` (PHPStan). |
+| `e2e` | Isolated WordPress (Docker, port 8081, compiled `assets/`), seeded test data, Playwright smoke test. On failure it uploads the Playwright report. See [Smoke test (E2E)](#smoke-test-e2e). |
 
 To reproduce locally, from `wp-content/themes/silveira`:
 
@@ -157,6 +158,24 @@ docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && 
 ```
 
 If the `frontend` job reports that `assets/` is out of date, run `npm run build` in the theme and commit `assets/` (or make sure the hooks are installed with `npm install` at the root).
+
+## Smoke test (E2E)
+
+A Playwright smoke test (`tests/e2e/`) checks the front page and a project page against a **separate** WordPress (Compose project `silveira-e2e`, own volumes, **port 8081**, `SILVEIRA_VITE_DEV=0` so it uses the committed `assets/`). It doesn't touch your development database and doesn't need port 80.
+
+It covers: no PHP/console errors, one marker and list item per project with coordinates, marker popup, the modalidade filter, project content with HTML shown as text without running anything (regression test for the map XSS), and the project page.
+
+From the repository root (after `npm install`):
+
+```bash
+npm run e2e:up      # start the isolated stack on http://localhost:8081
+npm run e2e:seed    # install WP + ACF and create the test data (idempotent)
+npx playwright install chromium   # first time only
+npm run test:e2e    # run the tests
+npm run e2e:down    # stop and delete the stack and its volumes
+```
+
+The test data lives in `scripts/e2e-seed.sh`. If a change alters the map/front-page markup the tests rely on, update `tests/e2e/` in the same change.
 
 ## Git blame and mass reformatting
 
@@ -174,12 +193,14 @@ GitHub's blame view applies this file automatically.
 |------|-------------|
 | `docker-compose.yml` | WordPress, MariaDB, optional `wpcli` (`tools` profile) |
 | `wp-content/themes/silveira/` | Theme: Vite entry `src/main.js`, build output `assets/` |
-| `package.json` (root) | Husky + lint-staged only → **`node_modules/` at repo root** |
+| `package.json` (root) | Husky, lint-staged and Playwright → **`node_modules/` at repo root** |
 | `wp-content/themes/silveira/package.json` | Vite + linters + build scripts → **`node_modules/` under the theme** |
 | `lint-staged.config.mjs` | Pre-commit tasks (lint, PHPCS, assets build) |
 | `scripts/lint-staged-phpcs.sh` | PHPCS for staged PHP: local PHP → Docker → warning |
 | `scripts/build-assets.sh` | Rebuilds and stages `assets/` from the pre-commit hook |
-| `.github/workflows/ci.yml` | CI: `frontend` and `php` jobs |
+| `.github/workflows/ci.yml` | CI: `frontend`, `php` and `e2e` jobs |
+| `tests/e2e/`, `playwright.config.js` | Playwright smoke test |
+| `docker-compose.e2e.yml`, `scripts/e2e-*.sh` | Isolated E2E stack, seed and cleanup |
 | `.nvmrc` | Node version (22) for local and CI |
 | `.git-blame-ignore-revs` | Reformatting commits hidden from `git blame` |
 

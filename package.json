@@ -3,9 +3,14 @@
 	"private": true,
 	"description": "Repo root: Husky + lint-staged. After clone: npm install (root), npm install in wp-content/themes/silveira, and composer install in the theme for PHPCS/PHPStan. Pre-commit runs lint-staged (lint-staged.config.mjs) from the repo root.",
 	"scripts": {
-		"prepare": "husky"
+		"prepare": "husky",
+		"e2e:up": "docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait",
+		"e2e:seed": "bash scripts/e2e-seed.sh",
+		"e2e:down": "bash scripts/e2e-down.sh",
+		"test:e2e": "playwright test"
 	},
 	"devDependencies": {
+		"@playwright/test": "1.56.1",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.4.3"
 	}
