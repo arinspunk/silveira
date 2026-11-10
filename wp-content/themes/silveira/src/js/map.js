@@ -2,6 +2,108 @@
  * Interactive Map Logic
  */
 
+/**
+ * Crea un elemento DOM. Los hijos string se insertan como texto (nunca como HTML);
+ * los null/false/undefined se omiten.
+ *
+ * @param {string} tag
+ * @param {{className?: string, attrs?: Record<string, string>}} [options]
+ * @param {Array<Node|string|null|false|undefined>} [children]
+ * @returns {HTMLElement}
+ */
+const el = (tag, { className, attrs } = {}, children = []) => {
+	const node = document.createElement(tag);
+	if (className) node.className = className;
+	if (attrs) {
+		Object.entries(attrs).forEach(([name, value]) => node.setAttribute(name, value));
+	}
+	children.forEach((child) => {
+		if (child === null || child === undefined || child === false) return;
+		node.append(typeof child === 'string' ? document.createTextNode(child) : child);
+	});
+	return node;
+};
+
+/**
+ * Devuelve la URL absoluta solo si es http(s); si no, null.
+ *
+ * @param {unknown} value
+ * @returns {string|null}
+ */
+const safeUrl = (value) => {
+	if (typeof value !== 'string' || value === '') return null;
+	try {
+		const url = new URL(value, window.location.origin);
+		return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
+	} catch {
+		return null;
+	}
+};
+
+const icon = (className, name) => el('span', { className }, [name]);
+
+/**
+ * Popup de un marcador.
+ *
+ * @param {object} point
+ * @returns {HTMLElement}
+ */
+const buildPopup = (point) => {
+	const title = point.title || '';
+	const image = safeUrl(point.image);
+	const url = safeUrl(point.url);
+
+	return el('article', { className: 'c-map-card' }, [
+		image &&
+			el('div', { className: 'c-map-card__media' }, [
+				el('img', { attrs: { src: image, alt: title } }),
+			]),
+		el('div', { className: 'c-map-card__content' }, [
+			el('div', { className: 'c-map-card__headline' }, [
+				el('h3', { className: 'c-map-card__title' }, [title]),
+				el('span', { className: 'c-map-card__subhead' }, [point.lema || '']),
+			]),
+		]),
+		url &&
+			el('div', { className: 'c-map-card__actions' }, [
+				el('a', { className: 'c-btn c-btn--secondary c-btn--l', attrs: { href: url } }, [
+					'Ver projeto',
+				]),
+			]),
+	]);
+};
+
+/**
+ * Elemento de la lista lateral. Sin URL segura se pinta como <div> (sin enlace).
+ *
+ * @param {object} point
+ * @returns {HTMLLIElement}
+ */
+const buildListItem = (point) => {
+	const url = safeUrl(point.url);
+
+	return el('li', {}, [
+		el(
+			url ? 'a' : 'div',
+			{ className: 'c-project-list-item', attrs: url ? { href: url } : undefined },
+			[
+				el('div', { className: 'c-project-list-item__leading' }, [
+					icon('o-icon o-icon--lg o-icon--filled', 'location_on'),
+				]),
+				el('div', { className: 'c-project-list-item__content' }, [
+					el('p', { className: 'c-project-list-item__overline' }, [point.overline || '']),
+					el('h3', { className: 'c-project-list-item__title' }, [point.title || '']),
+					point.lema && el('p', { className: 'c-project-list-item__lema' }, [point.lema]),
+					el('p', { className: 'c-project-list-item__supporting' }, [point.excerpt || '']),
+				]),
+				el('div', { className: 'c-project-list-item__trailing' }, [
+					icon('o-icon', 'arrow_forward'),
+				]),
+			],
+		),
+	]);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 	const mapContainer = document.getElementById('map');
 	if (!mapContainer || typeof L === 'undefined') return;
@@ -34,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		// Clear list container
 		if (projectListContainer) {
-			projectListContainer.innerHTML = '';
+			projectListContainer.replaceChildren();
 		}
 
 		// Define custom icon using Material Symbol
@@ -49,28 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		filteredPoints.forEach((point) => {
 			const marker = L.marker([point.lat, point.lng], { icon: customIcon }).addTo(map);
 
-			const popupContent = `
-                <article class="c-map-card">
-                    ${
-											point.image
-												? `
-                    <div class="c-map-card__media">
-                        <img src="${point.image}" alt="${point.title}">
-                    </div>
-                    `
-												: ''
-										}
-                    <div class="c-map-card__content">
-                        <div class="c-map-card__headline">
-                            <h3 class="c-map-card__title">${point.title}</h3>
-                            <span class="c-map-card__subhead">${point.lema || ''}</span>
-                        </div>
-                    </div>
-                    <div class="c-map-card__actions">
-                        <a href="${point.url}" class="c-btn c-btn--secondary c-btn--l">Ver projeto</a>
-                    </div>
-                </article>
-            `;
+			const popupContent = buildPopup(point);
 
 			marker.bindPopup(popupContent);
 			markers.push(marker);
@@ -82,23 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			// Populate side list
 			if (projectListContainer) {
-				const li = document.createElement('li');
-				li.innerHTML = `
-                    <a href="${point.url}" class="c-project-list-item">
-                        <div class="c-project-list-item__leading">
-                            <span class="o-icon o-icon--lg o-icon--filled">location_on</span>
-                        </div>
-                        <div class="c-project-list-item__content">
-                            <p class="c-project-list-item__overline">${point.overline || ''}</p>
-                            <h3 class="c-project-list-item__title">${point.title}</h3>
-                            ${point.lema ? `<p class="c-project-list-item__lema">${point.lema}</p>` : ''}
-                            <p class="c-project-list-item__supporting">${point.excerpt || ''}</p>
-                        </div>
-                        <div class="c-project-list-item__trailing">
-                            <span class="o-icon">arrow_forward</span>
-                        </div>
-                    </a>
-                `;
+				const li = buildListItem(point);
 				projectListContainer.appendChild(li);
 			}
 		});

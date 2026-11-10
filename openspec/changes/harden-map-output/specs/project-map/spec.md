@@ -7,15 +7,15 @@ Mapa interactivo de la portada que muestra los proyectos publicados con coordena
 ## ADDED Requirements
 
 ### Requirement: Project content is displayed as text
-El mapa SHALL mostrar el título, lema, extracto y texto de contexto (modalidade/territorio) de cada proyecto como texto literal en el popup y en la lista lateral, sin interpretar ningún marcado HTML contenido en esos campos.
+El mapa SHALL mostrar el título, lema, extracto y texto de contexto (modalidade/territorio) de cada proyecto como texto plano en el popup y en la lista lateral: el marcado HTML contenido en esos campos se elimina y nunca se interpreta.
 
 #### Scenario: Title containing HTML markup
 - **WHEN** un proyecto publicado tiene como título `<img src=x onerror=alert(1)>Horta`
-- **THEN** el popup y la lista muestran literalmente ese texto, no se crea ningún elemento `<img>` a partir de él y no se ejecuta ningún script
+- **THEN** el popup y la lista muestran `Horta` (sin la etiqueta), no se crea ningún elemento `<img>` a partir de él y no se ejecuta ningún script
 
 #### Scenario: Lema containing a script terminator
 - **WHEN** el lema de un proyecto contiene `</script><script>alert(1)</script>`
-- **THEN** la portada carga sin errores, el mapa muestra todos los proyectos con coordenadas y el lema aparece como texto literal
+- **THEN** la portada carga sin errores, el mapa muestra todos los proyectos con coordenadas, no se ejecuta ningún script y el lema se muestra sin las etiquetas (vacío si solo contenía `<script>`)
 
 ### Requirement: Typographic characters render correctly
 El mapa SHALL mostrar apóstrofos, comillas, ampersands y caracteres acentuados tal como los ve el lector en la ficha del proyecto, nunca como entidades HTML visibles.
