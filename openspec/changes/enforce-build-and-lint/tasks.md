@@ -13,15 +13,15 @@
 
 ## 2. Ampliar y limpiar el análisis PHP (después de `harden-map-output`)
 
-- [ ] 2.1 Cambiar `phpcs.xml.dist` para analizar todo el theme (`<file>.</file>` con exclusiones) y configurar `text_domain` y prefijo `silveira` (design D4); verificar con `docker run --rm -v "$PWD":/app -w /app composer:2 vendor/bin/phpcs --report=summary` que se listan todos los ficheros PHP del theme
-- [ ] 2.2 Ejecutar `phpcbf` vía Docker en un commit propio y añadir su hash a `.git-blame-ignore-revs`; verificar que el número de infracciones baja y que portada, ficha de proyecto, archivos y kitchen sink se ven igual que antes
-- [ ] 2.3 Corregir manualmente las infracciones PHPCS restantes (escapes, `date()`→`wp_date()`, docblocks, Yoda, etc.) sin cambio funcional; verificar que `composer run lint` (vía Docker) termina con 0 errores y revisión visual de las mismas páginas
-- [ ] 2.4 Añadir `php-stubs/acf-pro-stubs` a `require-dev`, configurar `phpstan.neon.dist` con `paths: [.]`, exclusiones, nivel 5 y los stubs; verificar que `composer run analyse` (vía Docker) analiza todos los ficheros
-- [ ] 2.5 Corregir los errores de PHPStan nivel 5; verificar que `composer run analyse` termina con 0 errores y sin baseline
+- [x] 2.1 Cambiar `phpcs.xml.dist` para analizar todo el theme (`<file>.</file>` con exclusiones) y configurar `text_domain` y prefijo `silveira` (design D4); verificar con `docker run --rm -v "$PWD":/app -w /app composer:2 vendor/bin/phpcs --report=summary` que se listan todos los ficheros PHP del theme
+- [x] 2.2 Ejecutar `phpcbf` vía Docker en un commit propio y añadir su hash a `.git-blame-ignore-revs`; verificar que el número de infracciones baja y que portada, ficha de proyecto, archivos y kitchen sink se ven igual que antes
+- [x] 2.3 Corregir manualmente las infracciones PHPCS restantes (escapes, `date()`→`wp_date()`, docblocks, Yoda, etc.) sin cambio funcional; verificar que `composer run lint` (vía Docker) termina con 0 errores y revisión visual de las mismas páginas
+- [x] 2.4 Añadir `php-stubs/acf-pro-stubs` a `require-dev`, configurar `phpstan.neon.dist` con `paths: [.]`, exclusiones, nivel 5 y los stubs; verificar que `composer run analyse` (vía Docker) analiza todos los ficheros
+- [x] 2.5 Corregir los errores de PHPStan nivel 5; verificar que `composer run analyse` termina con 0 errores y sin baseline
 
 ## 3. Hook pre-commit
 
-- [ ] 3.1 Reescribir `scripts/lint-staged-phpcs.sh` con la cascada PHP local → Docker `composer:2` → aviso visible (design D3), convirtiendo rutas a relativas al theme; verificar con un PHP con una infracción deliberada que el commit se bloquea en un equipo sin `php` pero con Docker, y que sin Docker sale el aviso
+- [x] 3.1 Reescribir `scripts/lint-staged-phpcs.sh` con la cascada PHP local → Docker `composer:2` → aviso visible (design D3), convirtiendo rutas a relativas al theme; verificar con un PHP con una infracción deliberada que el commit se bloquea en un equipo sin `php` pero con Docker, y que sin Docker sale el aviso
 - [ ] 3.2 Crear `scripts/build-assets.sh` y la entrada de lint-staged que lo ejecuta una vez por commit cuando hay cambios en `src/**`, `vite.config.js` o `package-lock.json` del theme (design D2); verificar que un commit que solo toca un `.scss` incluye también los ficheros actualizados de `assets/` y el `manifest.json`
 - [ ] 3.3 Verificar que un commit que no toca `src/` no ejecuta el build (tiempo del hook sin cambios apreciables)
 
