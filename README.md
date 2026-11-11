@@ -141,12 +141,12 @@ With PHP + Composer installed locally, the same `composer run …` commands work
 
 ## Continuous integration
 
-GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and on pushes to `main`. Both jobs must be green:
+GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and on pushes to `main`. All three jobs must be green (they are required checks on `main`):
 
 | Job | Checks |
 |-----|--------|
 | `frontend` | `npm ci`, `npm run validate` (ESLint + Stylelint), `npm run format:check` (Prettier), `npm run build`, then fails if `assets/` differs from the committed one (changed, new or deleted files). On failure it uploads the generated `assets/` as an artifact for diagnosis. |
-| `php` | PHP 8.2, `composer install`, `composer run lint` (PHPCS), `composer run analyse` (PHPStan). |
+| `php` | PHP 8.2, `composer install`, `composer audit` (security advisories in PHP dependencies; abandoned packages are only reported), `composer run lint` (PHPCS), `composer run analyse` (PHPStan). |
 | `e2e` | Isolated WordPress (Docker, port 8081, compiled `assets/`), seeded test data, Playwright smoke test. On failure it uploads the Playwright report. See [Smoke test (E2E)](#smoke-test-e2e). |
 
 To reproduce locally, from `wp-content/themes/silveira`:
@@ -154,10 +154,16 @@ To reproduce locally, from `wp-content/themes/silveira`:
 ```bash
 npm ci && npm run validate && npm run format:check && npm run build
 git status --porcelain -- assets/   # must print nothing
-docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && composer run lint && composer run analyse'
+docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && composer audit --locked --abandoned=report && composer run lint && composer run analyse'
 ```
 
 If the `frontend` job reports that `assets/` is out of date, run `npm run build` in the theme and commit `assets/` (or make sure the hooks are installed with `npm install` at the root).
+
+### Weekly security audit
+
+`.github/workflows/audit.yml` runs the same `composer audit` every Monday at 06:00 UTC (and on demand from the **Actions** tab → *Audit* → *Run workflow*), so a newly published advisory shows up even when nobody opens a PR. GitHub emails the repo owner when it fails. GitHub disables scheduled workflows after 60 days without repository activity; re-enable it from the Actions tab if that happens.
+
+**When `composer audit` fails** (in the `php` job or the weekly run): the advisory is about a PHP dev tool, not the site. Update only the affected package to a fixed version in a small change (raise its constraint in `composer.json` so a vulnerable version can't come back, run a scoped `composer update <package>` via Docker, and keep `lint`/`analyse` at zero errors). After it is merged, run `composer install` in the theme so your local `vendor/` (used by the pre-commit hook) is updated too.
 
 ## Smoke test (E2E)
 

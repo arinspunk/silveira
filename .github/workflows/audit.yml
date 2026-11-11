@@ -1,0 +1,30 @@
+name: Audit
+
+# composer audit semanal: detecta avisos de seguridad publicados aunque nadie abra una PR.
+# GitHub envía un email si falla. Mismo comando que el paso del job php en ci.yml.
+on:
+  schedule:
+    - cron: '0 6 * * 1' # lunes 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  composer-audit:
+    name: composer-audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wp-content/themes/silveira
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+          coverage: none
+
+      - run: composer install --no-interaction --no-progress
+      - run: composer audit --locked --abandoned=report --no-interaction

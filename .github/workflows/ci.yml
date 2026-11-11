@@ -65,6 +65,10 @@ jobs:
           coverage: none
 
       - run: composer install --no-interaction --no-progress
+
+      - name: Avisos de seguridad en dependencias PHP
+        run: composer audit --locked --abandoned=report --no-interaction
+
       - run: composer run lint
       - run: composer run analyse -- --no-progress
 
