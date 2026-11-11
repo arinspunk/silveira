@@ -9,7 +9,7 @@
 
 - [x] 2.1 Añadir el paso `composer audit --locked --abandoned=report --no-interaction` al job `php` de `.github/workflows/ci.yml` tras `composer install` (design D2); verificar en la PR que el job `php` pasa en verde con el paso nuevo
 - [x] 2.2 Comprobar que el paso bloquea: en una rama de prueba con una versión vulnerable en `composer.lock` (p. ej. volver a WPCS 3.3.0), verificar que el job `php` falla en `composer audit`; cerrar la PR de prueba y borrar la rama
-- [ ] 2.3 Crear `.github/workflows/audit.yml` con `schedule` semanal y `workflow_dispatch` (design D3); verificar lanzándolo a mano desde la pestaña Actions que termina en verde
+- [x] 2.3 Crear `.github/workflows/audit.yml` con `schedule` semanal y `workflow_dispatch` (design D3); verificar que termina en verde. Como `workflow_dispatch` solo funciona con el workflow ya en `main`, se verificó antes del merge con un disparo `pull_request` temporal en la PR (retirado después); tras el merge se lanza a mano como confirmación
 
 ## 3. Documentación
 

@@ -6,7 +6,6 @@ on:
   schedule:
     - cron: '0 6 * * 1' # lunes 06:00 UTC
   workflow_dispatch:
-  pull_request: # TEMPORAL: verificar audit.yml en la PR #8; se quita antes del archivado
 
 permissions:
   contents: read
