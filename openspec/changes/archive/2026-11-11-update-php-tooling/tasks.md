@@ -14,7 +14,7 @@
 ## 3. Documentación
 
 - [x] 3.1 Documentar en el README (sección de CI) el paso `composer audit`, el workflow semanal y qué hacer cuando falla (actualizar la dependencia afectada en un change pequeño); añadir también a `.claude/skills/silveira-dev-setup/SKILL.md` que `composer audit` forma parte del job `php`; verificar que los comandos documentados funcionan tal cual
-- [ ] 3.2 Comprobar en la PR que los tres jobs (`frontend`, `php`, `e2e`) pasan en verde antes del archivado
+- [x] 3.2 Comprobar en la PR que los tres jobs (`frontend`, `php`, `e2e`) pasan en verde antes del archivado
 
 ## Workflow follow-up
 
