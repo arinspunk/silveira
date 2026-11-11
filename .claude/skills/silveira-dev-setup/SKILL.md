@@ -44,10 +44,11 @@ Desde `wp-content/themes/silveira`:
 ```bash
 npm ci && npm run validate && npm run format:check && npm run build
 git status --porcelain -- assets/        # debe salir vacío
-docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && composer run lint && composer run analyse'
+docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && composer audit --locked --abandoned=report && composer run lint && composer run analyse'
 ```
 
 - PHPCS (WPCS, text domain y prefijo `silveira`) y PHPStan nivel 5 cubren todo el theme; **0 errores, sin baseline**. Variables de plantilla con prefijo `silveira_`.
+- `composer audit` es un paso bloqueante del job `php` (y hay una ejecución semanal en `audit.yml`). Si falla, actualizar solo el paquete afectado en un change pequeño, subiendo su restricción en `composer.json`, con `composer update <paquete>` acotado (sin `--with-dependencies` si no hace falta).
 - `composer run lint:fix` (phpcbf) para lo automático; si es un reformateo masivo, commit propio y añadir su hash a `.git-blame-ignore-revs`.
 - Para que el build en Linux sea idéntico: mismo lockfile y Node 22. Se puede verificar en un clon limpio con `docker run node:22`.
 
