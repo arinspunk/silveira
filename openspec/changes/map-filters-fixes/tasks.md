@@ -4,6 +4,7 @@
 
 - [ ] 1.1 Generar las opciones de Comarca y Localidade según design D1; verificar con un territorio de prueba de primer nivel sin hijas que aparece solo en "Comarca" (escenarios de "Filter options reflect the territory hierarchy")
 - [ ] 1.2 Cambiar `wp_get_post_terms` por `get_the_terms` y eliminar `$territorios` sin uso en `silveira_get_map_points()` (design D5); verificar que el JSON de puntos es idéntico al anterior y que Query Monitor (o `SAVEQUERIES`) muestra menos consultas en la portada
+- [ ] 1.3 Fijar un orden determinista en la consulta de `silveira_get_map_points()` (p. ej. `'orderby' => array( 'date' => 'DESC', 'ID' => 'DESC' )`); verificar que dos cargas seguidas de la portada dan el mismo JSON de puntos aunque haya proyectos con la misma fecha
 
 ## 2. Lógica de filtrado
 
@@ -19,3 +20,4 @@
 ## 4. Build
 
 - [ ] 4.1 Actualizar los selectores del smoke test (`map-smoke-tests`) si cambian por el nuevo marcado de los desplegables; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa y repetir los escenarios del spec con `SILVEIRA_VITE_DEV=0`
+- [ ] 4.2 Hacer que el smoke test pulse el marcador de un proyecto concreto del seed (por su título o atributo, no el primero de la lista); verificar que pasa con el seed limpio y también con contenido extra en la base de datos local

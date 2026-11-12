@@ -38,5 +38,6 @@ En `silveira_get_map_points()`: `get_the_terms()` (usa caché de objeto cargada 
 
 ## Risks / Trade-offs
 
+- [Orden de los puntos no determinista] → `silveira_get_map_points()` no fija orden secundario: los proyectos con la misma fecha (p. ej. los del seed, creados en el mismo segundo) salen en un orden que MySQL puede variar según el contenido de la tabla, y el smoke test pulsa el "primer" marcador, que a veces queda tapado por otro (falló al añadir 12 recursos en local durante `theme-robustness`). Se fija el orden (tarea 1.3) y el test pulsa un marcador concreto (tarea 4.2).
 - [Cambiar `div` por `button` altera estilos del `.c-select`] → resetear estilos del botón en `_forms.scss` y comparar con Kitchen Sink.
 - [El clic en `.c-select` que expande el mapa (map.js) puede romperse al mover el listener] → mantener el listener en el contenedor `.c-select`; verificar en tarea.
