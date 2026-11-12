@@ -77,6 +77,8 @@ function silveira_hero() {
 		}
 	} elseif ( is_home() ) {
 		$title = get_the_title( get_option( 'page_for_posts' ) );
+	} elseif ( is_404() ) {
+		$title = __( 'Página nom encontrada', 'silveira' );
 	}
 
 	get_template_part(

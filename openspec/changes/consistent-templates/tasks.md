@@ -11,6 +11,7 @@
 - [x] 2.1 Ajustar `single-projeto.php` (hero dentro de `main`, sin `comments_template`) y `content-projeto.php` (sin título, `h4`→`h2` con el mismo estilo en `_project-single.scss`) (design D3); verificar escenarios "One main heading per page", "Heading levels do not skip" y "Comments are not offered on projects"
 - [x] 2.2 Crear `single.php` para evento y recurso con hero (design D4) y borrar `single-evento.php` y `single-recurso.php`; verificar el escenario "Event page" y la ficha de un recurso
 - [x] 2.3 Adaptar `content.php`/`index.php` para no emitir `h1` propio; verificar con la búsqueda (`/?s=horta`) y una página estática que hay un único `h1`
+- [x] 2.4 Dar título al hero en la página 404 (`silveira_hero()`, texto traducible); verificar el escenario "Not found page": estado 404 y un único `h1`
 
 ## 3. Footer y verificación global
 
