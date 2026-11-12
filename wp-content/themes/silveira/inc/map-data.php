@@ -48,6 +48,11 @@ function silveira_get_map_points() {
 			'post_type'      => 'projeto',
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
+			// Orden estable: con la misma fecha, MySQL puede devolver los proyectos en cualquier orden.
+			'orderby'        => array(
+				'date' => 'DESC',
+				'ID'   => 'DESC',
+			),
 		)
 	);
 
@@ -64,9 +69,10 @@ function silveira_get_map_points() {
 		}
 
 		// Categorías para filtrar.
-		$modalidades     = wp_get_post_terms( $post_id, 'modalidade_projeto', array( 'fields' => 'slugs' ) );
+		// get_the_terms() usa la caché de términos que WP_Query ya ha cargado (sin consultas por proyecto).
 		$modalidades_obj = get_the_terms( $post_id, 'modalidade_projeto' );
-		$mod_name        = ( $modalidades_obj && ! is_wp_error( $modalidades_obj ) ) ? $modalidades_obj[0]->name : '';
+		$modalidades     = ( $modalidades_obj && ! is_wp_error( $modalidades_obj ) ) ? wp_list_pluck( $modalidades_obj, 'slug' ) : array();
+		$mod_name        = $modalidades ? $modalidades_obj[0]->name : '';
 
 		$territorios_obj  = get_the_terms( $post_id, 'territorio' );
 		$territorio_slugs = array();
@@ -112,7 +118,7 @@ function silveira_get_map_points() {
 			'url'         => silveira_map_url( get_permalink() ),
 			'lema'        => silveira_map_plain_text( silveira_field( 'projeto_lema' ) ),
 			'image'       => silveira_map_url( get_the_post_thumbnail_url( $post_id, 'large' ) ),
-			'modalidades' => is_array( $modalidades ) ? $modalidades : array(),
+			'modalidades' => array_values( $modalidades ),
 			'territorios' => array_values( array_unique( $territorio_slugs ) ),
 		);
 	}

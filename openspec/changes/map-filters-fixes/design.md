@@ -25,6 +25,8 @@ Comarcas: `get_terms( taxonomy=territorio, parent=0, hide_empty=true )` (con `hi
 ### D2. Estado y visibilidad en `map.js`
 `syncFilterOptions` pasa a ser la única que toca visibilidad, usando `label.hidden`. Regla extra para localidades: si hay comarcas marcadas y la localidade no pertenece a ninguna, se desmarca (sin re-disparar `change`, se recalcula en la misma pasada). `initDependentFilters` se elimina de `forms.js`.
 - Se extrae un predicado `matches(point, group)` para no repetir las cinco expresiones `some/includes` actuales.
+- *Al aplicar*: las opciones de Comarca se calculan sin tener en cuenta la localidade marcada (`ignoredFor` en `map.js`). Si no, con "Lalín" marcada solo se ofrecería "Deza" y el escenario "Incompatible localidade is unchecked" (marcar "Ordes") sería imposible desde la interfaz. Se añade esta regla al requisito "Only compatible options are offered".
+- *Al aplicar*: cada marcador lleva `data-project-id` (lo usa el smoke test para pulsar un proyecto concreto, tarea 4.2).
 
 ### D3. Desplegable accesible
 Marcado: el `div.c-select` mantiene su clase; dentro, la zona de etiqueta/valor/icono pasa a ser `<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-comarca-panel">`; el panel `div.c-select__dropdown` recibe `id` y `role="group"` con `aria-labelledby`. JS: Enter/Espacio nativos del botón; `Escape` en el panel cierra y devuelve foco; clic fuera cierra (ya existe). Abrir el desplegable sigue disparando la expansión del mapa (comportamiento de `homepage-scroll-a11y`).

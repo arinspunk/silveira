@@ -12,7 +12,7 @@
 	align-items: flex-start;
 	gap: 1px;
 	height: 50px;
-	padding: 0 45px 0 15px; // Extra padding on the right for the action icon
+	padding: 0;
 	background-color: var(--sil-pure-white);
 	border: 1px solid var(--sil-violeta-700);
 	border-radius: 5px;
@@ -24,6 +24,33 @@
 	&:hover,
 	&--active {
 		background-color: var(--sil-violeta-050);
+	}
+
+	// Botón que abre el panel: ocupa toda la caja (el aspecto es el del .c-select).
+	&__trigger {
+		appearance: none;
+		display: flex;
+		flex: 1 1 auto;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-start;
+		align-self: stretch;
+		gap: 1px;
+		width: 100%;
+		margin: 0;
+		padding: 0 45px 0 15px; // Extra padding on the right for the action icon
+		border: 0;
+		border-radius: inherit;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-align: left;
+		cursor: pointer;
+
+		&:focus-visible {
+			outline: 2px solid var(--sil-violeta-700);
+			outline-offset: 2px;
+		}
 	}
 
 	&__label {
@@ -81,6 +108,11 @@
 	height: 40px;
 	padding: 0 16px;
 	cursor: pointer;
+
+	// Opciones ocultadas por los filtros (map.js usa el atributo hidden).
+	&[hidden] {
+		display: none;
+	}
 
 	&:hover {
 		background-color: var(--sil-violeta-050);

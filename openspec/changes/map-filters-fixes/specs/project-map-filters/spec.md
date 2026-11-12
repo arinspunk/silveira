@@ -25,7 +25,7 @@ Dentro de un mismo filtro las opciones marcadas SHALL combinarse como O; entre f
 - **THEN** el mapa y la lista muestran los proyectos de Deza que son Escola u Obradoiro
 
 ### Requirement: Only compatible options are offered
-Cada filtro SHALL ocultar las opciones que no producirían resultados combinadas con las selecciones de los otros filtros; las opciones marcadas SHALL permanecer visibles salvo lo indicado para localidades.
+Cada filtro SHALL ocultar las opciones que no producirían resultados combinadas con las selecciones de los otros filtros; las opciones marcadas SHALL permanecer visibles salvo lo indicado para localidades. Las opciones de "Comarca" SHALL depender solo de la modalidade, no de la localidade marcada: la localidade es un refinamiento dentro de la comarca, y elegir otra comarca desmarca las localidades incompatibles.
 
 #### Scenario: Localidades limited by comarca
 - **WHEN** se marca la comarca "Deza"

@@ -139,6 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			projectListContainer.replaceChildren();
 		}
 
+		if (projectListContainer && filteredPoints.length === 0) {
+			projectListContainer.append(
+				el('li', { className: 'c-project-list__empty' }, [
+					projectListContainer.dataset.emptyText || '',
+				]),
+			);
+		}
+
 		// Define custom icon using Material Symbol
 		const customIcon = L.divIcon({
 			html: '<span class="o-icon o-icon--lg o-icon--filled" style="color: var(--sil-violeta-500); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">location_on</span>',
@@ -150,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		filteredPoints.forEach((point) => {
 			const marker = L.marker([point.lat, point.lng], { icon: customIcon }).addTo(map);
+			// Identifica el marcador de cada proyecto (lo usa el smoke test).
+			marker.getElement()?.setAttribute('data-project-id', String(point.id));
 
 			const popupContent = buildPopup(point);
 
@@ -172,121 +182,103 @@ document.addEventListener('DOMContentLoaded', () => {
 	renderMarkers(points);
 
 	// 4. Filtering Logic
+	// Estado: valores marcados por grupo. Dentro de un grupo se combinan con O; entre grupos, con Y.
 	const filters = {
 		modalidade: [],
 		comarca: [],
 		localidade: [],
 	};
+	// Campo del punto que se compara con cada grupo.
+	const pointField = {
+		modalidade: 'modalidades',
+		comarca: 'territorios',
+		localidade: 'territorios',
+	};
+
+	const groupOf = (cb) => {
+		if (cb.dataset.filter === 'modalidade') return 'modalidade';
+		if (cb.classList.contains('js-filter-comarca')) return 'comarca';
+		if (cb.classList.contains('js-filter-localidade')) return 'localidade';
+		return null;
+	};
+
+	const filterInputs = Array.from(document.querySelectorAll('.c-checkbox__input')).filter(groupOf);
+
+	/** ¿Cumple el punto el filtro de un grupo? (sin nada marcado, sí). */
+	const matches = (point, group) =>
+		filters[group].length === 0 || filters[group].some((v) => point[pointField[group]].includes(v));
+
+	/** ¿Cumple el punto todos los grupos, salvo los de `except`? */
+	const matchesAll = (point, except = []) =>
+		Object.keys(filters).every((group) => except.includes(group) || matches(point, group));
+
+	// Grupos que NO restringen las opciones de cada grupo. Las comarcas no dependen de la localidade
+	// (es un refinamiento dentro de la comarca): elegir otra comarca desmarca las localidades incompatibles.
+	const ignoredFor = {
+		modalidade: ['modalidade'],
+		comarca: ['comarca', 'localidade'],
+		localidade: ['localidade'],
+	};
+
+	const readFilters = () => {
+		Object.keys(filters).forEach((group) => {
+			filters[group] = filterInputs
+				.filter((cb) => cb.checked && groupOf(cb) === group)
+				.map((cb) => cb.value);
+		});
+	};
+
+	/** Una localidade solo es compatible si no hay comarcas marcadas o pertenece a una de ellas. */
+	const localidadeFitsComarcas = (cb) =>
+		filters.comarca.length === 0 ||
+		filters.comarca.includes(cb.closest('.c-checkbox')?.dataset.parentComarca);
+
+	/**
+	 * Única responsable de qué opciones se ven (atributo `hidden`): se ofrece una opción si,
+	 * combinada con los demás grupos (ver ignoredFor), daría resultados. Las marcadas siguen visibles, salvo
+	 * localidades de otra comarca, que ya se han desmarcado en updateFilters().
+	 */
+	const syncFilterOptions = () => {
+		const available = {};
+		Object.keys(filters).forEach((group) => {
+			available[group] = new Set();
+			points
+				.filter((p) => matchesAll(p, ignoredFor[group]))
+				.forEach((p) => p[pointField[group]].forEach((v) => available[group].add(v)));
+		});
+
+		filterInputs.forEach((cb) => {
+			const group = groupOf(cb);
+			const label = cb.closest('.c-checkbox');
+			if (!label) return;
+			let visible = cb.checked || available[group].has(cb.value);
+			if (group === 'localidade' && !localidadeFitsComarcas(cb)) visible = false;
+			label.hidden = !visible;
+		});
+	};
 
 	const updateFilters = () => {
-		// 1. Update state
-		const checkboxes = document.querySelectorAll('.c-checkbox__input');
-		filters.modalidade = [];
-		filters.comarca = [];
-		filters.localidade = [];
+		readFilters();
 
-		checkboxes.forEach((cb) => {
-			if (cb.checked) {
-				if (cb.dataset.filter === 'modalidade') {
-					filters.modalidade.push(cb.value);
-				} else if (cb.classList.contains('js-filter-comarca')) {
-					filters.comarca.push(cb.value);
-				} else if (cb.classList.contains('js-filter-localidade')) {
-					filters.localidade.push(cb.value);
-				}
-			}
-		});
+		// Localidades marcadas que ya no encajan con las comarcas elegidas: se desmarcan en esta misma pasada.
+		const incompatible = filterInputs.filter(
+			(cb) => cb.checked && groupOf(cb) === 'localidade' && !localidadeFitsComarcas(cb),
+		);
+		if (incompatible.length) {
+			incompatible.forEach((cb) => {
+				cb.checked = false;
+			});
+			readFilters();
+		}
 
-		// 2. Filter points
-		const filteredPoints = points.filter((p) => {
-			const matchModalidade =
-				filters.modalidade.length === 0 ||
-				filters.modalidade.some((m) => p.modalidades.includes(m));
-
-			const matchComarca =
-				filters.comarca.length === 0 || filters.comarca.some((t) => p.territorios.includes(t));
-
-			const matchLocalidade =
-				filters.localidade.length === 0 ||
-				filters.localidade.some((t) => p.territorios.includes(t));
-
-			return matchModalidade && matchComarca && matchLocalidade;
-		});
-
-		// 3. Update Markers
-		renderMarkers(filteredPoints);
-
-		// 4. Sync Filter Options UI
+		renderMarkers(points.filter((p) => matchesAll(p)));
 		syncFilterOptions();
 	};
 
-	const syncFilterOptions = () => {
-		const checkboxes = document.querySelectorAll('.c-checkbox__input');
-
-		// 1. Determine available options for each group
-		// Modalidades are restricted by Comarca AND Localidade
-		const availableM = new Set();
-		points.forEach((p) => {
-			const matchesOther =
-				(filters.comarca.length === 0 || filters.comarca.some((t) => p.territorios.includes(t))) &&
-				(filters.localidade.length === 0 ||
-					filters.localidade.some((t) => p.territorios.includes(t)));
-			if (matchesOther) {
-				p.modalidades.forEach((m) => availableM.add(m));
-			}
-		});
-
-		// Comarcas are restricted by Modalidade AND Localidade
-		const availableC = new Set();
-		points.forEach((p) => {
-			const matchesOther =
-				(filters.modalidade.length === 0 ||
-					filters.modalidade.some((m) => p.modalidades.includes(m))) &&
-				(filters.localidade.length === 0 ||
-					filters.localidade.some((t) => p.territorios.includes(t)));
-			if (matchesOther) {
-				p.territorios.forEach((t) => availableC.add(t));
-			}
-		});
-
-		// Localidades are restricted by Modalidade AND Comarca
-		const availableL = new Set();
-		points.forEach((p) => {
-			const matchesOther =
-				(filters.modalidade.length === 0 ||
-					filters.modalidade.some((m) => p.modalidades.includes(m))) &&
-				(filters.comarca.length === 0 || filters.comarca.some((t) => p.territorios.includes(t)));
-			if (matchesOther) {
-				p.territorios.forEach((t) => availableL.add(t));
-			}
-		});
-
-		// 2. Update UI
-		checkboxes.forEach((cb) => {
-			const val = cb.value;
-			const isM = cb.dataset.filter === 'modalidade';
-			const isC = cb.classList.contains('js-filter-comarca');
-			const isL = cb.classList.contains('js-filter-localidade');
-
-			let isAvailable = false;
-			if (isM) isAvailable = availableM.has(val);
-			if (isC) isAvailable = availableC.has(val);
-			if (isL) isAvailable = availableL.has(val);
-
-			const label = cb.closest('.c-checkbox');
-			if (label) {
-				if (isAvailable || cb.checked) {
-					label.style.display = 'flex';
-				} else {
-					label.style.display = 'none';
-				}
-			}
-		});
-	};
-
-	document.querySelectorAll('.c-checkbox__input').forEach((cb) => {
+	filterInputs.forEach((cb) => {
 		cb.addEventListener('change', updateFilters);
 	});
+	syncFilterOptions();
 
 	// 6. Map Scroll UX Optimization (Wheel & Touch Events)
 	const mapWrapper = document.querySelector('.c-map');

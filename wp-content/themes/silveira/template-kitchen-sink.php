@@ -150,13 +150,15 @@ get_header(); ?>
 		<div class="c-filter-bar">
 			<!-- Select 1: Modalidade -->
 			<div class="c-filter-bar__item">
-				<div class="c-select">
-					<span class="c-select__label">Modalidade educativa</span>
-					<span class="c-select__value">Que procuras?</span>
-					<span class="c-select__action o-icon o-icon--sm">expand_more</span>
+				<div class="c-select" id="sg-select-1">
+					<button type="button" class="c-select__trigger" aria-expanded="true" aria-controls="sg-select-1-panel">
+						<span class="c-select__label" id="sg-select-1-label">Modalidade educativa</span>
+						<span class="c-select__value">Que procuras?</span>
+						<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+					</button>
 					
 					<!-- Simulating open dropdown state for the first item -->
-					<div class="c-select__dropdown c-select__dropdown--open">
+					<div class="c-select__dropdown c-select__dropdown--open" id="sg-select-1-panel" role="group" aria-labelledby="sg-select-1-label">
 						<label class="c-checkbox">
 							<input type="checkbox" class="c-checkbox__input">
 							<span class="c-checkbox__box"></span>
@@ -178,19 +180,23 @@ get_header(); ?>
 
 			<!-- Select 2: Comarca -->
 			<div class="c-filter-bar__item">
-				<div class="c-select">
-					<span class="c-select__label">Comarca</span>
-					<span class="c-select__value">Em que zona?</span>
-					<span class="c-select__action o-icon o-icon--sm">expand_more</span>
+				<div class="c-select" id="sg-select-2">
+					<button type="button" class="c-select__trigger" aria-expanded="false">
+						<span class="c-select__label" id="sg-select-2-label">Comarca</span>
+						<span class="c-select__value">Em que zona?</span>
+						<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+					</button>
 				</div>
 			</div>
 
 			<!-- Select 3: Localidade -->
 			<div class="c-filter-bar__item">
-				<div class="c-select">
-					<span class="c-select__label">Localidade</span>
-					<span class="c-select__value">Em que vila?</span>
-					<span class="c-select__action o-icon o-icon--sm">expand_more</span>
+				<div class="c-select" id="sg-select-3">
+					<button type="button" class="c-select__trigger" aria-expanded="false">
+						<span class="c-select__label" id="sg-select-3-label">Localidade</span>
+						<span class="c-select__value">Em que vila?</span>
+						<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+					</button>
 				</div>
 			</div>
 		</div>
