@@ -19,5 +19,5 @@
 
 ## 4. Build
 
-- [ ] 4.1 Actualizar los selectores del smoke test (`map-smoke-tests`) si cambian por el nuevo marcado de los desplegables; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa y repetir los escenarios del spec con `SILVEIRA_VITE_DEV=0`
+- [x] 4.1 Actualizar los selectores del smoke test (`map-smoke-tests`) si cambian por el nuevo marcado de los desplegables; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa y repetir los escenarios del spec con `SILVEIRA_VITE_DEV=0`
 - [x] 4.2 Hacer que el smoke test pulse el marcador de un proyecto concreto del seed (por su título o atributo, no el primero de la lista); verificar que pasa con el seed limpio y también con contenido extra en la base de datos local
