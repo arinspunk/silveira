@@ -85,5 +85,7 @@ npm run e2e:down                                         # al terminar (borra su
 ## 7. Git y GitHub
 
 - Merges a `main` siempre con merge commit (`--no-ff` o "Create a merge commit"); nunca squash ni rebase (rompería `.git-blame-ignore-revs`).
-- `main` está protegida: exige los checks `frontend` y `php`; el admin puede saltársela para merges locales.
+- `main` está protegida: exige los checks `frontend`, `php` y `e2e`; el admin puede saltársela para merges locales.
+- GitHub borra la rama de la PR al mergear ("Automatically delete head branches"); después, `git switch main && git pull && git branch -d <rama>` en local.
+- Changes de OpenSpec: una rama y una PR por change. El archivado (`openspec/changes/archive/YYYY-MM-DD-<nombre>/`, con sync de specs si las hay) va como **último commit de esa misma rama**, con la CI en verde antes del merge; nunca en una PR aparte.
 - La CI solo se ejecuta en PRs y en pushes a `main`; un push a otra rama no la dispara.
