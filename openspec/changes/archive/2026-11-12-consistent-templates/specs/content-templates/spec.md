@@ -17,6 +17,10 @@ Cada página pública SHALL tener exactamente un encabezado de nivel 1, que corr
 - **WHEN** un visitante abre el archivo de proyectos con 10 proyectos
 - **THEN** la página contiene un único `h1` y cada proyecto se presenta con un encabezado de nivel inferior
 
+#### Scenario: Not found page
+- **WHEN** un visitante abre una URL que no existe
+- **THEN** la página responde 404 y contiene un único `h1` que indica que la página no se ha encontrado
+
 ### Requirement: Heading levels do not skip
 Dentro del contenido de las plantillas del theme, los encabezados SHALL descender de nivel de uno en uno.
 

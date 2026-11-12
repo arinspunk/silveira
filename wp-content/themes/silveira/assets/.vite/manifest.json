@@ -20,12 +20,12 @@
     "src": "src/fonts/material-symbols-subset.woff2"
   },
   "src/main.js": {
-    "file": "js/main-BdpO3C7X.js",
+    "file": "js/main-C24g064U.js",
     "name": "main",
     "src": "src/main.js",
     "isEntry": true,
     "css": [
-      "css/main-BgH2MBlo.css"
+      "css/main-n5-WLi7n.css"
     ],
     "assets": [
       "fonts/Isaac-Regular-Bneyzeyg.woff2",

@@ -119,6 +119,21 @@
 		line-height: 1.5;
 		color: var(--sil-verde-800);
 		margin: 0;
+
+		// the_excerpt() envuelve el texto en <p>.
+		p {
+			margin: 0;
+		}
+	}
+
+	&__title a {
+		color: inherit;
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			text-decoration: underline;
+		}
 	}
 
 	&__actions {

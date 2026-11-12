@@ -1,0 +1,30 @@
+/**
+ * 6-COMPONENTS / ENTRY
+ * Contenido de las fichas de evento y recurso (single.php). Misma tipografía que la ficha de proyecto.
+ */
+
+.c-entry {
+	padding: 60px 0;
+
+	&__content {
+		max-width: 760px;
+		font-size: 18px;
+		line-height: 1.6;
+		color: var(--sil-verde-800);
+
+		p {
+			margin-bottom: 1.5em;
+		}
+	}
+
+	&__terms {
+		margin: 0;
+		font-family: var(--sil-font-primary);
+		font-size: 16px;
+		color: var(--sil-verde-700);
+
+		a {
+			color: inherit;
+		}
+	}
+}
