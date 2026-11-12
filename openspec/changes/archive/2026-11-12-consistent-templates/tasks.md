@@ -2,7 +2,7 @@
 
 ## 1. Tarjeta y archivo
 
-- [ ] 1.1 Crear `silveira_card_context()` y `template-parts/card.php` sobre `c-stacked-card` (design D2) y la rejilla `.c-card-grid`; añadir la tarjeta a la Kitchen Sink y verificar visualmente que coincide con el componente de Figma
+- [x] 1.1 Crear `silveira_card_context()` y `template-parts/card.php` sobre `c-stacked-card` (design D2) y la rejilla `.c-card-grid`; añadir la tarjeta a la Kitchen Sink y verificar visualmente que coincide con el componente de Figma
 - [x] 1.2 Crear `archive.php` (design D1) y borrar `archive-evento.php`, `archive-projeto.php`, `archive-recurso.php` y `taxonomy-territorio.php`; verificar los escenarios de "Archives list items as cards" en `/projeto/`, `/agenda/`, `/recursos/`, un territorio y una categoría de recurso, incluida la paginación
 - [x] 1.3 Limpiar el título del hero en los archivos (design D6): sin prefijo "Archives:" ni `<span>` visible; verificar el escenario "Archive title" en `/projeto/`, `/agenda/`, `/recursos/` y un territorio
 
