@@ -3,105 +3,63 @@
  */
 
 export const initSelects = () => {
-	const selects = document.querySelectorAll('.c-select');
+	const selects = Array.from(document.querySelectorAll('.c-select'));
 
-	const updateSelectIcons = (s) => {
-		const dropdown = s.querySelector('.c-select__dropdown');
-		const icon = s.querySelector('.c-select__action.o-icon');
-		if (!icon) return;
+	const parts = (select) => ({
+		trigger: select.querySelector('.c-select__trigger'),
+		panel: select.querySelector('.c-select__dropdown'),
+		icon: select.querySelector('.c-select__action.o-icon'),
+	});
 
-		if (dropdown.classList.contains('c-select__dropdown--open')) {
-			icon.textContent = 'expand_less';
-			s.classList.add('c-select--active');
-		} else {
-			icon.textContent = 'expand_more';
-			s.classList.remove('c-select--active');
-		}
+	const setOpen = (select, open) => {
+		const { trigger, panel, icon } = parts(select);
+		if (!panel) return;
+		panel.classList.toggle('c-select__dropdown--open', open);
+		select.classList.toggle('c-select--active', open);
+		if (trigger) trigger.setAttribute('aria-expanded', String(open));
+		if (icon) icon.textContent = open ? 'expand_less' : 'expand_more';
 	};
+
+	const isOpen = (select) => !!parts(select).panel?.classList.contains('c-select__dropdown--open');
+
+	const firstVisibleOption = (select) =>
+		Array.from(select.querySelectorAll('.c-select__dropdown .c-checkbox__input')).find(
+			(input) => !input.closest('.c-checkbox')?.hidden,
+		);
 
 	selects.forEach((select) => {
-		const toggle = (e) => {
-			e.stopPropagation();
-			const dropdown = select.querySelector('.c-select__dropdown');
-			const isOpen = dropdown.classList.contains('c-select__dropdown--open');
+		const { trigger, panel } = parts(select);
+		if (!trigger || !panel) return;
 
-			// Close others
-			selects.forEach((s) => {
-				if (s !== select) {
-					const otherDropdown = s.querySelector('.c-select__dropdown');
-					if (otherDropdown) {
-						otherDropdown.classList.remove('c-select__dropdown--open');
-						updateSelectIcons(s);
-					}
-				}
+		// Enter y Espacio son nativos del botón y llegan aquí como click.
+		trigger.addEventListener('click', (e) => {
+			const open = !isOpen(select);
+			selects.forEach((other) => {
+				if (other !== select) setOpen(other, false);
 			});
+			setOpen(select, open);
+			// Abierto con teclado (click sin puntero: detail === 0): el foco va a la primera opción visible.
+			if (open && e.detail === 0) firstVisibleOption(select)?.focus();
+		});
 
-			dropdown.classList.toggle('c-select__dropdown--open', !isOpen);
-			updateSelectIcons(select);
-		};
-
-		select.addEventListener('click', toggle);
-	});
-
-	// Close dropdowns on outside click
-	document.addEventListener('click', () => {
-		selects.forEach((s) => {
-			const d = s.querySelector('.c-select__dropdown');
-			if (d && d.classList.contains('c-select__dropdown--open')) {
-				d.classList.remove('c-select__dropdown--open');
-				updateSelectIcons(s);
+		select.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && isOpen(select)) {
+				e.preventDefault();
+				setOpen(select, false);
+				trigger.focus();
 			}
 		});
 	});
 
-	// Prevent closing when clicking inside dropdown
-	document.querySelectorAll('.c-select__dropdown').forEach((d) => {
-		d.addEventListener('click', (e) => e.stopPropagation());
-	});
-};
-
-/**
- * Dependent Filter Logic (Comarcas -> Localidades)
- */
-export const initDependentFilters = () => {
-	const comarcaCheckboxes = document.querySelectorAll('.js-filter-comarca');
-	const localidadeCheckboxes = document.querySelectorAll('.js-filter-localidade');
-
-	if (!comarcaCheckboxes.length || !localidadeCheckboxes.length) return;
-
-	const updateVisibility = () => {
-		const selectedComarcas = Array.from(comarcaCheckboxes)
-			.filter((cb) => cb.checked)
-			.map((cb) => cb.value);
-
-		localidadeCheckboxes.forEach((cb) => {
-			const parentLabel = cb.closest('.c-checkbox');
-			if (!parentLabel) return;
-
-			const parentComarca = parentLabel.dataset.parentComarca;
-
-			if (selectedComarcas.length === 0 || selectedComarcas.includes(parentComarca)) {
-				parentLabel.style.display = 'flex';
-			} else {
-				parentLabel.style.display = 'none';
-				if (cb.checked) {
-					cb.checked = false;
-					// Trigger a change event so other listeners (like map.js) know it was unchecked
-					cb.dispatchEvent(new Event('change', { bubbles: true }));
-				}
-			}
+	// Clic fuera de un desplegable: se cierra. No se usa stopPropagation, para que el clic siga
+	// llegando a los demás listeners (p. ej. el que expande el mapa en map.js).
+	document.addEventListener('click', (e) => {
+		selects.forEach((select) => {
+			if (isOpen(select) && !select.contains(e.target)) setOpen(select, false);
 		});
-	};
-
-	comarcaCheckboxes.forEach((cb) => {
-		cb.addEventListener('change', updateVisibility);
 	});
-
-	// Run once on load to ensure correct state
-	updateVisibility();
 };
 
 document.addEventListener('DOMContentLoaded', () => {
 	initSelects();
-	initDependentFilters();
 });

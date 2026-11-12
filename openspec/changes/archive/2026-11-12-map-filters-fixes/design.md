@@ -25,6 +25,8 @@ Comarcas: `get_terms( taxonomy=territorio, parent=0, hide_empty=true )` (con `hi
 ### D2. Estado y visibilidad en `map.js`
 `syncFilterOptions` pasa a ser la única que toca visibilidad, usando `label.hidden`. Regla extra para localidades: si hay comarcas marcadas y la localidade no pertenece a ninguna, se desmarca (sin re-disparar `change`, se recalcula en la misma pasada). `initDependentFilters` se elimina de `forms.js`.
 - Se extrae un predicado `matches(point, group)` para no repetir las cinco expresiones `some/includes` actuales.
+- *Al aplicar*: las opciones de Comarca se calculan sin tener en cuenta la localidade marcada (`ignoredFor` en `map.js`). Si no, con "Lalín" marcada solo se ofrecería "Deza" y el escenario "Incompatible localidade is unchecked" (marcar "Ordes") sería imposible desde la interfaz. Se añade esta regla al requisito "Only compatible options are offered".
+- *Al aplicar*: cada marcador lleva `data-project-id` (lo usa el smoke test para pulsar un proyecto concreto, tarea 4.2).
 
 ### D3. Desplegable accesible
 Marcado: el `div.c-select` mantiene su clase; dentro, la zona de etiqueta/valor/icono pasa a ser `<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-comarca-panel">`; el panel `div.c-select__dropdown` recibe `id` y `role="group"` con `aria-labelledby`. JS: Enter/Espacio nativos del botón; `Escape` en el panel cierra y devuelve foco; clic fuera cierra (ya existe). Abrir el desplegable sigue disparando la expansión del mapa (comportamiento de `homepage-scroll-a11y`).
@@ -38,5 +40,6 @@ En `silveira_get_map_points()`: `get_the_terms()` (usa caché de objeto cargada 
 
 ## Risks / Trade-offs
 
+- [Orden de los puntos no determinista] → `silveira_get_map_points()` no fija orden secundario: los proyectos con la misma fecha (p. ej. los del seed, creados en el mismo segundo) salen en un orden que MySQL puede variar según el contenido de la tabla, y el smoke test pulsa el "primer" marcador, que a veces queda tapado por otro (falló al añadir 12 recursos en local durante `theme-robustness`). Se fija el orden (tarea 1.3) y el test pulsa un marcador concreto (tarea 4.2).
 - [Cambiar `div` por `button` altera estilos del `.c-select`] → resetear estilos del botón en `_forms.scss` y comparar con Kitchen Sink.
 - [El clic en `.c-select` que expande el mapa (map.js) puede romperse al mover el listener] → mantener el listener en el contenedor `.c-select`; verificar en tarea.

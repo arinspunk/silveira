@@ -22,17 +22,29 @@ test.describe('Portada', () => {
 		await expect(items.filter({ hasText: 'Escola de Ames' })).toHaveCount(1);
 		await expect(page.getByText('Projeto sem coordenadas')).toHaveCount(0);
 
-		// Pulsar un marcador abre su popup y expande el mapa.
-		await markers.first().click();
+		// Pulsar el marcador de un proyecto concreto abre su popup y expande el mapa. Se elige por su id
+		// (no "el primero": el orden y el solape de marcadores dependen de los datos) y se dispara el clic
+		// en el propio marcador, porque en el seed los marcadores están tan juntos que unos tapan a otros.
+		const amesId = await page.evaluate(
+			() => window.silveiraMapPoints.find((p) => p.title === 'Escola de Ames').id,
+		);
+		await page.locator(`.leaflet-marker-icon[data-project-id="${amesId}"]`).dispatchEvent('click');
 		const card = page.locator('.leaflet-popup-content .c-map-card');
 		await expect(card).toBeVisible();
-		await expect(card.locator('.c-map-card__title')).not.toBeEmpty();
-		await expect(card.getByRole('link', { name: 'Ver projeto' })).toHaveAttribute('href', /\/projeto\//);
+		await expect(card.locator('.c-map-card__title')).toHaveText('Escola de Ames');
+		await expect(card.getByRole('link', { name: 'Ver projeto' })).toHaveAttribute(
+			'href',
+			/\/projeto\//,
+		);
 		await expect(page.locator('.c-map')).not.toHaveClass(/is-locked/);
 		await page.locator('.leaflet-popup-close-button').click();
 
 		// Filtrar por modalidade "Escola" deja solo sus dos proyectos.
-		await page.locator('#filter-modalidade').click();
+		await page.locator('#filter-modalidade .c-select__trigger').click();
+		await expect(page.locator('#filter-modalidade .c-select__trigger')).toHaveAttribute(
+			'aria-expanded',
+			'true',
+		);
 		await page.locator('#filter-modalidade').getByText('Escola', { exact: true }).click();
 		await expect(markers).toHaveCount(2);
 		await expect(items).toHaveCount(2);
@@ -42,7 +54,9 @@ test.describe('Portada', () => {
 	});
 
 	// Regresión de harden-map-output: el título y el lema con HTML no se interpretan.
-	test('el contenido con HTML del proyecto se muestra como texto sin ejecutar nada', async ({ page }) => {
+	test('el contenido con HTML del proyecto se muestra como texto sin ejecutar nada', async ({
+		page,
+	}) => {
 		const watcher = watchErrors(page); // incluye diálogos: un alert() haría fallar el test
 
 		await page.goto('/');

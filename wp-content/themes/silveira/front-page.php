@@ -18,11 +18,13 @@ get_header();
 		<!-- Modalidade -->
 		<div class="c-filter-bar__item">
 			<div class="c-select" id="filter-modalidade">
-				<span class="c-select__label"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
-				<span class="c-select__value"><?php esc_html_e( 'Que procuras?', 'silveira' ); ?></span>
-				<span class="c-select__action o-icon o-icon--sm">expand_more</span>
-				
-				<div class="c-select__dropdown">
+				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-modalidade-panel">
+					<span class="c-select__label" id="filter-modalidade-label"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
+					<span class="c-select__value"><?php esc_html_e( 'Que procuras?', 'silveira' ); ?></span>
+					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+				</button>
+
+				<div class="c-select__dropdown" id="filter-modalidade-panel" role="group" aria-labelledby="filter-modalidade-label">
 					<?php
 					$silveira_terms = get_terms(
 						array(
@@ -45,11 +47,13 @@ get_header();
 		<!-- Comarca (Parent Territorio) -->
 		<div class="c-filter-bar__item">
 			<div class="c-select" id="filter-comarca">
-				<span class="c-select__label"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
-				<span class="c-select__value"><?php esc_html_e( 'Em que zona?', 'silveira' ); ?></span>
-				<span class="c-select__action o-icon o-icon--sm">expand_more</span>
-				
-				<div class="c-select__dropdown">
+				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-comarca-panel">
+					<span class="c-select__label" id="filter-comarca-label"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
+					<span class="c-select__value"><?php esc_html_e( 'Em que zona?', 'silveira' ); ?></span>
+					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+				</button>
+
+				<div class="c-select__dropdown" id="filter-comarca-panel" role="group" aria-labelledby="filter-comarca-label">
 					<?php
 					$silveira_comarcas = get_terms(
 						array(
@@ -73,18 +77,25 @@ get_header();
 		<!-- Localidade (Child Territorio) -->
 		<div class="c-filter-bar__item">
 			<div class="c-select" id="filter-localidade">
-				<span class="c-select__label"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
-				<span class="c-select__value"><?php esc_html_e( 'Em que vila?', 'silveira' ); ?></span>
-				<span class="c-select__action o-icon o-icon--sm">expand_more</span>
-				
-				<div class="c-select__dropdown">
+				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-localidade-panel">
+					<span class="c-select__label" id="filter-localidade-label"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
+					<span class="c-select__value"><?php esc_html_e( 'Em que vila?', 'silveira' ); ?></span>
+					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+				</button>
+
+				<div class="c-select__dropdown" id="filter-localidade-panel" role="group" aria-labelledby="filter-localidade-label">
 					<?php
-					$silveira_localidades = get_terms(
-						array(
-							'taxonomy'   => 'territorio',
-							'childless'  => true,
-							'hide_empty' => true,
-						)
+					// Localidades: territorios con comarca pai (as comarcas sem localidades só saem em "Comarca").
+					$silveira_localidades = array_filter(
+						get_terms(
+							array(
+								'taxonomy'   => 'territorio',
+								'hide_empty' => true,
+							)
+						),
+						static function ( $silveira_term ) {
+							return 0 !== (int) $silveira_term->parent;
+						}
 					);
 					foreach ( $silveira_localidades as $silveira_loc ) :
 						$silveira_parent_term = get_term( $silveira_loc->parent, 'territorio' );
@@ -114,7 +125,7 @@ get_header();
 		
 		<!-- Slide out panel -->
 		<div class="c-map-panel" id="map-project-list" style="transform: translateX(100%);">
-			<ul class="c-project-list">
+			<ul class="c-project-list" data-empty-text="<?php esc_attr_e( 'Nom há projetos para estes filtros.', 'silveira' ); ?>">
 				<!-- Injected via map.js -->
 			</ul>
 		</div>
