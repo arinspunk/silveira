@@ -60,9 +60,8 @@
 	<div class="c-footer__silvas">
 		<img src="<?php echo esc_url( get_theme_file_uri( 'assets/img/footer-silvas.png' ) ); ?>" alt="" aria-hidden="true">
 	</div>
-
-	<?php wp_footer(); ?>
 </footer>
 </div><!-- .l-site-content -->
+<?php wp_footer(); ?>
 </body>
 </html>

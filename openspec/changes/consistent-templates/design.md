@@ -32,6 +32,13 @@ Hero (dentro de `main`) + contenido + territorios/categoría como enlaces. Se bo
 ### D6. Título de archivo limpio
 Hoy el hero muestra `Archives: <span>Projetos</span>`: `get_the_archive_title()` envuelve el nombre en `<span>` y antepone un prefijo en inglés; `silveira_hero()` intenta quitarlo con un `str_replace` de prefijos fijos que no coinciden ("Archive: " frente a "Archives: ") y el hero escapa el HTML. Se sustituye por el filtro `get_the_archive_title_prefix` (devuelve `''`) y `wp_strip_all_tags()` sobre el título; se elimina el `str_replace`.
 
+### Ajustes al aplicar
+- `template-parts/content-none.php` emitía un `h1` (segundo `h1` en un archivo vacío): pasa a `h2`.
+- La portada saltaba de `h1` a `h3`: los títulos de la lista lateral y del popup del mapa (`map.js`) pasan a `h2`, con el mismo aspecto (estilos por clase).
+- `template-parts/content.php` deja de usarse (archivos e `index.php` usan `card.php`) y se elimina; `index.php` muestra `content-none` cuando no hay resultados.
+- `single.php` usa un componente mínimo `c-entry` (`_entry.scss`) con la tipografía de la ficha de proyecto; la rejilla y la paginación van en `_card-grid.scss`.
+- Con `wp_footer()` fuera de `.l-site-content`, la barra de admin deja de estar dentro del contenedor que se desplaza con `transform` en la portada.
+
 ## Risks / Trade-offs
 
 - [Cambian las URLs de plantilla y algún estilo depende de `l-main--archive-projeto`] → se mantienen esas clases (D1).

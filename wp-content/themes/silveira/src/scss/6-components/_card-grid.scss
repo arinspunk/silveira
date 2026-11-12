@@ -1,0 +1,47 @@
+/**
+ * 6-COMPONENTS / CARD GRID
+ * Rejilla de tarjetas (c-stacked-card) de los listados y su paginación.
+ */
+
+.c-card-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 360px));
+	gap: 24px;
+	padding: 40px 0;
+}
+
+// the_posts_pagination()
+.l-main--archive .pagination,
+.l-main--search .pagination {
+	padding-bottom: 60px;
+
+	.nav-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.page-numbers {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 40px;
+		height: 40px;
+		padding: 0 12px;
+		border: 1px solid var(--sil-verde-100);
+		border-radius: 5px;
+		font-family: var(--sil-font-primary);
+		color: var(--sil-verde-800);
+		text-decoration: none;
+
+		&.current {
+			background-color: var(--sil-verde-800);
+			border-color: var(--sil-verde-800);
+			color: var(--sil-pure-white);
+		}
+	}
+
+	a.page-numbers:hover {
+		border-color: var(--sil-verde-200);
+	}
+}

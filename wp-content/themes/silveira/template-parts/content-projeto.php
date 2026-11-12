@@ -27,8 +27,6 @@ $silveira_territorios = get_the_terms( $silveira_post_id, 'territorio' );
 						</div>
 					<?php endif; ?>
 
-					<h1 class="c-project-single__title"><?php the_title(); ?></h1>
-					
 					<?php if ( $silveira_lema ) : ?>
 						<p class="c-project-single__lema"><?php echo esc_html( $silveira_lema ); ?></p>
 					<?php endif; ?>
@@ -45,7 +43,7 @@ $silveira_territorios = get_the_terms( $silveira_post_id, 'territorio' );
 					
 					<?php if ( $silveira_endereco ) : ?>
 						<div class="c-project-info-block">
-							<h4 class="c-project-info-block__title"><?php esc_html_e( 'Endereço', 'silveira' ); ?></h4>
+							<h2 class="c-project-info-block__title"><?php esc_html_e( 'Endereço', 'silveira' ); ?></h2>
 							<p class="c-project-info-block__text">
 								<span class="o-icon o-icon--xs">location_on</span>
 								<?php echo esc_html( $silveira_endereco ); ?>
@@ -55,7 +53,7 @@ $silveira_territorios = get_the_terms( $silveira_post_id, 'territorio' );
 
 					<?php if ( ! empty( $silveira_territorios ) ) : ?>
 						<div class="c-project-info-block">
-							<h4 class="c-project-info-block__title"><?php esc_html_e( 'Território', 'silveira' ); ?></h4>
+							<h2 class="c-project-info-block__title"><?php esc_html_e( 'Território', 'silveira' ); ?></h2>
 							<div class="c-project-info-block__tags">
 								<?php echo get_the_term_list( $silveira_post_id, 'territorio', '', ', ', '' ); ?>
 							</div>

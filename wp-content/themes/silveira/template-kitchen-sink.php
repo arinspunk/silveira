@@ -202,6 +202,29 @@ get_header(); ?>
 		</div>
 	</section>
 
+	<!-- CARDS -->
+	<section class="sg-section">
+		<h2 class="sg-section__title">Cards (listados)</h2>
+		<p>Tarjeta <code>template-parts/card.php</code> (<code>c-stacked-card</code>) en la rejilla <code>.c-card-grid</code> de los archivos. Muestra los últimos contenidos publicados.</p>
+
+		<div class="c-card-grid">
+			<?php
+			$silveira_cards = new WP_Query(
+				array(
+					'post_type'           => array( 'projeto', 'evento', 'recurso' ),
+					'posts_per_page'      => 3,
+					'ignore_sticky_posts' => true,
+				)
+			);
+			while ( $silveira_cards->have_posts() ) :
+				$silveira_cards->the_post();
+				get_template_part( 'template-parts/card' );
+			endwhile;
+			wp_reset_postdata();
+			?>
+		</div>
+	</section>
+
 	<!-- BUTTONS -->
 	<section class="sg-section">
 		<h2 class="sg-section__title">Buttons</h2>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plantilla principal mínima — proyecto silveira.
+ * Plantilla de reserva: páginas, búsqueda, blog y 404.
  *
  * @package Silveira
  */
@@ -8,30 +8,33 @@
 get_header();
 ?>
 
-<main id="primary" class="site-main">
-	<?php
-	silveira_hero();
-	?>
+<main id="primary" class="l-main<?php echo is_search() ? ' l-main--search' : ''; ?>">
+	<?php silveira_hero(); ?>
 
 	<div class="o-container">
-		<?php
-		if ( have_posts() ) {
-			while ( have_posts() ) {
+		<?php if ( have_posts() && is_singular() ) : ?>
+			<?php
+			while ( have_posts() ) :
 				the_post();
-				if ( is_singular() ) {
-					the_content();
-				} else {
-					get_template_part( 'template-parts/content', get_post_type() );
-				}
-			}
-		} else {
-			echo '<p>' . esc_html__( 'No hay entradas.', 'silveira' ) . '</p>';
-		}
-		?>
+				the_content();
+			endwhile;
+			?>
+		<?php elseif ( have_posts() ) : ?>
+			<div class="c-card-grid">
+				<?php
+				while ( have_posts() ) :
+					the_post();
+					get_template_part( 'template-parts/card' );
+				endwhile;
+				?>
+			</div>
+
+			<?php the_posts_pagination(); ?>
+		<?php else : ?>
+			<?php get_template_part( 'template-parts/content', 'none' ); ?>
+		<?php endif; ?>
 	</div>
 </main>
-
-
 
 <?php
 get_footer();

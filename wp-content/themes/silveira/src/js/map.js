@@ -60,7 +60,7 @@ const buildPopup = (point) => {
 			]),
 		el('div', { className: 'c-map-card__content' }, [
 			el('div', { className: 'c-map-card__headline' }, [
-				el('h3', { className: 'c-map-card__title' }, [title]),
+				el('h2', { className: 'c-map-card__title' }, [title]),
 				el('span', { className: 'c-map-card__subhead' }, [point.lema || '']),
 			]),
 		]),
@@ -92,7 +92,7 @@ const buildListItem = (point) => {
 				]),
 				el('div', { className: 'c-project-list-item__content' }, [
 					el('p', { className: 'c-project-list-item__overline' }, [point.overline || '']),
-					el('h3', { className: 'c-project-list-item__title' }, [point.title || '']),
+					el('h2', { className: 'c-project-list-item__title' }, [point.title || '']),
 					point.lema && el('p', { className: 'c-project-list-item__lema' }, [point.lema]),
 					el('p', { className: 'c-project-list-item__supporting' }, [point.excerpt || '']),
 				]),
