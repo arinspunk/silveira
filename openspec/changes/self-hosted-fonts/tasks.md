@@ -15,4 +15,4 @@
 
 ## 3. Cierre
 
-- [ ] 3.1 Revisión visual de portada, ficha, archivo y Kitchen Sink con las nuevas fuentes (anotar cambios de métrica que afecten al layout); verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
+- [x] 3.1 Revisión visual de portada, ficha, archivo y Kitchen Sink con las nuevas fuentes (anotar cambios de métrica que afecten al layout); verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
