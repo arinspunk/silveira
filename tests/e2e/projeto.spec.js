@@ -9,7 +9,7 @@ test('la ficha de un proyecto responde 200 sin errores', async ({ page }) => {
 	expect(response.status()).toBe(200);
 	await expectNoPhpErrors(response);
 
-	await expect(page.locator('h1').filter({ hasText: 'Escola de Ames' }).first()).toBeVisible();
+	await expect(page.locator('h1').filter({ hasText: 'TEXTO QUE NOM EXISTE' }).first()).toBeVisible();
 	await expect(page.getByText('Aprender em galego').first()).toBeVisible();
 
 	watcher.assertClean();
