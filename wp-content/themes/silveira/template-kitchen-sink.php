@@ -40,7 +40,7 @@ get_header(); ?>
 	}
 	.sg-swatch__label {
 		font-size: 12px;
-		font-family: var(--sil-font-mono);
+		font-family: monospace;
 	}
 	.sg-grid-visual {
 		background-color: #f0f0f0;
@@ -49,7 +49,7 @@ get_header(); ?>
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-family: var(--sil-font-mono);
+		font-family: monospace;
 		font-size: 12px;
 		margin-bottom: 20px;
 	}
@@ -72,7 +72,6 @@ get_header(); ?>
 			<h3>Heading Level 3 (Isaac)</h3>
 			<h4>Heading Level 4 (Isaac)</h4>
 			<p>Body text (Isaac). Standard paragraph text for content readability. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris.</p>
-			<p style="font-family: var(--sil-font-mono);">Monospaced Text (Akkurat-Mono). Used for identifiers or code snippets.</p>
 		</div>
 	</section>
 
