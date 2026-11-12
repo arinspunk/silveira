@@ -1,7 +1,18 @@
 /**
  * 4-ELEMENTS / ICONS
  * Base styles for Material Symbols integration.
+ *
+ * Subconjunto autoalojado con solo los iconos de src/material-symbols-icons.txt.
+ * Para añadir un icono: añadirlo a esa lista y ejecutar `npm run icons:subset` (ver README).
  */
+
+@font-face {
+	font-family: 'Material Symbols Outlined';
+	src: url('/src/fonts/material-symbols-subset.woff2') format('woff2');
+	font-weight: 100 700;
+	font-style: normal;
+	font-display: block;
+}
 
 .o-icon {
 	font-family: 'Material Symbols Outlined', sans-serif;

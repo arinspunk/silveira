@@ -4,23 +4,38 @@
 
 // Font Families
 $font-primary: 'Isaac', sans-serif;
-$font-mono: 'Akkurat-Mono', monospace;
 
-// Font Face Declarations (Placeholder - path needs verification)
+// Isaac (src/fonts/, woff2). Estilos incluidos: Regular, Italic, Bold y Bold Italic.
+// El peso 500 no existe en la familia: el navegador usa la Regular.
 @font-face {
 	font-family: Isaac;
-	src: url('../../assets/fonts/Isaac-Regular.woff2') format('woff2');
+	src: url('/src/fonts/Isaac-Regular.woff2') format('woff2');
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
 }
 
-// Akkurat-Mono (Placeholder)
 @font-face {
-	font-family: Akkurat-Mono;
-	src: url('../../assets/fonts/Akkurat-Mono.woff2') format('woff2');
+	font-family: Isaac;
+	src: url('/src/fonts/Isaac-Italic.woff2') format('woff2');
 	font-weight: normal;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: Isaac;
+	src: url('/src/fonts/Isaac-Bold.woff2') format('woff2');
+	font-weight: bold;
 	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: Isaac;
+	src: url('/src/fonts/Isaac-BoldItalic.woff2') format('woff2');
+	font-weight: bold;
+	font-style: italic;
 	font-display: swap;
 }
 

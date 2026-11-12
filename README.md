@@ -113,6 +113,22 @@ npm run build
 
 Output goes to **`assets/`**, including **`assets/.vite/manifest.json`**. These files are **committed** so deployments do not require a Node build on the server. You normally don't need to run the build by hand: the pre-commit hook rebuilds and stages `assets/` whenever a commit touches `src/`, `vite.config.js` or `package-lock.json`, and CI fails if `assets/` does not match `src/`.
 
+## Fonts and icons
+
+Everything is served from the theme; the site makes no requests to Google Fonts. Font files live in `wp-content/themes/silveira/src/fonts/` (only `woff2`) and Vite emits them with a hash to `assets/fonts/`.
+
+**Isaac** (text typeface): Regular, Italic, Bold and Bold Italic, declared in `src/scss/1-settings/_typography.scss`. These are the only styles the CSS uses (weight 500 doesn't exist in the family; the browser uses Regular). To add another style, convert its `otf` to `woff2` without subsetting (e.g. with `fonttools`: `TTFont(path)`, `flavor = 'woff2'`, `save()`), put it in `src/fonts/` and add its `@font-face` with the right `font-weight`/`font-style`. Never commit the `otf` files.
+
+**Icons** (Material Symbols Outlined): a subset with only the icons listed in `src/material-symbols-icons.txt`, in `src/fonts/material-symbols-subset.woff2`, declared in `src/scss/4-elements/_icons.scss`. To use a new icon:
+
+```bash
+cd wp-content/themes/silveira
+echo new_icon_name >> src/material-symbols-icons.txt
+npm run icons:subset    # downloads the new subset once from Google Fonts
+```
+
+Then commit the list and the `woff2` (the hook rebuilds `assets/`). An icon missing from the subset shows up as its name in plain text; the Kitchen Sink page lists every icon so it's easy to spot.
+
 ## Git hooks (Husky)
 
 Hooks live at the **repository root** and are installed by `npm install` at the root. **`pre-commit`** runs **lint-staged** (config in `lint-staged.config.mjs`) sequentially on the staged files:
@@ -202,6 +218,7 @@ GitHub's blame view applies this file automatically.
 | `docker-compose.yml` | WordPress, MariaDB, optional `wpcli` (`tools` profile) |
 | `wp-content/themes/silveira/` | Theme: Vite entry `src/main.js`, build output `assets/` |
 | `package.json` (root) | Husky, lint-staged and Playwright → **`node_modules/` at repo root** |
+| `wp-content/themes/silveira/src/fonts/`, `src/material-symbols-icons.txt`, `scripts/icons-subset.mjs` | Self-hosted fonts and the icon subset (see [Fonts and icons](#fonts-and-icons)) |
 | `wp-content/themes/silveira/package.json` | Vite + linters + build scripts → **`node_modules/` under the theme** |
 | `lint-staged.config.mjs` | Pre-commit tasks (lint, PHPCS, assets build) |
 | `scripts/lint-staged-phpcs.sh` | PHPCS for staged PHP: local PHP → Docker → warning |

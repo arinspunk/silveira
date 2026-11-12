@@ -4,7 +4,7 @@
 
 Todas las páginas cargan Material Symbols desde Google Fonts. Eso transfiere la IP de cada visitante a Google, con implicaciones de RGPD y precedente judicial en la UE, y además añade dos `preconnect` que se imprimen dos veces (uno con `echo` dentro de `wp_enqueue_scripts`).
 
-Las tipografías del diseño (**Isaac** y **Akkurat-Mono**) se declaran en `_typography.scss` con una ruta a `assets/fonts/` que no existe, así que el sitio se muestra siempre con la fuente de reserva.
+La tipografía del diseño, **Isaac**, se declara en `_typography.scss` con una ruta a `assets/fonts/` que no existe, así que el sitio se muestra siempre con la fuente de reserva. También se declara **Akkurat-Mono**, que ningún componente usa y el diseño no va a usar: solo genera un 404.
 
 Este problema es independiente del mapa, así que se separa de `third-party-assets` y se aplica pronto.
 
@@ -12,7 +12,8 @@ Este problema es independiente del mapa, así que se separa de `third-party-asse
 
 - **Material Symbols servido desde el theme:** un subconjunto `woff2` con los iconos usados, generado con el parámetro `icon_names` de Google Fonts y versionado en `src/fonts/`.
 - **Sin Google Fonts:** se elimina el encolado de la hoja de Google, los `preconnect` (el `echo` y `silveira_add_preconnect`) y cualquier petición a `fonts.googleapis.com`/`fonts.gstatic.com`.
-- **Isaac y Akkurat-Mono servidas desde el theme**, en `src/fonts/` con rutas que Vite resuelve y emite con hash, y `font-display: swap`. Las licencias web para autoalojarlas ya están confirmadas; falta copiar los ficheros al repositorio.
+- **Isaac servida desde el theme**: Regular, Italic, Bold y Bold Italic (los estilos que usa el CSS) en `woff2`, en `src/fonts/` con rutas que Vite resuelve y emite con hash, y `font-display: swap`.
+- **Sin Akkurat-Mono**: se eliminan su `@font-face`, `$font-mono`, el mixin `font-mono` y `--sil-font-mono`.
 
 ## Capabilities
 
@@ -24,9 +25,8 @@ Este problema es independiente del mapa, así que se separa de `third-party-asse
 
 ## Impact
 
-- **Ficheros nuevos:** `src/fonts/material-symbols-subset.woff2`, `src/fonts/Isaac-*.woff2`, `src/fonts/Akkurat-Mono*.woff2`.
-- **Código:** `inc/assets.php` (sin Google Fonts ni `preconnect`), `src/scss/1-settings/_typography.scss`, `src/scss/4-elements/_icons.scss`.
-- **Documentación:** README (cómo regenerar el subconjunto de iconos; origen y licencia de las tipografías).
+- **Ficheros nuevos:** `src/fonts/material-symbols-subset.woff2`, `src/fonts/Isaac-{Regular,Italic,Bold,BoldItalic}.woff2`.
+- **Código:** `inc/assets.php` (sin Google Fonts ni `preconnect`), `src/scss/1-settings/_typography.scss`, `_tokens.scss`, `2-tools/_mixins.scss`, `src/scss/4-elements/_icons.scss`, `tests/e2e/helpers.js`.
+- **Documentación:** README (cómo regenerar el subconjunto de iconos y qué estilos de Isaac se incluyen).
 - `assets/` lo regenera el hook de `enforce-build-and-lint`.
-- **Pendiente externo:** copiar al repositorio los `woff2` de Isaac y Akkurat-Mono (licencias ya disponibles). La parte de iconos no depende de ello.
 - **Orden recomendado:** después de `map-smoke-tests` y antes de `theme-robustness`, que ya no tiene que tratar los `preconnect`.
