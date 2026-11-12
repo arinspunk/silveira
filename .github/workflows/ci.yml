@@ -95,9 +95,35 @@ jobs:
       - name: Sembrar datos de prueba
         run: npm run e2e:seed
 
-      - run: npx playwright install --with-deps chromium
+      # Los tests corren en la imagen oficial de Playwright (navegador y dependencias de sistema
+      # incluidos): sin apt ni `playwright install`. La etiqueta sale de package.json.
+      - name: Versión de Playwright (package.json)
+        run: |
+          PW_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
+          if ! [[ "$PW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::@playwright/test debe estar fijado a una versión exacta X.Y.Z en package.json (ahora: '$PW_VERSION'); la imagen mcr.microsoft.com/playwright se elige con esa versión."
+            exit 1
+          fi
+          echo "PW_IMAGE=mcr.microsoft.com/playwright:v$PW_VERSION-noble" >> "$GITHUB_ENV"
+          echo "PW_VERSION=$PW_VERSION" >> "$GITHUB_ENV"
 
-      - run: npm run test:e2e
+      - name: Descargar imagen de Playwright
+        timeout-minutes: 8
+        run: |
+          for i in 1 2 3; do
+            if timeout 150 docker pull -q "$PW_IMAGE"; then exit 0; fi
+            echo "Intento $i de descargar $PW_IMAGE fallido."
+            [ "$i" -lt 3 ] && sleep 15
+          done
+          echo "::error::No se pudo descargar $PW_IMAGE de mcr.microsoft.com tras 3 intentos. Es un fallo de infraestructura, no de los tests: relanza el job más tarde."
+          exit 1
+
+      - name: Tests E2E (Playwright en Docker)
+        run: |
+          docker run --rm --network host --ipc host \
+            -v "$PWD":/work -w /work -e CI=true \
+            "$PW_IMAGE" \
+            sh -c 'echo "Node $(node --version) en la imagen" && npx playwright --version && npx playwright test'
 
       - name: Subir informe de Playwright
         if: failure()

@@ -147,7 +147,7 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and on pu
 |-----|--------|
 | `frontend` | `npm ci`, `npm run validate` (ESLint + Stylelint), `npm run format:check` (Prettier), `npm run build`, then fails if `assets/` differs from the committed one (changed, new or deleted files). On failure it uploads the generated `assets/` as an artifact for diagnosis. |
 | `php` | PHP 8.2, `composer install`, `composer audit` (security advisories in PHP dependencies; abandoned packages are only reported), `composer run lint` (PHPCS), `composer run analyse` (PHPStan). |
-| `e2e` | Isolated WordPress (Docker, port 8081, compiled `assets/`), seeded test data, Playwright smoke test. On failure it uploads the Playwright report. See [Smoke test (E2E)](#smoke-test-e2e). |
+| `e2e` | Isolated WordPress (Docker, port 8081, compiled `assets/`), seeded test data, Playwright smoke test run inside the official `mcr.microsoft.com/playwright` image (no `apt`, no `playwright install`). On failure it uploads the Playwright report. See [Smoke test (E2E)](#smoke-test-e2e). |
 
 To reproduce locally, from `wp-content/themes/silveira`:
 
@@ -180,6 +180,8 @@ npx playwright install chromium   # first time only
 npm run test:e2e    # run the tests
 npm run e2e:down    # stop and delete the stack and its volumes
 ```
+
+**In CI** the tests don't use the runner's browser: they run with `docker run --network host` inside `mcr.microsoft.com/playwright:v<version>-noble`, which already ships Chromium and its system libraries. The tag is taken from `@playwright/test` in the root `package.json`, which must stay pinned to an exact `X.Y.Z` version (the job fails otherwise). To upgrade Playwright, change that version and run `npm install`; CI picks the matching image. If the job fails while downloading the image, it is an infrastructure problem, not a test failure: re-run the job. Locally nothing changes: `npm run test:e2e` uses the browser installed on your machine.
 
 The test data lives in `scripts/e2e-seed.sh`. If a change alters the map/front-page markup the tests rely on, update `tests/e2e/` in the same change.
 

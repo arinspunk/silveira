@@ -80,6 +80,8 @@ npm run e2e:down                                         # al terminar (borra su
 - El test usa `assets/` compilado: tras cambiar `src/`, `npm run build` en el theme antes de ejecutarlo.
 - Si un change modifica el marcado o el comportamiento del mapa o de la portada, actualizar `tests/e2e/` (y el seed si hace falta) en el mismo change.
 - Para comprobar que un test detecta una regresión: introducirla temporalmente, recompilar, ver el fallo y restaurar `src/` y `assets/` desde `HEAD` (`git restore --source=HEAD` + `git clean` de los `assets/` nuevos).
+- En la CI los tests corren dentro de `mcr.microsoft.com/playwright:v<versión>-noble` (`docker run --network host`), sin apt ni `playwright install`. La versión sale de `@playwright/test` en el `package.json` de la raíz, que debe ser exacta (`X.Y.Z`); para subir Playwright basta con cambiarla y `npm install`. En local no cambia nada: `npm run test:e2e` usa el navegador del host.
+- Si `e2e` falla en el paso «Descargar imagen de Playwright», es un fallo de infraestructura, no de los tests: relanzar el job (`gh run rerun <id> --failed`).
 - `tests/e2e/helpers.js` tiene una excepción temporal (`KNOWN_MISSING`) para los 404 de las fuentes del diseño; la quita `self-hosted-fonts`.
 
 ## 7. Git y GitHub
