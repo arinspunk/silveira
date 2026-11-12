@@ -28,5 +28,10 @@
 		flex: 1 1 200px; // Grow and shrink naturally but keep a base width
 		min-width: 0; // Fix Flexbox truncation issue
 		max-width: 260px;
+
+		// En columna, la base de 200px sería alto: cada filtro ocupa solo lo suyo.
+		@media (width <= 767px) {
+			flex: 0 0 auto;
+		}
 	}
 }

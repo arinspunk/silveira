@@ -1,18 +1,37 @@
 /**
  * 5-OBJECTS / MAIN
  * Structural layout wrapper for page content.
+ *
+ * Portada: los estados los pone homepage.js en `html[data-home]` (collapsed | expanded | footer) y mide
+ * --sil-hero-height y --sil-footer-height. Sin JS no hay atributo y la página usa el scroll nativo.
  */
 
-.l-site-content {
+// El borde superior de la barra de filtros queda bajo el borde inferior de la cabecera.
+$border-overlap: 1px;
+
+// Altura del footer que asoma con el mapa expandido (la reserva .c-map).
+$footer-peek: 40px;
+
+html[data-home] body {
+	overflow: hidden;
+}
+
+html[data-home] .l-site-content {
+	// Desplazamiento con el mapa expandido: el hero sale por arriba.
+	--sil-home-expanded-y: calc(-1 * var(--sil-hero-height, 230px) - #{$border-overlap});
+
 	transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
 
-	&.is-scrolled {
-		transform: translateY(-231px);
-	}
+html[data-home='expanded'] .l-site-content {
+	transform: translateY(var(--sil-home-expanded-y));
+}
 
-	&.is-footer-open {
-		transform: translateY(calc(-231px - (var(--sil-footer-height, 400px) - 40px)));
-	}
+// Footer revelado: además, sube todo lo que no asomaba del footer.
+html[data-home='footer'] .l-site-content {
+	transform: translateY(
+		calc(var(--sil-home-expanded-y) - var(--sil-footer-height, 400px) + #{$footer-peek})
+	);
 }
 
 .l-main {

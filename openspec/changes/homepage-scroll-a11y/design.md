@@ -45,6 +45,8 @@ El footer ya asoma 40 px (las silvas). Se convierte esa franja en el disparador:
 
 ### D5. Desplazamientos por variables CSS
 JS mide `hero.offsetHeight` y `footer.offsetHeight` (y en `ResizeObserver`) y fija `--sil-hero-height` / `--sil-footer-height` en `.l-site-content`; `_main.scss` usa `calc()` con ellas en lugar de `-231px`.
+- La altura del mapa (`_map.scss`) usa también `--sil-header-height` y `--sil-filter-height`, medidas igual, y `100dvh`, para que la franja del footer asome en móvil con la barra de direcciones visible.
+- Layout móvil (añadido durante la implementación, fallo previo): en `≤767px` los items de `.c-filter-bar` pasan a `flex: 0 0 auto` (en columna, la base de 200 px se aplicaba como alto y la barra medía 682 px) y el `min-height` del mapa baja de 460 px a 240 px. Sin esto el mapa y la franja del footer quedaban fuera de pantalla y el escenario "Touch device" no se podía cumplir.
 
 ### D6. Panel de lista
 `#map-project-list` arranca con `inert` y `aria-hidden` implícito por `inert`; el botón tiene `aria-controls="map-project-list"` y `aria-expanded`. Abrir quita `inert`. El texto del botón se cambia en un `<span>` hijo (no `innerHTML` del botón). Se quitan los `style=` en línea de `front-page.php`; visibilidad inicial vía `[data-home="collapsed"] .c-btn--map-toggle { visibility: hidden }`.
