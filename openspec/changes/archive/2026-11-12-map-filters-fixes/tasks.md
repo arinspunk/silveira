@@ -14,7 +14,7 @@
 ## 3. Accesibilidad de los desplegables
 
 - [x] 3.1 Cambiar el marcado de los tres `.c-select` a botón + panel con `aria-expanded`/`aria-controls`/`role="group"` (design D3) y ajustar `_forms.scss` para que el aspecto no cambie; verificar visualmente contra la portada actual y la Kitchen Sink
-- [ ] 3.2 Adaptar `initSelects` en `forms.js`: `aria-expanded`, foco a la primera opción visible al abrir, `Escape` cierra y devuelve foco, uno abierto a la vez; verificar los escenarios de teclado del spec solo con teclado y con VoiceOver anunciando "contraído/expandido"
+- [x] 3.2 Adaptar `initSelects` en `forms.js`: `aria-expanded`, foco a la primera opción visible al abrir, `Escape` cierra y devuelve foco, uno abierto a la vez; verificar los escenarios de teclado del spec solo con teclado y con VoiceOver anunciando "contraído/expandido"
 - [x] 3.3 Verificar que abrir un desplegable sigue expandiendo el mapa cuando está contraído
 
 ## 4. Build
