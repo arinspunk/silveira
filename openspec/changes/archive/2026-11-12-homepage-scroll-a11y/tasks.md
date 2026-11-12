@@ -13,11 +13,11 @@
 
 ## 3. Táctil y footer
 
-- [ ] 3.1 Añadir `c-footer__reveal` con `aria-label` (texto en galego reintegrado, variante "umha"/"-çom"/"nom", con `esc_attr__( …, 'silveira' )` para que lo recoja el inventario de `i18n-reintegrado`) y `aria-expanded`, y sus gestos (design D4); verificar el escenario "Touch device" en un móvil real o en el emulador de dispositivos de Chrome y Safari iOS
+- [x] 3.1 Añadir `c-footer__reveal` con `aria-label` (texto en galego reintegrado, variante "umha"/"-çom"/"nom", con `esc_attr__( …, 'silveira' )` para que lo recoja el inventario de `i18n-reintegrado`) y `aria-expanded`, y sus gestos (design D4); verificar el escenario "Touch device" en un móvil real o en el emulador de dispositivos de Chrome y Safari iOS
 
 ## 4. Panel de lista
 
-- [ ] 4.1 Aplicar `inert`, `aria-controls`/`aria-expanded` y quitar estilos en línea de `front-page.php` y `innerHTML` del botón (design D6); verificar "Tabbing with closed panel" y "Toggle state announced" con VoiceOver
+- [x] 4.1 Aplicar `inert`, `aria-controls`/`aria-expanded` y quitar estilos en línea de `front-page.php` y `innerHTML` del botón (design D6); verificar "Tabbing with closed panel" y "Toggle state announced" con VoiceOver
 
 ## 5. Movimiento reducido y cierre
 
