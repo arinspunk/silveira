@@ -19,6 +19,7 @@ Ver proposal.md. `functions.php` tiene ~430 líneas con responsabilidades mezcla
 ### D2. Asignar `geral` al guardar
 Hook `save_post_recurso` (y `rest_after_insert_recurso` para el editor de bloques): si `wp_get_object_terms` está vacío, `term_exists( 'geral' )` o `wp_insert_term( 'Geral', ... )` y `wp_set_object_terms`. El filtro `post_type_link` mantiene el fallback a `geral` solo para borradores/previews.
 - *Alternativa*: `default_term` en `register_taxonomy` (WP 5.5+) — hace lo mismo de forma nativa. **Se prefiere `default_term`** (`array( 'name' => 'Geral', 'slug' => 'geral' )`) y el hook queda solo si las pruebas muestran que no cubre algún flujo (p. ej. REST sin términos).
+- *Resultado de las pruebas (al aplicar)*: `default_term` cubre la creación sin categorías (también desde el editor de bloques), pero no cuando la API REST recibe `categoria_recurso: []` explícito (p. ej. al desmarcar la última categoría): el recurso quedaba sin término. Se mantiene `silveira_recurso_ensure_category()` en `rest_after_insert_recurso` y `save_post_recurso`, que asigna el término por defecto solo si no hay ninguno; también se usa para asignar `geral` a los recursos existentes (tarea 3.2).
 
 ### D3. Reglas de reescritura
 Se verifican las URLs del spec tras flush. Si `/recursos/<cat>/page/N/` choca con la regla del CPT (que interpretaría `page` como slug de recurso), se añade una regla explícita de paginación para la taxonomía con prioridad `top`.

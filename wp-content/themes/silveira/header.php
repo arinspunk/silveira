@@ -36,11 +36,12 @@
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => 'main',
-							'container'      => '',
-							'menu_class'     => 'c-main-nav',
-							'fallback_cb'    => false,
-							'depth'          => 1,
+							'theme_location'   => 'main',
+							'silveira_context' => 'header',
+							'container'        => '',
+							'menu_class'       => 'c-main-nav',
+							'fallback_cb'      => false,
+							'depth'            => 1,
 						)
 					);
 					?>

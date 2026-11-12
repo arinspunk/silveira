@@ -43,11 +43,12 @@
 					<?php
 					wp_nav_menu(
 						array(
-							'theme_location' => 'main', // Same as header.
-							'container'      => '',
-							'menu_class'     => 'c-main-nav',
-							'fallback_cb'    => false,
-							'depth'          => 1,
+							'theme_location'   => 'main', // Same as header.
+							'silveira_context' => 'footer',
+							'container'        => '',
+							'menu_class'       => 'c-main-nav',
+							'fallback_cb'      => false,
+							'depth'            => 1,
 						)
 					);
 					?>
