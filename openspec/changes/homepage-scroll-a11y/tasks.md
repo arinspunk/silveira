@@ -22,4 +22,4 @@
 ## 5. Movimiento reducido y cierre
 
 - [x] 5.1 Verificar el escenario "Rapid keyboard navigation with reduced motion" activando "Reducir movimiento" en el sistema
-- [ ] 5.2 Pasar axe DevTools en los tres estados de la portada sin errores nuevos; actualizar el smoke test si cambia cómo se expande el mapa; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
+- [x] 5.2 Pasar axe DevTools en los tres estados de la portada sin errores nuevos; actualizar el smoke test si cambia cómo se expande el mapa; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
