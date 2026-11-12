@@ -18,12 +18,12 @@ La fuente de iconos y las tipografías del theme SHALL servirse desde el dominio
 - **THEN** los iconos se ven como glifos, no como el texto de su nombre
 
 ### Requirement: Design typefaces are applied
-Los textos del sitio SHALL mostrarse con las tipografías del diseño (Isaac para texto, Akkurat-Mono para monoespaciado), mostrando texto con la fuente de reserva mientras se descargan.
+Los textos del sitio SHALL mostrarse con la tipografía del diseño, Isaac, con sus estilos reales de negrita y cursiva, mostrando texto con la fuente de reserva mientras se descarga.
 
 #### Scenario: Body text
 - **WHEN** se carga una página y se inspecciona la fuente renderizada de un párrafo
 - **THEN** la fuente usada es Isaac
 
-#### Scenario: Monospaced text
-- **WHEN** se inspecciona la fuente renderizada de un texto con estilo monoespaciado
-- **THEN** la fuente usada es Akkurat-Mono
+#### Scenario: Emphasis
+- **WHEN** se inspecciona la fuente renderizada del lema de una ficha de proyecto (cursiva) y de una etiqueta de modalidade (negrita)
+- **THEN** se usan los ficheros Isaac Italic e Isaac Bold respectivamente, no estilos sintetizados por el navegador

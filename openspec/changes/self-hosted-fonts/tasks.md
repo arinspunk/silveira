@@ -6,11 +6,12 @@
 - [ ] 1.2 Eliminar de `inc/assets.php` el encolado de Google Fonts, el `echo` de `preconnect` y `silveira_add_preconnect` (design D3); verificar el escenario "Any page" en la pestaña Red y en el código fuente
 - [ ] 1.3 Documentar en el README cómo regenerar el subconjunto al añadir iconos; verificar siguiendo el procedimiento con un icono nuevo de prueba
 
-## 2. Tipografías (pendiente de copiar los ficheros; licencias ya confirmadas)
+## 2. Tipografías
 
-- [ ] 2.1 Copiar a `src/fonts/` los ficheros de Isaac y Akkurat-Mono (convertirlos a `woff2` si hace falta, design D2) y anotar en el README su origen y dónde están guardadas las licencias web; verificar que solo hay `woff2` en `src/fonts/`
-- [ ] 2.2 Corregir las rutas `@font-face` (un bloque por peso/estilo disponible) y añadir `font-display: swap` (design D2); verificar "Body text" y "Monospaced text" en las herramientas de desarrollo (Fuentes renderizadas) y que el build emite las fuentes con hash en `assets/`
-- [ ] 2.3 Quitar de `tests/e2e/helpers.js` la excepción `KNOWN_MISSING` de los 404 de Isaac y Akkurat-Mono (añadida en `map-smoke-tests`); verificar que `npm run test:e2e` pasa sin ella
+- [ ] 2.1 Convertir a `woff2` Isaac Regular, Regular Italic, Bold y Bold Italic desde los `otf` (design D2) y dejar en `src/fonts/` solo esos cuatro `woff2` (los `otf` fuera del repo); verificar con `fonttools` que cada `woff2` conserva peso, estilo y número de glifos del `otf` y que `git status` no muestra ningún `otf`
+- [ ] 2.2 Escribir los cuatro `@font-face` de Isaac con rutas a `src/fonts/` y `font-display: swap`, y eliminar Akkurat-Mono (`@font-face`, `$font-mono`, mixin `font-mono`, `--sil-font-mono`) (design D2, D2b); verificar "Body text" y "Emphasis" (fuentes renderizadas en Chrome) y que el build emite las cuatro fuentes con hash en `assets/` y ninguna referencia a Akkurat
+- [ ] 2.3 Quitar de `tests/e2e/helpers.js` la excepción `KNOWN_MISSING` de los 404 de fuentes (añadida en `map-smoke-tests`); verificar que `npm run test:e2e` pasa sin ella
+- [ ] 2.4 Documentar en el README qué estilos de Isaac se incluyen y cómo añadir otro (convertir el `otf` a `woff2` y añadir su `@font-face`)
 
 ## 3. Cierre
 

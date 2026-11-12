@@ -17,15 +17,20 @@ Descargar una vez `https://fonts.googleapis.com/css2?family=Material+Symbols+Out
 - *Alternativa*: paquete npm `material-symbols` — incluye la fuente completa (~3 MB por estilo).
 - Riesgo de olvido al añadir un icono nuevo → la Kitchen Sink muestra todos los iconos usados; un icono no incluido se ve como texto, fácil de detectar.
 
-### D2. Tipografías propias
-Ficheros en `src/fonts/` referenciados con ruta relativa desde el SCSS (`../../fonts/…`) para que Vite los procese, les dé hash y los emita en `assets/`. Un `@font-face` por peso/estilo disponible, con `font-display: swap`. Preload opcional de Isaac Regular desde PHP leyendo el manifest.
-- Si los ficheros recibidos no son `woff2` (p. ej. `otf`/`ttf`), se convierten con `fonttools` (`pyftsubset --flavor=woff2` o `woff2_compress`) siempre que la licencia permita la conversión.
-- Las licencias no se versionan si son confidenciales; el README indica dónde están guardadas.
+### D2. Isaac: cuatro estilos en `woff2`
+La familia se recibe en `otf` (16 estilos, de Thin a ExtraBold). El CSS solo usa 400, 400 cursiva (lema de la ficha, `<em>`), 700 (etiquetas, `<strong>`) y, en un único sitio, 500, que no existe en la familia y el navegador resuelve con la de 400. Se incluyen solo **Regular, Regular Italic, Bold y Bold Italic** (`IsaacRegular*.otf`, `IsaacBold*.otf`; *Book*, también de peso 400, no se usa).
+- Conversión con `fonttools` (Docker `python:3.12-slim`, `pyftsubset --flavor=woff2`), conservando todos los glifos (sin subconjunto: los textos en galego reintegrado necesitan los diacríticos) y quitando solo tablas de hinting innecesarias en web si reducen el tamaño sin cambiar el render.
+- Nombres: `src/fonts/Isaac-Regular.woff2`, `Isaac-Italic.woff2`, `Isaac-Bold.woff2`, `Isaac-BoldItalic.woff2`, referenciados con ruta relativa desde el SCSS (`../../fonts/…`) para que Vite los procese, les dé hash y los emita en `assets/`. Un `@font-face` por fichero, misma `font-family: Isaac`, con `font-weight`/`font-style` y `font-display: swap`.
+- Los `otf` originales no se versionan: en `src/fonts/` solo quedan `woff2`.
+- Preload de Isaac Regular desde PHP leyendo el manifest: opcional, solo si la revisión visual muestra un salto de fuente molesto.
+
+### D2b. Sin Akkurat-Mono
+Ningún componente la usa y el diseño no la va a usar. Se eliminan su `@font-face`, `$font-mono`, el mixin `font-mono` y `--sil-font-mono`, y su entrada en `KNOWN_MISSING` de `tests/e2e/helpers.js`.
 
 ### D3. Sin Google Fonts
 Se eliminan de `inc/assets.php` el `wp_enqueue_style( 'silveira-google-icons', … )`, el `echo` de `preconnect` y `silveira_add_preconnect`. Si el fichero queda vacío, se elimina y se quita su `require`.
 
 ## Risks / Trade-offs
 
-- [Los ficheros de tipografía tardan en copiarse] → el grupo de iconos se aplica igualmente; el change no se archiva hasta tener las tipografías (es solo copiar ficheros, la licencia ya está resuelta).
+- [Cambio de métricas al pasar de la fuente de reserva a Isaac] → puede mover saltos de línea y alturas; se revisa visualmente en 3.1.
 - [El subconjunto de iconos se queda corto] → ver D1.
