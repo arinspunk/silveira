@@ -36,7 +36,7 @@ test.describe('Portada', () => {
 			'href',
 			/\/projeto\//,
 		);
-		await expect(page.locator('.c-map')).not.toHaveClass(/is-locked/);
+		await expect(page.locator('html')).toHaveAttribute('data-home', 'expanded');
 		await page.locator('.leaflet-popup-close-button').click();
 
 		// Filtrar por modalidade "Escola" deja solo sus dos proyectos.
@@ -49,6 +49,48 @@ test.describe('Portada', () => {
 		await expect(markers).toHaveCount(2);
 		await expect(items).toHaveCount(2);
 		await expect(items.filter({ hasText: 'Obradoiro de Ames' })).toHaveCount(0);
+
+		watcher.assertClean();
+	});
+
+	// homepage-scroll-a11y: la portada se recorre con teclado y la lista cerrada no recibe el foco.
+	test('teclado: expande el mapa, abre el footer y respeta la lista cerrada', async ({ page }) => {
+		const watcher = watchErrors(page);
+		const html = page.locator('html');
+
+		await page.goto('/');
+		await expect(page.locator('.leaflet-marker-icon')).toHaveCount(PROJECTS_ON_MAP);
+		await expect(html).toHaveAttribute('data-home', 'collapsed');
+
+		// El foco en un filtro expande el mapa; Home vuelve al hero sin perder el foco.
+		const trigger = page.locator('#filter-modalidade .c-select__trigger');
+		await trigger.focus();
+		await expect(html).toHaveAttribute('data-home', 'expanded');
+		await expect(html).not.toHaveAttribute('data-home-busy');
+		await page.keyboard.press('Home');
+		await expect(html).toHaveAttribute('data-home', 'collapsed');
+		await expect(trigger).toBeFocused();
+
+		// PageDown expande; la lista cerrada es inert y el botón expone su estado.
+		await expect(html).not.toHaveAttribute('data-home-busy');
+		await page.keyboard.press('PageDown');
+		await expect(html).toHaveAttribute('data-home', 'expanded');
+		await expect(page.locator('#map-project-list')).toHaveJSProperty('inert', true);
+		const toggle = page.locator('#map-list-toggle');
+		await expect(toggle).toBeVisible();
+		await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+		await toggle.click();
+		await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+		await expect(page.locator('#map-project-list')).toHaveJSProperty('inert', false);
+		await toggle.click();
+
+		// El foco en un enlace del footer lo revela y el enlace queda a la vista.
+		const footerLink = page.locator('.c-footer a').first();
+		await footerLink.focus();
+		await expect(html).toHaveAttribute('data-home', 'footer');
+		await expect(page.locator('.c-footer__reveal')).toHaveAttribute('aria-expanded', 'true');
+		await expect(html).not.toHaveAttribute('data-home-busy');
+		await expect(footerLink).toBeInViewport();
 
 		watcher.assertClean();
 	});

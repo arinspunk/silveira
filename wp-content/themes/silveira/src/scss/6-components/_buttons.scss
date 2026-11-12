@@ -90,6 +90,11 @@
 		.c-btn__icon {
 			display: flex;
 			align-items: center;
+
+			// Iconos alternos (p. ej. el botón de la lista del mapa).
+			&[hidden] {
+				display: none;
+			}
 		}
 	}
 
@@ -124,7 +129,8 @@
 			opacity 0.2s ease-in-out,
 			visibility 0.2s ease-in-out;
 
-		&.is-visible {
+		// Visible con el mapa desbloqueado (estado de homepage.js) y mientras el footer está revelado.
+		html:is([data-home='expanded']:not([data-home-busy='collapsed']), [data-home='footer']) & {
 			opacity: 1;
 			visibility: visible;
 			pointer-events: auto;

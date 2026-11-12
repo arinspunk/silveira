@@ -280,210 +280,35 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	syncFilterOptions();
 
-	// 6. Map Scroll UX Optimization (Wheel & Touch Events)
-	const mapWrapper = document.querySelector('.c-map');
-	const hero = document.querySelector('.c-hero');
-	const siteContent = document.querySelector('.l-site-content');
-
+	// 5. Panel de la lista (design D6). Cerrado es `inert`: ni foco ni lectores de pantalla.
 	const listToggleBtn = document.getElementById('map-list-toggle');
 	const listPanel = document.getElementById('map-project-list');
 
+	const setListOpen = (open) => {
+		if (!listToggleBtn || !listPanel) return;
+		listPanel.classList.toggle('is-open', open);
+		listPanel.inert = !open;
+		listToggleBtn.classList.toggle('is-open', open);
+		listToggleBtn.setAttribute('aria-expanded', String(open));
+		const label = listToggleBtn.querySelector('.c-btn__label');
+		if (label) {
+			label.textContent = open ? listToggleBtn.dataset.labelClose : listToggleBtn.dataset.labelOpen;
+		}
+		listToggleBtn.querySelectorAll('[data-icon-when]').forEach((iconEl) => {
+			iconEl.hidden = iconEl.dataset.iconWhen !== (open ? 'open' : 'closed');
+		});
+	};
+
 	if (listToggleBtn && listPanel) {
 		listToggleBtn.addEventListener('click', () => {
-			const isOpen = listPanel.classList.toggle('is-open');
-			listToggleBtn.classList.toggle('is-open', isOpen);
-
-			if (isOpen) {
-				listToggleBtn.innerHTML = `Acochar a lista <span class="c-btn__icon o-icon o-icon--xs">arrow_forward</span>`;
-			} else {
-				listToggleBtn.innerHTML = `<span class="c-btn__icon o-icon o-icon--xs">arrow_back</span> Ver a lista`;
-			}
+			setListOpen(!listPanel.classList.contains('is-open'));
 		});
 	}
 
-	let isMapLocked = true;
-	let isFooterOpen = false;
-	let isAnimating = false;
-
-	if (mapWrapper && hero && siteContent) {
-		const footer = document.querySelector('.c-footer');
-
-		// Prevent scroll restoration on page reload
-		if ('scrollRestoration' in history) {
-			history.scrollRestoration = 'manual';
-		}
-		window.scrollTo(0, 0);
-
-		// Ensure body doesn't scroll natively
-		document.body.style.overflow = 'hidden';
-
-		const slideUp = () => {
-			if (!isMapLocked || isAnimating || isFooterOpen) return;
-			isAnimating = true;
-			siteContent.classList.add('is-scrolled');
-
-			setTimeout(() => {
-				mapWrapper.classList.remove('is-locked');
-				if (listToggleBtn) {
-					listToggleBtn.removeAttribute('style');
-					listToggleBtn.classList.add('is-visible');
-				}
-				if (listPanel) {
-					listPanel.removeAttribute('style');
-				}
-				isMapLocked = false;
-				isAnimating = false;
-				map.invalidateSize(); // Ensure leaflet recalculates bounds
-			}, 800);
-		};
-
-		const slideDown = () => {
-			if (isMapLocked || isAnimating || isFooterOpen) return;
-			isAnimating = true;
-			mapWrapper.classList.add('is-locked');
-			siteContent.classList.remove('is-scrolled');
-
-			if (listToggleBtn) {
-				listToggleBtn.classList.remove('is-visible');
-				listToggleBtn.classList.remove('is-open');
-				listToggleBtn.innerHTML = `<span class="c-btn__icon o-icon o-icon--xs">arrow_back</span> Ver a lista`;
-			}
-			if (listPanel) listPanel.classList.remove('is-open');
-
-			setTimeout(() => {
-				isMapLocked = true;
-				isAnimating = false;
-			}, 800);
-		};
-
-		const openFooter = () => {
-			if (isAnimating || isFooterOpen || isMapLocked) return;
-			isAnimating = true;
-			isFooterOpen = true;
-
-			const footerHeight = footer.offsetHeight;
-			siteContent.style.setProperty('--sil-footer-height', `${footerHeight}px`);
-
-			siteContent.classList.add('is-footer-open');
-			mapWrapper.classList.add('is-locked'); // Lock map while footer is open
-
-			setTimeout(() => {
-				isAnimating = false;
-			}, 800);
-		};
-
-		const closeFooter = () => {
-			if (isAnimating || !isFooterOpen) return;
-			isAnimating = true;
-			isFooterOpen = false;
-			siteContent.classList.remove('is-footer-open');
-			mapWrapper.classList.remove('is-locked'); // Unlock map
-
-			setTimeout(() => {
-				isAnimating = false;
-				map.invalidateSize();
-			}, 800);
-		};
-
-		if (footer) {
-			footer.addEventListener('mouseenter', () => {
-				if (!isMapLocked && !isFooterOpen) {
-					openFooter();
-				}
-			});
-
-			footer.addEventListener('mouseleave', (e) => {
-				// If exiting from the top (clientY is near or above the footer's top boundary)
-				if (isFooterOpen && e.clientY <= footer.getBoundingClientRect().top + 5) {
-					closeFooter();
-				}
-			});
-		}
-
-		// Expand map when clicking on filters
-		document.querySelectorAll('.c-select').forEach((select) => {
-			select.addEventListener('click', () => {
-				if (isMapLocked && !isAnimating) {
-					slideUp();
-				}
-			});
-		});
-
-		// Expand map when clicking a marker (triggered from renderMarkers)
-		window.addEventListener('silveira:slide-up', () => {
-			if (isMapLocked && !isAnimating) {
-				slideUp();
-			}
-		});
-
-		// Track touch events for mobile swipe
-		let touchStartY = 0;
-
-		window.addEventListener(
-			'touchstart',
-			(e) => {
-				touchStartY = e.touches[0].clientY;
-			},
-			{ passive: true },
-		);
-
-		window.addEventListener(
-			'touchmove',
-			(e) => {
-				if (isAnimating) return;
-
-				const touchEndY = e.touches[0].clientY;
-				const diff = touchStartY - touchEndY;
-
-				// If footer is open, swipe down (scroll up) closes it
-				if (isFooterOpen) {
-					if (diff < -10) {
-						closeFooter();
-					}
-					return;
-				}
-
-				// Swipe Up (Scroll Down)
-				if (diff > 10 && isMapLocked) {
-					slideUp();
-				}
-				// Swipe Down (Scroll Up)
-				else if (diff < -10 && !isMapLocked) {
-					// Must be on filter bar or header
-					if (e.target.closest('.c-filter-bar') || e.target.closest('.c-header')) {
-						slideDown();
-					}
-				}
-			},
-			{ passive: false },
-		);
-
-		// Desktop Wheel
-		window.addEventListener(
-			'wheel',
-			(e) => {
-				if (isAnimating) return;
-
-				// If footer is open, wheel up closes it
-				if (isFooterOpen) {
-					if (e.deltaY < -5) {
-						closeFooter();
-					}
-					return;
-				}
-
-				// Scrolling down
-				if (e.deltaY > 5 && isMapLocked) {
-					slideUp();
-				}
-				// Scrolling up
-				else if (e.deltaY < -5 && !isMapLocked) {
-					if (e.target.closest('.c-filter-bar') || e.target.closest('.c-header')) {
-						slideDown();
-					}
-				}
-			},
-			{ passive: true },
-		);
-	}
+	// 6. Estado de la portada (homepage.js): al volver al hero se cierra la lista; al terminar
+	// cada transición, Leaflet recalcula su tamaño.
+	window.addEventListener('silveira:home-change', (e) => {
+		if (e.detail.state === 'collapsed') setListOpen(false);
+		if (e.detail.settled) map.invalidateSize();
+	});
 });

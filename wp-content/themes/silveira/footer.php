@@ -7,7 +7,11 @@
 
 ?>
 
-<footer class="c-footer">
+<footer class="c-footer" id="colophon">
+	<?php if ( is_front_page() ) : ?>
+		<?php // Franja visible del footer en la portada: lo abre con toque, clic o teclado (homepage.js). ?>
+		<button type="button" class="c-footer__reveal" aria-controls="colophon" aria-expanded="false" aria-label="<?php esc_attr_e( 'Mostrar o rodapé', 'silveira' ); ?>"></button>
+	<?php endif; ?>
 	<div class="o-container">
 		<div class="o-row">
 			<div class="o-col-6 c-footer__brand">

@@ -5,16 +5,23 @@
 
 .c-map {
 	width: 100%;
-	height: calc(100vh - 122px - 40px); // 122px (header+filter) + 40px gap for footer
-	min-height: 460px;
+
+	// Hasta el borde inferior de la pantalla, dejando asomar 40px de footer (ver _main.scss). Las alturas
+	// las mide homepage.js; sin JS se usan las de escritorio.
+	height: calc(100vh - var(--sil-header-height, 50px) - var(--sil-filter-height, 72px) - 40px);
+	height: calc(100dvh - var(--sil-header-height, 50px) - var(--sil-filter-height, 72px) - 40px);
+	min-height: 240px; // Más alto empujaría la franja del footer fuera de pantalla en móviles bajos
 	position: relative;
 	z-index: 1; // Below header/dropdowns
 	background-color: var(--sil-violeta-050);
 
-	&.is-locked {
+	// Bloqueado en el hero, con el footer revelado y mientras se sale del hero; los marcadores siguen
+	// respondiendo para expandirlo.
+	html[data-home='collapsed'] &,
+	html[data-home='footer'] &,
+	html[data-home-busy='collapsed'] & {
 		pointer-events: none;
 
-		// Allow interaction with markers to trigger expansion
 		.leaflet-marker-icon,
 		.c-map-marker {
 			pointer-events: auto;

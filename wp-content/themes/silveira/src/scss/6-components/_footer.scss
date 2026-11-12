@@ -16,6 +16,28 @@
 	position: relative;
 	overflow: hidden;
 
+	// Franja que asoma con el mapa expandido (solo portada, solo con JS): abre y cierra el footer.
+	&__reveal {
+		display: none;
+		position: absolute;
+		inset: 0 0 auto;
+		height: 40px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		cursor: pointer;
+		z-index: 1;
+
+		&:focus-visible {
+			outline: 2px solid $verde-800;
+			outline-offset: -4px;
+		}
+
+		html[data-home] & {
+			display: block;
+		}
+	}
+
 	&__brand {
 		display: flex;
 		flex-direction: column;

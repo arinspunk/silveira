@@ -114,17 +114,18 @@ get_header();
 	</div>
 
 	<!-- Map Container -->
-	<div class="c-map is-locked">
+	<div class="c-map">
 		<div id="map" class="c-map__container"></div>
 		
 		<!-- Floating toggle button -->
-		<button class="c-btn c-btn--secondary c-btn--l c-btn--has-icon c-btn--map-toggle" id="map-list-toggle" style="opacity: 0; visibility: hidden;">
-			<span class="c-btn__icon o-icon o-icon--xs">arrow_back</span>
-			Ver a lista
+		<button type="button" class="c-btn c-btn--secondary c-btn--l c-btn--has-icon c-btn--map-toggle" id="map-list-toggle" aria-controls="map-project-list" aria-expanded="false" data-label-open="<?php esc_attr_e( 'Ver a lista', 'silveira' ); ?>" data-label-close="<?php esc_attr_e( 'Acochar a lista', 'silveira' ); ?>">
+			<span class="c-btn__icon o-icon o-icon--xs" aria-hidden="true" data-icon-when="closed">arrow_back</span>
+			<span class="c-btn__label"><?php esc_html_e( 'Ver a lista', 'silveira' ); ?></span>
+			<span class="c-btn__icon o-icon o-icon--xs" aria-hidden="true" data-icon-when="open" hidden>arrow_forward</span>
 		</button>
 		
-		<!-- Slide out panel -->
-		<div class="c-map-panel" id="map-project-list" style="transform: translateX(100%);">
+		<!-- Slide out panel (inert mientras está cerrado; lo abre map.js) -->
+		<div class="c-map-panel" id="map-project-list" inert>
 			<ul class="c-project-list" data-empty-text="<?php esc_attr_e( 'Nom há projetos para estes filtros.', 'silveira' ); ?>">
 				<!-- Injected via map.js -->
 			</ul>
