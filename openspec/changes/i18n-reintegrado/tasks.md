@@ -7,7 +7,7 @@
 
 ## 2. Títulos
 
-- [ ] 2.1 Filtrar `get_the_archive_title_prefix` y eliminar el `str_replace` de `silveira_hero()` (design D3); verificar el escenario "Territory archive" y el archivo de proyectos
+- [ ] 2.1 Comprobar que el título de archivo sin prefijo de `consistent-templates` (design D3) se mantiene con WordPress en galego; verificar el escenario "Territory archive" y el archivo de proyectos
 - [ ] 2.2 Corregir el escapado del título de búsqueda (design D4); verificar el escenario "Search with ampersand"
 
 ## 3. Textos

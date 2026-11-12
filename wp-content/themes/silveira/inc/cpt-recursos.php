@@ -33,6 +33,11 @@ function silveira_register_cpt_recurso() {
 		'show_tagcloud'     => false,
 		'show_in_rest'      => true,
 		'rewrite'           => array( 'slug' => 'recursos' ),
+		// Todo recurso tiene categoría: sin ninguna, WordPress le asigna «Geral» (y crea el término si no existe).
+		'default_term'      => array(
+			'name' => __( 'Geral', 'silveira' ),
+			'slug' => 'geral',
+		),
 	);
 	register_taxonomy( 'categoria_recurso', array( 'recurso' ), $tax_args );
 
@@ -95,3 +100,40 @@ function silveira_recurso_post_link( $post_link, $post ) {
 	return $post_link;
 }
 add_filter( 'post_type_link', 'silveira_recurso_post_link', 1, 2 );
+
+/**
+ * Asigna la categoría por defecto («geral») a un recurso que ha quedado sin ninguna.
+ *
+ * `default_term` cubre la creación sin categorías, pero no el caso en que la API REST (el editor de bloques)
+ * envía la lista vacía de forma explícita, p. ej. al desmarcar la última categoría.
+ *
+ * @param WP_Post|int $post Recurso.
+ */
+function silveira_recurso_ensure_category( $post ) {
+	$post = get_post( $post );
+	if ( ! $post || 'recurso' !== $post->post_type || 'auto-draft' === $post->post_status ) {
+		return;
+	}
+	$terms = wp_get_object_terms( $post->ID, 'categoria_recurso', array( 'fields' => 'ids' ) );
+	if ( is_wp_error( $terms ) || ! empty( $terms ) ) {
+		return;
+	}
+	$default = (int) get_option( 'default_term_categoria_recurso' );
+	if ( $default ) {
+		wp_set_object_terms( $post->ID, $default, 'categoria_recurso' );
+	}
+}
+add_action( 'rest_after_insert_recurso', 'silveira_recurso_ensure_category' );
+
+/**
+ * Igual que silveira_recurso_ensure_category() para guardados fuera de la API REST.
+ *
+ * @param int $post_id ID del recurso.
+ */
+function silveira_recurso_ensure_category_on_save( $post_id ) {
+	if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+		return;
+	}
+	silveira_recurso_ensure_category( $post_id );
+}
+add_action( 'save_post_recurso', 'silveira_recurso_ensure_category_on_save', 20 );

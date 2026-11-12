@@ -29,6 +29,9 @@ Hero (dentro de `main`) + contenido + territorios/categoría como enlaces. Se bo
 ### D5. `wp_footer()` fuera
 `footer.php`: `</footer></div><!-- .l-site-content --><?php wp_footer(); ?></body>`.
 
+### D6. Título de archivo limpio
+Hoy el hero muestra `Archives: <span>Projetos</span>`: `get_the_archive_title()` envuelve el nombre en `<span>` y antepone un prefijo en inglés; `silveira_hero()` intenta quitarlo con un `str_replace` de prefijos fijos que no coinciden ("Archive: " frente a "Archives: ") y el hero escapa el HTML. Se sustituye por el filtro `get_the_archive_title_prefix` (devuelve `''`) y `wp_strip_all_tags()` sobre el título; se elimina el `str_replace`.
+
 ## Risks / Trade-offs
 
 - [Cambian las URLs de plantilla y algún estilo depende de `l-main--archive-projeto`] → se mantienen esas clases (D1).

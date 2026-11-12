@@ -7,7 +7,7 @@ El mapa de la portada depende de recursos de terceros servidos desde sus dominio
 - **Leaflet** (JS y CSS) desde `unpkg.com`, sin integridad (SRI) y registrado en todas las páginas.
 - **Teselas del mapa** de `tile.openstreetmap.org`, con la URL fija en el código y una atribución sin enlace.
 
-Los iconos (Material Symbols) y las tipografías propias (Isaac y Akkurat-Mono) se tratan en el change `self-hosted-fonts`, aplicado antes.
+Los iconos (Material Symbols) y la tipografía propia (Isaac) ya se sirven desde el theme gracias a `self-hosted-fonts`.
 
 ## What Changes
 

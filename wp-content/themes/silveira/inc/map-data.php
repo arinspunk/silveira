@@ -56,8 +56,8 @@ function silveira_get_map_points() {
 	while ( $projects_query->have_posts() ) {
 		$projects_query->the_post();
 		$post_id = get_the_ID();
-		$lat     = get_field( 'projeto_latitude' );
-		$lng     = get_field( 'projeto_longitude' );
+		$lat     = silveira_field( 'projeto_latitude' );
+		$lng     = silveira_field( 'projeto_longitude' );
 
 		if ( ! $lat || ! $lng ) {
 			continue;
@@ -110,7 +110,7 @@ function silveira_get_map_points() {
 			'lat'         => (float) $lat,
 			'lng'         => (float) $lng,
 			'url'         => silveira_map_url( get_permalink() ),
-			'lema'        => silveira_map_plain_text( get_field( 'projeto_lema' ) ),
+			'lema'        => silveira_map_plain_text( silveira_field( 'projeto_lema' ) ),
 			'image'       => silveira_map_url( get_the_post_thumbnail_url( $post_id, 'large' ) ),
 			'modalidades' => is_array( $modalidades ) ? $modalidades : array(),
 			'territorios' => array_values( array_unique( $territorio_slugs ) ),

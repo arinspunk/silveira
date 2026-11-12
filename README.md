@@ -231,6 +231,13 @@ GitHub's blame view applies this file automatically.
 
 ## WP-CLI (optional)
 
+**Resources without a category.** Every `recurso` gets the `geral` category when saved without one (`default_term` plus a hook for the REST API). Resources created before that change keep no category until they are saved again; to fix them all at once (run it once after deploying):
+
+```bash
+wp eval 'foreach ( get_posts( array( "post_type" => "recurso", "post_status" => "any", "numberposts" => -1 ) ) as $p ) { silveira_recurso_ensure_category( $p ); }'
+```
+
+
 With the `tools` profile:
 
 ```bash

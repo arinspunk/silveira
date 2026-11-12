@@ -6,8 +6,8 @@
  */
 
 $silveira_post_id     = get_the_ID();
-$silveira_lema        = get_field( 'projeto_lema' );
-$silveira_endereco    = get_field( 'projeto_endereco' );
+$silveira_lema        = silveira_field( 'projeto_lema' );
+$silveira_endereco    = silveira_field( 'projeto_endereco' );
 $silveira_modalidades = get_the_terms( $silveira_post_id, 'modalidade_projeto' );
 $silveira_territorios = get_the_terms( $silveira_post_id, 'territorio' );
 ?>

@@ -19,7 +19,7 @@ Además, los textos de `map.js` no se pueden traducir, y los títulos de archivo
   - textos de `map.js`;
   - textos introducidos por otros changes (estado vacío de filtros, avisos de geocoding).
 - **Todos esos textos pasan por gettext con el text domain `silveira`**, y se carga el text domain del theme. Los textos de JavaScript llegan desde PHP ya traducidos.
-- **Títulos de archivo sin prefijo** mediante el filtro de WordPress, en lugar de `str_replace` de prefijos concretos.
+- **Títulos de archivo sin prefijo** en cualquier idioma de WordPress. El filtro lo introduce `consistent-templates`; aquí se verifica con WordPress en galego.
 - **Corrección del doble escapado** en el título de resultados de búsqueda.
 - **Revisión lingüística posterior y no bloqueante:** el inventario de textos se envía a una persona que escriba la variante con soltura cuando haya disponibilidad. No impide aplicar ni archivar el change; sus correcciones se aplican después en un change de seguimiento.
 - **Fuera de alcance:**
