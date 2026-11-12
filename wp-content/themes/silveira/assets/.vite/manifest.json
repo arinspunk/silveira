@@ -1,11 +1,38 @@
 {
+  "src/fonts/Isaac-Bold.woff2": {
+    "file": "fonts/Isaac-Bold-BpFguklQ.woff2",
+    "src": "src/fonts/Isaac-Bold.woff2"
+  },
+  "src/fonts/Isaac-BoldItalic.woff2": {
+    "file": "fonts/Isaac-BoldItalic-CkQ60HaQ.woff2",
+    "src": "src/fonts/Isaac-BoldItalic.woff2"
+  },
+  "src/fonts/Isaac-Italic.woff2": {
+    "file": "fonts/Isaac-Italic-CIm77Hyw.woff2",
+    "src": "src/fonts/Isaac-Italic.woff2"
+  },
+  "src/fonts/Isaac-Regular.woff2": {
+    "file": "fonts/Isaac-Regular-Bneyzeyg.woff2",
+    "src": "src/fonts/Isaac-Regular.woff2"
+  },
+  "src/fonts/material-symbols-subset.woff2": {
+    "file": "fonts/material-symbols-subset-a2UWwLGO.woff2",
+    "src": "src/fonts/material-symbols-subset.woff2"
+  },
   "src/main.js": {
-    "file": "js/main-CJIoY95g.js",
+    "file": "js/main-DC576Q6c.js",
     "name": "main",
     "src": "src/main.js",
     "isEntry": true,
     "css": [
-      "css/main-EyOJElUn.css"
+      "css/main-DNt9SkID.css"
+    ],
+    "assets": [
+      "fonts/Isaac-Regular-Bneyzeyg.woff2",
+      "fonts/Isaac-Italic-CIm77Hyw.woff2",
+      "fonts/Isaac-Bold-BpFguklQ.woff2",
+      "fonts/Isaac-BoldItalic-CkQ60HaQ.woff2",
+      "fonts/material-symbols-subset-a2UWwLGO.woff2"
     ]
   }
 }

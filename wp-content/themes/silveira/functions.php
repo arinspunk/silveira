@@ -240,7 +240,6 @@ require_once get_template_directory() . '/inc/tax-shared.php';
 require_once get_template_directory() . '/inc/cpt-projetos.php';
 require_once get_template_directory() . '/inc/cpt-eventos.php';
 require_once get_template_directory() . '/inc/cpt-recursos.php';
-require_once get_template_directory() . '/inc/assets.php';
 require_once get_template_directory() . '/inc/map-data.php';
 
 add_action( 'after_switch_theme', 'silveira_rewrite_flush' );

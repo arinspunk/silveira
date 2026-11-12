@@ -11,10 +11,11 @@
 		"build": "vite build",
 		"prebuild": "npm run validate",
 		"validate": "npm run lint && npm run lint:css",
-		"lint": "eslint src vite.config.js eslint.config.js stylelint.config.js",
+		"lint": "eslint src scripts vite.config.js eslint.config.js stylelint.config.js",
 		"lint:css": "stylelint \"src/**/*.{css,scss}\"",
-		"format": "prettier --write \"src/**/*.{js,css,scss}\" \"vite.config.js\" \"eslint.config.js\" \"stylelint.config.js\"",
-		"format:check": "prettier --check \"src/**/*.{js,css,scss}\" \"vite.config.js\" \"eslint.config.js\" \"stylelint.config.js\""
+		"format": "prettier --write \"src/**/*.{js,css,scss}\" \"vite.config.js\" \"eslint.config.js\" \"stylelint.config.js\" \"scripts/**/*.mjs\"",
+		"format:check": "prettier --check \"src/**/*.{js,css,scss}\" \"vite.config.js\" \"eslint.config.js\" \"stylelint.config.js\" \"scripts/**/*.mjs\"",
+		"icons:subset": "node scripts/icons-subset.mjs"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.15.0",

@@ -24,6 +24,11 @@ La familia se recibe en `otf` (16 estilos, de Thin a ExtraBold). El CSS solo usa
 - Los `otf` originales no se versionan: en `src/fonts/` solo quedan `woff2`.
 - Preload de Isaac Regular desde PHP leyendo el manifest: opcional, solo si la revisión visual muestra un salto de fuente molesto.
 
+### D2c. Rutas de las fuentes en el build (añadido al aplicar)
+El `base` de Vite era `/wp-content/themes/silveira/`, sin `assets/`: hasta ahora no importaba porque el CSS no tenía `url()` y el PHP lee el manifest, pero las fuentes salían con 404. El build pasa a usar `base: './'` (rutas relativas: `assets/css/` → `../fonts/…`, independiente de la ruta de instalación) y el modo dev mantiene la ruta del theme, que usa `functions.php`. Los `url()` del SCSS son absolutos desde la raíz del proyecto (`/src/fonts/…`), porque Vite no reescribe las rutas relativas de los parciales de Sass. Las fuentes se emiten en `assets/fonts/` en lugar de `assets/css/`. El contenido del JS generado no cambia.
+
+Material Symbols usa `font-display: block` (no `swap`): con `swap` se verían los nombres de los iconos como texto mientras carga la fuente.
+
 ### D2b. Sin Akkurat-Mono
 Ningún componente la usa y el diseño no la va a usar. Se eliminan su `@font-face`, `$font-mono`, el mixin `font-mono` y `--sil-font-mono`, y su entrada en `KNOWN_MISSING` de `tests/e2e/helpers.js`.
 
