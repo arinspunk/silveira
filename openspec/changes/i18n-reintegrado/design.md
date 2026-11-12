@@ -21,7 +21,7 @@ Junto a `window.silveiraMapPoints` (mismo `wp_add_inline_script` de `harden-map-
 - *Alternativa*: `wp_set_script_translations` + `@wordpress/i18n` — requiere ficheros JSON de traducción por hash de script, mal encaje con Vite y hashes cambiantes.
 
 ### D3. Prefijo de archivo
-Filtro `get_the_archive_title_prefix` → `''` (WP ≥ 5.5). Se elimina el `str_replace`.
+Ya resuelto por `consistent-templates` (su D6): filtro `get_the_archive_title_prefix` → `''` y sin `str_replace`. Aquí solo se verifica que, con WordPress en galego, el título sigue saliendo sin prefijo.
 
 ### D4. Búsqueda
 `sprintf( __( 'Resultados para: %s', 'silveira' ), get_search_query( false ) )` y la plantilla del hero escapa una vez con `esc_html`.

@@ -35,6 +35,10 @@ Las páginas de archivo de proyectos, eventos, recursos y de cualquier territori
 - **WHEN** un visitante abre el archivo de un territorio con proyectos y eventos
 - **THEN** ve tarjetas de ambos tipos, cada una enlazando a su ficha
 
+#### Scenario: Archive title
+- **WHEN** un visitante abre `/projeto/` o el archivo de un territorio
+- **THEN** el título del hero es solo el nombre del archivo (p. ej. "Projetos" o el nombre del territorio), como texto, sin prefijos como "Archives:" ni etiquetas HTML visibles
+
 #### Scenario: Empty archive
 - **WHEN** un archivo no tiene elementos
 - **THEN** se muestra el mensaje de "nada encontrado"
