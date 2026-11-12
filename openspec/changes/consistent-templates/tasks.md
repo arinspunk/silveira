@@ -15,4 +15,4 @@
 ## 3. Footer y verificación global
 
 - [x] 3.1 Mover `wp_footer()` fuera de `.l-site-content` (design D5); verificar que la portada (expandir mapa, abrir footer) y la barra de admin funcionan igual
-- [ ] 3.2 Comprobar con un validador de encabezados (p. ej. extensión HeadingsMap o axe DevTools) portada, ficha de proyecto, evento, recurso, archivos y búsqueda: un `h1` y sin saltos; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
+- [x] 3.2 Comprobar con un validador de encabezados (p. ej. extensión HeadingsMap o axe DevTools) portada, ficha de proyecto, evento, recurso, archivos y búsqueda: un `h1` y sin saltos; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
