@@ -14,5 +14,10 @@ module.exports = defineConfig({
 		viewport: { width: 1440, height: 900 },
 		trace: 'retain-on-failure',
 	},
-	projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } }],
+	projects: [
+		{
+			name: 'chromium',
+			use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+		},
+	],
 });

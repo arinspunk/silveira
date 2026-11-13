@@ -26,7 +26,9 @@ test.describe('Front page', () => {
 		await expect(page.getByText('Projeto sem coordenadas')).toHaveCount(0);
 		expect(cdn, 'no requests to library CDNs').toEqual([]);
 		await expect(
-			page.locator('.leaflet-control-attribution a[href="https://www.openstreetmap.org/copyright"]'),
+			page.locator(
+				'.leaflet-control-attribution a[href="https://www.openstreetmap.org/copyright"]',
+			),
 		).toHaveCount(1);
 
 		// Clicking a specific project's marker opens its popup and expands the map. It is picked by id
@@ -68,7 +70,9 @@ test.describe('Front page', () => {
 	});
 
 	// homepage-scroll-a11y: the homepage is keyboard-navigable and the closed list gets no focus.
-	test('keyboard: expands the map, opens the footer and respects the closed list', async ({ page }) => {
+	test('keyboard: expands the map, opens the footer and respects the closed list', async ({
+		page,
+	}) => {
 		const watcher = watchErrors(page);
 		const html = page.locator('html');
 
@@ -110,9 +114,7 @@ test.describe('Front page', () => {
 	});
 
 	// harden-map-output regression: HTML in the title and lema is not interpreted.
-	test('project content with HTML is shown as text without running anything', async ({
-		page,
-	}) => {
+	test('project content with HTML is shown as text without running anything', async ({ page }) => {
 		const watcher = watchErrors(page); // includes dialogs: an alert() would fail the test
 
 		await page.goto('/');
