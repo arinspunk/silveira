@@ -11,4 +11,4 @@
 
 ## 3. Cierre
 
-- [ ] 3.1 Revisar la pestaña Red en portada, ficha de proyecto, archivo y búsqueda: solo peticiones al dominio del sitio y a las teselas; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
+- [x] 3.1 Revisar la pestaña Red en portada, ficha de proyecto, archivo y búsqueda: solo peticiones al dominio del sitio y a las teselas; verificar que el commit incluye `assets/` regenerado por el hook y que la CI (incluido el smoke test de `map-smoke-tests`) pasa
