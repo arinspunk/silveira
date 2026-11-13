@@ -29,6 +29,15 @@ Ya resuelto por `consistent-templates` (su D6): filtro `get_the_archive_title_pr
 ### D5. Inventario y revisión
 Se genera un inventario con `wp i18n make-pot` (WP-CLI) en `scratch` (no versionado) para listar todos los `msgid` del theme. Se reescriben según la variante (p. ej. "Não" → "Nom", "-ção" → "-çom", "uma" → "umha", "na lixeira" → forma a decidir) Los textos dudosos se marcan en la PR y en el inventario. La revisión lingüística es posterior y no bloquea el cierre del change (ver Risks).
 
+### D6. Nombre accesible de los filtros
+Hoy el `<button class="c-select__trigger">` no tiene nombre explícito, así que su nombre accesible es todo su contenido: la etiqueta ("Modalidade educativa") y el texto de ejemplo ("Que procuras?"), que además no cambia al marcar opciones.
+
+- En `front-page.php`, cada botón lleva `aria-labelledby="filter-<grupo>-label filter-<grupo>-status"`. El texto de ejemplo sigue visible, pero queda fuera del nombre.
+- `filter-<grupo>-status` es un `<span>` solo para lectores de pantalla dentro del botón. Vacío si no hay nada marcado (nombre: "Modalidade educativa"); con opciones marcadas, `_n( '%d selecionada', '%d selecionadas', … )` precedido de coma ("Modalidade educativa, 2 selecionadas").
+- El tema no tiene utilidad de texto oculto: se añade `.screen-reader-text` (la clase convencional de WordPress) en la capa de utilidades del SCSS.
+- `map.js` actualiza los tres `status` cuando cambia una casilla y cuando `syncFilterOptions` desmarca localidades incompatibles. Los textos singular/plural llegan por `window.silveiraI18n` (D2) como plantillas con `%d`.
+- La forma "selecionada(s)" se marca como dudosa en el inventario (D5) para la revisión lingüística.
+
 ## Risks / Trade-offs
 
 - [Formas léxicas dudosas en la variante (p. ej. "Adicionar"/"Engadir", "lixo/papeleira")] → se marcan como dudosos y se envían a revisión lingüística cuando haya disponibilidad; el change se archiva sin esperarla y las correcciones van en un change de seguimiento.
