@@ -32,12 +32,21 @@ docker run --rm -v "$PWD/wp-content/themes/silveira":/app -w /app composer:2 com
 
 `lint-staged.config.mjs`, sequentially (`--concurrent false`):
 - JS/config → ESLint `--fix` + Prettier; CSS/SCSS → Stylelint `--fix` + Prettier.
+- Root JS (`tests/**/*.js`, `playwright.config.js`, `lint-staged.config.mjs`) → Prettier from the root `node_modules`, with the shared root `.prettierrc.json`.
 - PHP → `scripts/lint-staged-phpcs.sh`: local PHP → Docker `composer:2` → visible warning and exit 0.
 - `src/**`, `vite.config.js` or `package-lock.json` staged → `scripts/build-assets.sh` (build + `git add assets/`), once per commit.
 
 Consequence: changes don't need a build task; the commit includes `assets/`. If you commit with `--no-verify`, CI will fail because `assets/` is out of date.
 
 ## 3. Reproduce CI locally
+
+From the repo root (the root formatting step of the `e2e` job):
+
+```bash
+npm ci && npm run format:check
+```
+
+The root `prettier` is pinned to the exact version locked in the theme's `package-lock.json`, and the `e2e` job fails if they differ. When the theme's lockfile moves Prettier, bump the root in the same change: `npm install --save-dev --save-exact prettier@<theme version>`.
 
 From `wp-content/themes/silveira`:
 

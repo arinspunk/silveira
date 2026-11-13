@@ -89,6 +89,18 @@ jobs:
 
       - run: npm ci
 
+      # Root JS (tests/, playwright.config.js, lint-staged.config.mjs) uses the shared .prettierrc.json.
+      # Its Prettier must be the version locked in the theme, or the two checks could drift apart.
+      - name: Root formatting (Prettier)
+        run: |
+          ROOT_PRETTIER=$(node -p "require('./package-lock.json').packages['node_modules/prettier'].version")
+          THEME_PRETTIER=$(node -p "require('./wp-content/themes/silveira/package-lock.json').packages['node_modules/prettier'].version")
+          if [ "$ROOT_PRETTIER" != "$THEME_PRETTIER" ]; then
+            echo "::error::Prettier versions differ: root package-lock.json has $ROOT_PRETTIER, the theme has $THEME_PRETTIER. Pin the root to the theme version: npm install --save-dev --save-exact prettier@$THEME_PRETTIER"
+            exit 1
+          fi
+          npm run format:check
+
       - name: Start isolated WordPress (port 8081, built assets)
         run: npm run e2e:up
 

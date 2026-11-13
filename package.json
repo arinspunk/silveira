@@ -7,7 +7,9 @@
 		"e2e:up": "docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait",
 		"e2e:seed": "bash scripts/e2e-seed.sh",
 		"e2e:down": "bash scripts/e2e-down.sh",
-		"test:e2e": "playwright test"
+		"test:e2e": "playwright test",
+		"format": "prettier --write \"tests/**/*.js\" playwright.config.js lint-staged.config.mjs",
+		"format:check": "prettier --check \"tests/**/*.js\" playwright.config.js lint-staged.config.mjs"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.56.1",

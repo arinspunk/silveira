@@ -20,6 +20,8 @@ export default {
 		'cd wp-content/themes/silveira && npx stylelint --fix',
 		'cd wp-content/themes/silveira && npx prettier --write',
 	],
+	// Root JS (tests and config files), formatted with the root Prettier and the shared .prettierrc.json.
+	'{tests/**/*.js,playwright.config.js,lint-staged.config.mjs}': 'npx prettier --write',
 	'wp-content/themes/silveira/**/*.php': 'bash scripts/lint-staged-phpcs.sh',
 	// A single run per commit: the function ignores the file list.
 	'wp-content/themes/silveira/{src/**,vite.config.js,package-lock.json}': () =>
