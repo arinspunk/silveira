@@ -19,7 +19,7 @@
 
 ## 4. Blame (commit 4)
 
-- [ ] 4.1 Add the hash of the commit from 2.1 to `.git-blame-ignore-revs` with its subject as a comment, following the existing entries; verify that `git blame --ignore-revs-file .git-blame-ignore-revs tests/e2e/home.spec.js` attributes the reformatted lines to earlier commits
+- [x] 4.1 Add the hash of the commit from 2.1 to `.git-blame-ignore-revs` with its subject as a comment, following the existing entries; verify that `git blame --ignore-revs-file .git-blame-ignore-revs tests/e2e/home.spec.js` attributes the reformatted lines to earlier commits
 
 ## 5. Close
 
