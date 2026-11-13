@@ -22,7 +22,7 @@
 
 ## 5. Close
 
-- [ ] 5.1 Check that no Spanish developer text remains in the whole repo: `git grep -nIwE "que|los|las|del|para|con|sin|una|cuando|hay|no se|debe" -- . ':!openspec/changes/archive' ':!.cursor/memory' ':!**/vendor/**' ':!**/node_modules/**' ':!**/assets/**'`, reviewing by hand the matches that are site text (galego reintegrado) or seed content; and verify that `frontend`, `php` and `e2e` are green on the PR
+- [x] 5.1 Check that no Spanish developer text remains in the whole repo: `git grep -nIwE "que|los|las|del|para|con|sin|una|cuando|hay|no se|debe" -- . ':!openspec/changes/archive' ':!.cursor/memory' ':!**/vendor/**' ':!**/node_modules/**' ':!**/assets/**'`, reviewing by hand the matches that are site text (galego reintegrado) or seed content; and verify that `frontend`, `php` and `e2e` are green on the PR
 
 ## Workflow follow-up
 
