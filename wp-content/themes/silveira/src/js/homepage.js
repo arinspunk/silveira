@@ -1,19 +1,20 @@
 /**
- * Portada: navegación entre tres estados.
+ * Homepage: navigation between three states.
  *
- *   collapsed  hero visible, mapa bloqueado
- *   expanded   hero fuera, mapa desbloqueado, asoma la franja del footer
- *   footer     footer revelado
+ *   collapsed  hero visible, map locked
+ *   expanded   hero out, map unlocked, the footer strip peeks in
+ *   footer     footer revealed
  *
- * El estado vive en `html[data-home]` y el CSS reacciona a él (ver _main.scss y _map.scss). Mientras dura
- * la transición se marca `html[data-home-busy="<estado de origen>"]`; se libera con el `transitionend` del contenido o, si este
- * no llega, tras SAFETY_MS. Con movimiento reducido no hay periodo de bloqueo.
+ * The state lives in `html[data-home]` and the CSS reacts to it (see _main.scss and _map.scss).
+ * While the transition runs, `html[data-home-busy="<origin state>"]` is set; it is released on the
+ * content's `transitionend` or, if that never arrives, after SAFETY_MS. With reduced motion there
+ * is no lock period.
  *
- * Sin este script no hay `data-home` y la portada se recorre con el scroll nativo.
+ * Without this script there is no `data-home` and the homepage is browsed with native scrolling.
  *
- * Eventos:
- *   escucha   `silveira:slide-up`     (map.js, al pulsar un marcador) → expanded
- *   emite     `silveira:home-change`  detail { state, settled } en cada cambio y al terminar la transición
+ * Events:
+ *   listens   `silveira:slide-up`     (map.js, when a marker is clicked) → expanded
+ *   emits     `silveira:home-change`  detail { state, settled } on each change and when it settles
  */
 
 const SAFETY_MS = 1000;
@@ -23,7 +24,7 @@ const WHEEL_PX = 5;
 const root = document.documentElement;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-/** ¿El foco está en un control donde las teclas tienen otro uso (escribir, mover el mapa, desplazar la lista)? */
+/** Is focus on a control where keys have another use (typing, panning the map, scrolling the list)? */
 const isKeyExempt = (target) => {
 	if (!(target instanceof Element)) return false;
 	if (
@@ -41,8 +42,8 @@ const isKeyExempt = (target) => {
 };
 
 /**
- * Estados en los que el foco puede estar en un elemento; si el actual no está en la lista, se pasa al
- * primero. `null`: cualquiera (la cabecera queda fuera de .l-site-content y siempre se ve).
+ * States in which an element can hold focus; if the current one is not in the list, switch to the
+ * first. `null`: any (the header sits outside .l-site-content and is always visible).
  *
  * @param {Element} target
  * @returns {string[]|null}
@@ -56,8 +57,8 @@ const focusStates = (target) => {
 };
 
 /**
- * Estados en los que un elemento se ve. Como focusStates, salvo los filtros: se ven también con el hero,
- * aunque al entrar en ellos con el foco el mapa se expanda.
+ * States in which an element is visible. Same as focusStates, except the filters: they are also
+ * visible with the hero, even though focusing them expands the map.
  *
  * @param {Element} target
  * @returns {string[]|null}
@@ -75,7 +76,7 @@ const initHomepage = () => {
 	const reveal = document.querySelector('.c-footer__reveal');
 	if (!siteContent || !hero || !mapWrapper || !footer) return;
 
-	// --- Medidas (design D5) ---
+	// --- Measurements (design D5) ---
 	const measure = () => {
 		const set = (name, node) => {
 			if (node) siteContent.style.setProperty(name, `${node.offsetHeight}px`);
@@ -93,7 +94,7 @@ const initHomepage = () => {
 		window.addEventListener('resize', measure);
 	}
 
-	// --- Máquina de estados (design D1) ---
+	// --- State machine (design D1) ---
 	let state = 'collapsed';
 	let busy = false;
 	let safetyTimer = 0;
@@ -110,10 +111,10 @@ const initHomepage = () => {
 	};
 
 	/**
-	 * Cambia de estado.
+	 * Changes state.
 	 *
 	 * @param {string} next
-	 * @param {{force?: boolean}} [options] force: aunque haya una transición en curso (el foco manda).
+	 * @param {{force?: boolean}} [options] force: even if a transition is in progress (focus wins).
 	 */
 	const go = (next, { force = false } = {}) => {
 		if (next === state || (busy && !force)) return;
@@ -128,7 +129,7 @@ const initHomepage = () => {
 			return;
 		}
 		busy = true;
-		root.dataset.homeBusy = previous; // el CSS espera al final solo al salir del hero
+		root.dataset.homeBusy = previous; // CSS waits for the end only when leaving the hero
 
 		window.clearTimeout(safetyTimer);
 		safetyTimer = window.setTimeout(settle, SAFETY_MS);
@@ -139,17 +140,17 @@ const initHomepage = () => {
 		if (e.target === siteContent && e.propertyName === 'transform') settle();
 	});
 
-	// Estado inicial: el CSS solo bloquea el scroll nativo cuando existe `data-home` (design D7).
+	// Initial state: CSS only locks native scrolling when `data-home` exists (design D7).
 	if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 	root.dataset.home = state;
 	window.scrollTo(0, 0);
-	// Con overflow: hidden el documento aún se desplaza al enfocar algo fuera de pantalla; el
-	// desplazamiento lo pone el transform, así que se anula ese scroll.
+	// With overflow: hidden the document still scrolls when something off-screen gets focus; the
+	// offset comes from the transform, so that scroll is cancelled.
 	window.addEventListener('scroll', () => {
 		if (window.scrollY !== 0) window.scrollTo(0, 0);
 	});
 
-	// --- Ratón y táctil (comportamiento previo, design D2) ---
+	// --- Mouse and touch (previous behaviour, design D2) ---
 	const onFilterOrHeader = (target) =>
 		target instanceof Element && !!target.closest('.c-filter-bar, .c-header');
 
@@ -163,12 +164,12 @@ const initHomepage = () => {
 		if (state === 'collapsed') go('expanded');
 	});
 
-	// Solo ratón: en táctil el pointerenter emulado de un toque abriría y el click volvería a cerrar.
+	// Mouse only: on touch, a tap's emulated pointerenter would open it and the click close it again.
 	footer.addEventListener('pointerenter', (e) => {
 		if (e.pointerType === 'mouse' && state === 'expanded') go('footer');
 	});
 	footer.addEventListener('pointerleave', (e) => {
-		// Solo si sale por arriba.
+		// Only when leaving through the top.
 		if (
 			e.pointerType === 'mouse' &&
 			state === 'footer' &&
@@ -205,7 +206,7 @@ const initHomepage = () => {
 		'touchmove',
 		(e) => {
 			if (busy) return;
-			const diff = touchStartY - e.touches[0].clientY; // > 0: el dedo sube (avanzar)
+			const diff = touchStartY - e.touches[0].clientY; // > 0: finger moves up (advance)
 			if (state === 'footer') {
 				if (diff < -SWIPE_PX) go('expanded');
 			} else if (diff > SWIPE_PX && state === 'collapsed') {
@@ -223,14 +224,14 @@ const initHomepage = () => {
 		{ passive: true },
 	);
 
-	// --- Franja del footer (design D4) ---
+	// --- Footer strip (design D4) ---
 	if (reveal) {
 		reveal.addEventListener('click', () => {
 			go(state === 'footer' ? 'expanded' : 'footer', { force: true });
 		});
 	}
 
-	// --- Teclado (design D2) ---
+	// --- Keyboard (design D2) ---
 	document.addEventListener('keydown', (e) => {
 		if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || isKeyExempt(e.target)) return;
 		const onDocument = e.target === document.body || e.target === root;
@@ -242,7 +243,7 @@ const initHomepage = () => {
 				if (state === 'collapsed') next = 'expanded';
 				break;
 			case ' ':
-				// Espacio solo desde el documento: en botones y enlaces tiene su función nativa.
+				// Space only from the document: on buttons and links it keeps its native function.
 				if (onDocument && state === 'collapsed' && !e.shiftKey) next = 'expanded';
 				break;
 			case 'PageUp':
@@ -266,9 +267,9 @@ const initHomepage = () => {
 	});
 
 	/**
-	 * Tras un cambio por teclado, el foco no puede quedarse en algo que ya no se ve (p. ej. `End` con el foco
-	 * en un filtro): en el footer pasa a su franja; en otro caso se suelta, y el navegador mantiene ese punto
-	 * como inicio del siguiente Tab.
+	 * After a keyboard change, focus cannot stay on something no longer visible (e.g. `End` with
+	 * focus on a filter): in the footer it moves to the strip; otherwise it is released, and the
+	 * browser keeps that point as the start of the next Tab.
 	 */
 	const keepFocusVisible = () => {
 		const active = document.activeElement;
@@ -279,7 +280,7 @@ const initHomepage = () => {
 		else active.blur();
 	};
 
-	// --- Foco (design D3): el elemento enfocado siempre queda a la vista ---
+	// --- Focus (design D3): the focused element always stays in view ---
 	document.addEventListener('focusin', (e) => {
 		const states = e.target instanceof Element ? focusStates(e.target) : null;
 		if (states && !states.includes(state)) go(states[0], { force: true });

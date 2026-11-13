@@ -1,6 +1,6 @@
 <?php
 /**
- * Formulario de búsqueda del theme (sustituye al del núcleo para que sus textos estén en la norma del sitio).
+ * Theme search form (replaces the core one so its texts follow the site's language norm).
  *
  * @package Silveira
  */

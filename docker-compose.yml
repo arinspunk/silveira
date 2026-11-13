@@ -1,6 +1,6 @@
-# Proyecto: silveira
-# URL canónica: http://silveira.localhost (puerto 80 por defecto en el navegador).
-# Puerto publicado: 80 del host -> 80 del contenedor. Si el 80 está ocupado, cambia el mapeo en `ports`.
+# Project: silveira
+# Canonical URL: http://silveira.localhost (default port 80 in the browser).
+# Published port: host 80 -> container 80. If 80 is taken, change the mapping in `ports`.
 
 services:
   db:
@@ -25,9 +25,9 @@ services:
     ports:
       - "80:80"
     environment:
-      # Vite: solo activar en local cuando `npm run dev` corre en el host (ver .env.example).
+      # Vite: only enable locally when `npm run dev` is running on the host (see .env.example).
       SILVEIRA_VITE_DEV: ${SILVEIRA_VITE_DEV:-0}
-      # URL en <script src>: la pide el navegador del dev (mismo host que Vite → 127.0.0.1). host.docker.internal suele fallar en el navegador.
+      # URL used in <script src>: requested by the developer's browser (same host as Vite → 127.0.0.1). host.docker.internal usually fails in the browser.
       VITE_DEV_SERVER_URL: ${VITE_DEV_SERVER_URL:-http://127.0.0.1:5173}
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}
@@ -53,7 +53,7 @@ services:
       - ./wp-content/themes/silveira:/var/www/html/wp-content/themes/silveira
     environment:
       SILVEIRA_VITE_DEV: ${SILVEIRA_VITE_DEV:-0}
-      # URL en <script src>: la pide el navegador del dev (mismo host que Vite → 127.0.0.1). host.docker.internal suele fallar en el navegador.
+      # URL used in <script src>: requested by the developer's browser (same host as Vite → 127.0.0.1). host.docker.internal usually fails in the browser.
       VITE_DEV_SERVER_URL: ${VITE_DEV_SERVER_URL:-http://127.0.0.1:5173}
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: ${MYSQL_USER:-wordpress}

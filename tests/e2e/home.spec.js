@@ -1,14 +1,14 @@
-// Smoke test de la portada: mapa, lista, popup y filtros.
-// Datos: scripts/e2e-seed.sh (4 proyectos con coordenadas, 1 sin coordenadas).
+// Homepage smoke test: map, list, popup and filters.
+// Data: scripts/e2e-seed.sh (4 projects with coordinates, 1 without).
 const { test, expect } = require('@playwright/test');
 const { watchErrors, expectNoPhpErrors } = require('./helpers');
 
-const PROJECTS_ON_MAP = 4; // 3 normales + el de XSS; el proyecto sin coordenadas no sale.
+const PROJECTS_ON_MAP = 4; // 3 regular + the XSS one; the project without coordinates is not shown.
 
 test.describe('Portada', () => {
 	test('carga sin errores y pinta mapa, lista, popup y filtro', async ({ page }) => {
 		const watcher = watchErrors(page);
-		// third-party-assets: Leaflet sale del propio sitio, nunca de un CDN.
+		// third-party-assets: Leaflet is served by the site itself, never from a CDN.
 		const cdn = [];
 		page.on('request', (r) => r.url().includes('unpkg.com') && cdn.push(r.url()));
 
@@ -19,7 +19,7 @@ test.describe('Portada', () => {
 		const markers = page.locator('.leaflet-marker-icon');
 		const items = page.locator('.c-project-list > li');
 
-		// Un marcador y un elemento de lista por proyecto con coordenadas.
+		// One marker and one list item per project with coordinates.
 		await expect(markers).toHaveCount(PROJECTS_ON_MAP);
 		await expect(items).toHaveCount(PROJECTS_ON_MAP);
 		await expect(items.filter({ hasText: 'Escola de Ames' })).toHaveCount(1);
@@ -29,9 +29,9 @@ test.describe('Portada', () => {
 			page.locator('.leaflet-control-attribution a[href="https://www.openstreetmap.org/copyright"]'),
 		).toHaveCount(1);
 
-		// Pulsar el marcador de un proyecto concreto abre su popup y expande el mapa. Se elige por su id
-		// (no "el primero": el orden y el solape de marcadores dependen de los datos) y se dispara el clic
-		// en el propio marcador, porque en el seed los marcadores están tan juntos que unos tapan a otros.
+		// Clicking a specific project's marker opens its popup and expands the map. It is picked by id
+		// (not "the first": marker order and overlap depend on the data) and the click is dispatched
+		// on the marker itself, because in the seed the markers are so close that some cover others.
 		const amesId = await page.evaluate(
 			() => window.silveiraMapPoints.find((p) => p.title === 'Escola de Ames').id,
 		);
@@ -46,8 +46,8 @@ test.describe('Portada', () => {
 		await expect(page.locator('html')).toHaveAttribute('data-home', 'expanded');
 		await page.locator('.leaflet-popup-close-button').click();
 
-		// Filtrar por modalidade "Escola" deja solo sus dos proyectos.
-		// i18n-reintegrado: el nombre accesible es la etiqueta (sin "Que procuras?") y, al marcar, cuántas.
+		// Filtering by modalidade "Escola" leaves only its two projects.
+		// i18n-reintegrado: the accessible name is the label (no "Que procuras?") + checked count.
 		await expect(
 			page.getByRole('button', { name: 'Modalidade educativa', exact: true }),
 		).toBeVisible();
@@ -67,7 +67,7 @@ test.describe('Portada', () => {
 		watcher.assertClean();
 	});
 
-	// homepage-scroll-a11y: la portada se recorre con teclado y la lista cerrada no recibe el foco.
+	// homepage-scroll-a11y: the homepage is keyboard-navigable and the closed list gets no focus.
 	test('teclado: expande el mapa, abre el footer y respeta la lista cerrada', async ({ page }) => {
 		const watcher = watchErrors(page);
 		const html = page.locator('html');
@@ -76,7 +76,7 @@ test.describe('Portada', () => {
 		await expect(page.locator('.leaflet-marker-icon')).toHaveCount(PROJECTS_ON_MAP);
 		await expect(html).toHaveAttribute('data-home', 'collapsed');
 
-		// El foco en un filtro expande el mapa; Home vuelve al hero sin perder el foco.
+		// Focusing a filter expands the map; Home returns to the hero without losing focus.
 		const trigger = page.locator('#filter-modalidade .c-select__trigger');
 		await trigger.focus();
 		await expect(html).toHaveAttribute('data-home', 'expanded');
@@ -85,7 +85,7 @@ test.describe('Portada', () => {
 		await expect(html).toHaveAttribute('data-home', 'collapsed');
 		await expect(trigger).toBeFocused();
 
-		// PageDown expande; la lista cerrada es inert y el botón expone su estado.
+		// PageDown expands; the closed list is inert and the button exposes its state.
 		await expect(html).not.toHaveAttribute('data-home-busy');
 		await page.keyboard.press('PageDown');
 		await expect(html).toHaveAttribute('data-home', 'expanded');
@@ -98,7 +98,7 @@ test.describe('Portada', () => {
 		await expect(page.locator('#map-project-list')).toHaveJSProperty('inert', false);
 		await toggle.click();
 
-		// El foco en un enlace del footer lo revela y el enlace queda a la vista.
+		// Focusing a footer link reveals the footer and the link stays in view.
 		const footerLink = page.locator('.c-footer a').first();
 		await footerLink.focus();
 		await expect(html).toHaveAttribute('data-home', 'footer');
@@ -109,17 +109,18 @@ test.describe('Portada', () => {
 		watcher.assertClean();
 	});
 
-	// Regresión de harden-map-output: el título y el lema con HTML no se interpretan.
+	// harden-map-output regression: HTML in the title and lema is not interpreted.
 	test('el contenido con HTML del proyecto se muestra como texto sin ejecutar nada', async ({
 		page,
 	}) => {
-		const watcher = watchErrors(page); // incluye diálogos: un alert() haría fallar el test
+		const watcher = watchErrors(page); // includes dialogs: an alert() would fail the test
 
 		await page.goto('/');
 		await expect(page.locator('.leaflet-marker-icon')).toHaveCount(PROJECTS_ON_MAP);
 
-		// En la lista: el título llega sin la etiqueta (la quita PHP) y el extracto, que llega como HTML
-		// real (venía con entidades), se pinta como texto literal (lo frena map.js con textContent).
+		// In the list: the title arrives without the tag (PHP strips it) and the excerpt, which
+		// arrives as real HTML (it came with entities), is rendered as literal text (map.js stops it
+		// via textContent).
 		const xssItem = page
 			.locator('.c-project-list > li')
 			.filter({ has: page.locator('.c-project-list-item__title', { hasText: /^Horta$/ }) });
@@ -129,12 +130,13 @@ test.describe('Portada', () => {
 		);
 		await expect(xssItem.locator('img')).toHaveCount(0);
 
-		// En el popup: abrir el marcador del proyecto XSS (el único con lema vacío tras quitar etiquetas).
+		// In the popup: open the XSS project's marker (the only one with an empty lema once tags
+		// are stripped).
 		const markers = page.locator('.leaflet-marker-icon');
 		const count = await markers.count();
 		let found = false;
-		// dispatchEvent: abrir un popup desplaza el mapa y movería los demás marcadores
-		// (el clic real con ratón ya lo cubre el test anterior).
+		// dispatchEvent: opening a popup pans the map and would move the other markers
+		// (a real mouse click is already covered by the previous test).
 		for (let i = 0; i < count && !found; i++) {
 			await markers.nth(i).dispatchEvent('click');
 			const title = page.locator('.leaflet-popup-content .c-map-card__title');
@@ -151,7 +153,7 @@ test.describe('Portada', () => {
 		}
 		expect(found, 'no se encontró el popup del proyecto XSS').toBe(true);
 
-		// Nada se ha ejecutado ni inyectado en todo el documento.
+		// Nothing was executed or injected anywhere in the document.
 		expect(await page.evaluate(() => window.__xss)).toBeUndefined();
 		await expect(page.locator('img[src="x"]')).toHaveCount(0);
 		await expect(page.locator('main script')).toHaveCount(0);

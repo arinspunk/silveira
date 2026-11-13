@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Siembra el entorno E2E (proyecto Compose silveira-e2e) con datos reproducibles.
-# Idempotente: se puede ejecutar varias veces y deja siempre los mismos términos y proyectos.
-# Ningún proyecto lleva projeto_endereco, así que el guardado no llama a Nominatim.
+# Seeds the E2E environment (Compose project silveira-e2e) with reproducible data.
+# Idempotent: can be run repeatedly and always leaves the same terms and projects.
+# No project has projeto_endereco, so saving does not call Nominatim.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -22,7 +22,7 @@ wp rewrite structure '/%postname%/' >/dev/null
 
 wp eval-file - <<'PHP'
 <?php
-// Salvaguarda: bloquear y contar cualquier petición a Nominatim durante el seed.
+// Safeguard: block and count any request to Nominatim during the seed.
 $GLOBALS['e2e_nominatim'] = 0;
 add_filter(
 	'pre_http_request',
@@ -37,7 +37,7 @@ add_filter(
 	3
 );
 
-// Términos (get_term_by + insert para que sea idempotente).
+// Terms (get_term_by + insert so it is idempotent).
 function e2e_term( $name, $slug, $tax, $parent = 0 ) {
 	$t = get_term_by( 'slug', $slug, $tax );
 	if ( $t ) {
@@ -51,7 +51,7 @@ e2e_term( 'Obradoiro', 'obradoiro', 'modalidade_projeto' );
 $comarca = e2e_term( 'Compostela', 'compostela', 'territorio' );
 e2e_term( 'Ames', 'ames', 'territorio', $comarca );
 
-// Proyectos: [slug, título, lema, lat, lng, modalidade, territorio].
+// Projects: [slug, title, lema, lat, lng, modalidade, territorio].
 $projetos = array(
 	array( 'e2e-escola-ames', 'Escola de Ames', 'Aprender em galego', 42.857, -8.651, 'escola', 'ames' ),
 	array( 'e2e-escola-compostela', 'Escola de Compostela', 'Lema da escola', 42.880, -8.545, 'escola', 'compostela' ),
@@ -60,7 +60,7 @@ $projetos = array(
 	array( 'e2e-xss', '<img src=x onerror="window.__xss=1">Horta', '</script><script>window.__xss=1</script>', 42.950, -8.600, 'obradoiro', 'compostela' ),
 );
 
-// Borrar proyectos que no sean del seed para que el estado sea siempre el mismo.
+// Delete projects not created by the seed so the state is always the same.
 $keep = wp_list_pluck( $projetos, 0 );
 foreach ( get_posts( array( 'post_type' => 'projeto', 'post_status' => 'any', 'numberposts' => -1 ) ) as $p ) {
 	if ( ! in_array( $p->post_name, $keep, true ) ) {
@@ -68,7 +68,7 @@ foreach ( get_posts( array( 'post_type' => 'projeto', 'post_status' => 'any', 'n
 	}
 }
 
-wp_set_current_user( 1 ); // Admin con unfiltered_html: el título con HTML se guarda tal cual (peor caso).
+wp_set_current_user( 1 ); // Admin with unfiltered_html: the HTML title is saved as is (worst case).
 foreach ( $projetos as $d ) {
 	list( $slug, $title, $lema, $lat, $lng, $mod, $ter ) = $d;
 	$existing = get_page_by_path( $slug, OBJECT, 'projeto' );
@@ -79,8 +79,8 @@ foreach ( $projetos as $d ) {
 			'post_status'  => 'publish',
 			'post_name'    => $slug,
 			'post_title'   => $title,
-			// El extracto del proyecto XSS va con entidades: no hay etiquetas que quitar en PHP y llega
-			// al navegador como HTML real, así que solo lo frena que map.js pinte con textContent.
+			// The XSS project's excerpt uses entities: there are no tags for PHP to strip and it reaches
+			// the browser as real HTML, so only map.js rendering with textContent stops it.
 			'post_excerpt' => 'e2e-xss' === $slug ? '&lt;img src=x onerror=window.__xss=1&gt;' : 'Extracto de ' . $slug . '.',
 			'post_content' => '<p>Conteúdo de proba.</p>',
 		)

@@ -1,9 +1,9 @@
-// Utilidades comunes del smoke test.
+// Shared smoke test utilities.
 const { expect } = require('@playwright/test');
 
 /**
- * Recoge errores de página, de consola y diálogos (alert/confirm) mientras dura el test.
- * Llamar a `assertClean()` al final.
+ * Collects page errors, console errors and dialogs (alert/confirm) for the duration of the test.
+ * Call `assertClean()` at the end.
  */
 function watchErrors(page) {
 	const errors = [];
@@ -23,7 +23,7 @@ function watchErrors(page) {
 	};
 }
 
-/** Falla si el HTML contiene avisos o errores de PHP. */
+/** Fails if the HTML contains PHP warnings or errors. */
 async function expectNoPhpErrors(response) {
 	const html = await response.text();
 	expect(html).not.toMatch(/(Fatal error|Warning|Notice|Deprecated|Parse error)<\/b>:/);

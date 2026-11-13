@@ -1,6 +1,6 @@
 <?php
 /**
- * Funciones del theme silveira.
+ * Silveira theme functions.
  *
  * @package Silveira
  */

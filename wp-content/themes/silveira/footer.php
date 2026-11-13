@@ -9,7 +9,7 @@
 
 <footer class="c-footer" id="colophon">
 	<?php if ( is_front_page() ) : ?>
-		<?php // Franja visible del footer en la portada: lo abre con toque, clic o teclado (homepage.js). ?>
+		<?php // Visible strip of the footer on the front page: opens it on tap, click or keyboard (homepage.js). ?>
 		<button type="button" class="c-footer__reveal" aria-controls="colophon" aria-expanded="false" aria-label="<?php esc_attr_e( 'Mostrar o rodapé', 'silveira' ); ?>"></button>
 	<?php endif; ?>
 	<div class="o-container">

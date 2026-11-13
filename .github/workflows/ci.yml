@@ -95,8 +95,8 @@ jobs:
       - name: Sembrar datos de prueba
         run: npm run e2e:seed
 
-      # Los tests corren en la imagen oficial de Playwright (navegador y dependencias de sistema
-      # incluidos): sin apt ni `playwright install`. La etiqueta sale de package.json.
+      # Tests run in the official Playwright image (browser and system dependencies
+      # included): no apt or `playwright install`. The tag comes from package.json.
       - name: Versión de Playwright (package.json)
         run: |
           PW_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")

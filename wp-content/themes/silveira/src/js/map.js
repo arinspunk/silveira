@@ -3,8 +3,8 @@
  */
 
 /**
- * Crea un elemento DOM. Los hijos string se insertan como texto (nunca como HTML);
- * los null/false/undefined se omiten.
+ * Creates a DOM element. String children are inserted as text (never as HTML);
+ * null/false/undefined ones are skipped.
  *
  * @param {string} tag
  * @param {{className?: string, attrs?: Record<string, string>}} [options]
@@ -25,7 +25,7 @@ const el = (tag, { className, attrs } = {}, children = []) => {
 };
 
 /**
- * Devuelve la URL absoluta solo si es http(s); si no, null.
+ * Returns the absolute URL only if it is http(s); otherwise null.
  *
  * @param {unknown} value
  * @returns {string|null}
@@ -43,7 +43,7 @@ const safeUrl = (value) => {
 const icon = (className, name) => el('span', { className }, [name]);
 
 /**
- * Texto de la interfaz, traducido en PHP (silveira_map_i18n()); el fallback es el texto fuente.
+ * UI text, translated in PHP (silveira_map_i18n()); the fallback is the source text.
  *
  * @param {string} key
  * @param {string} fallback
@@ -52,7 +52,7 @@ const icon = (className, name) => el('span', { className }, [name]);
 const t = (key, fallback) => window.silveiraI18n?.[key] || fallback;
 
 /**
- * Popup de un marcador.
+ * Popup for a marker.
  *
  * @param {object} point
  * @returns {HTMLElement}
@@ -83,7 +83,7 @@ const buildPopup = (point) => {
 };
 
 /**
- * Elemento de la lista lateral. Sin URL segura se pinta como <div> (sin enlace).
+ * Side list item. Without a safe URL it is rendered as a <div> (no link).
  *
  * @param {object} point
  * @returns {HTMLLIElement}
@@ -113,7 +113,7 @@ const buildListItem = (point) => {
 	]);
 };
 
-/** Teselas por defecto si PHP no inyecta configuración (ver silveira_map_tiles()). */
+/** Default tiles if PHP injects no configuration (see silveira_map_tiles()). */
 const DEFAULT_TILES = {
 	url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 	attribution:
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const mapContainer = document.getElementById('map');
 	if (!mapContainer) return;
 
-	// Leaflet solo en páginas con mapa: Vite lo separa en un chunk propio (JS + CSS) dentro de assets/.
+	// Leaflet only on pages with a map: Vite splits it into its own chunk (JS + CSS) inside assets/.
 	const [leaflet] = await Promise.all([import('leaflet'), import('leaflet/dist/leaflet.css')]);
 	const L = leaflet.default ?? leaflet;
 
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-	// 2. Add Tiles (proveedor configurable desde PHP con el filtro silveira_map_tiles)
+	// 2. Add Tiles (provider configurable from PHP via the silveira_map_tiles filter)
 	const tiles = { ...DEFAULT_TILES, ...(window.silveiraMapConfig?.tiles || {}) };
 	L.tileLayer(tiles.url, {
 		attribution: tiles.attribution,
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		filteredPoints.forEach((point) => {
 			const marker = L.marker([point.lat, point.lng], { icon: customIcon }).addTo(map);
-			// Identifica el marcador de cada proyecto (lo usa el smoke test).
+			// Identifies each project's marker (used by the smoke test).
 			marker.getElement()?.setAttribute('data-project-id', String(point.id));
 
 			const popupContent = buildPopup(point);
@@ -205,13 +205,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 	renderMarkers(points);
 
 	// 4. Filtering Logic
-	// Estado: valores marcados por grupo. Dentro de un grupo se combinan con O; entre grupos, con Y.
+	// State: checked values per group. Within a group they combine with OR; across groups, with AND.
 	const filters = {
 		modalidade: [],
 		comarca: [],
 		localidade: [],
 	};
-	// Campo del punto que se compara con cada grupo.
+	// Point field compared against each group.
 	const pointField = {
 		modalidade: 'modalidades',
 		comarca: 'territorios',
@@ -227,16 +227,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	const filterInputs = Array.from(document.querySelectorAll('.c-checkbox__input')).filter(groupOf);
 
-	/** ¿Cumple el punto el filtro de un grupo? (sin nada marcado, sí). */
+	/** Does the point pass a group's filter? (yes if nothing is checked). */
 	const matches = (point, group) =>
 		filters[group].length === 0 || filters[group].some((v) => point[pointField[group]].includes(v));
 
-	/** ¿Cumple el punto todos los grupos, salvo los de `except`? */
+	/** Does the point pass every group, except those in `except`? */
 	const matchesAll = (point, except = []) =>
 		Object.keys(filters).every((group) => except.includes(group) || matches(point, group));
 
-	// Grupos que NO restringen las opciones de cada grupo. Las comarcas no dependen de la localidade
-	// (es un refinamiento dentro de la comarca): elegir otra comarca desmarca las localidades incompatibles.
+	// Groups that do NOT restrict each group's options. Comarcas do not depend on the localidade
+	// (it refines within the comarca): choosing another comarca unchecks incompatible localidades.
 	const ignoredFor = {
 		modalidade: ['modalidade'],
 		comarca: ['comarca', 'localidade'],
@@ -251,15 +251,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	};
 
-	/** Una localidade solo es compatible si no hay comarcas marcadas o pertenece a una de ellas. */
+	/** A localidade is only compatible if no comarca is checked or it belongs to one of them. */
 	const localidadeFitsComarcas = (cb) =>
 		filters.comarca.length === 0 ||
 		filters.comarca.includes(cb.closest('.c-checkbox')?.dataset.parentComarca);
 
 	/**
-	 * Única responsable de qué opciones se ven (atributo `hidden`): se ofrece una opción si,
-	 * combinada con los demás grupos (ver ignoredFor), daría resultados. Las marcadas siguen visibles, salvo
-	 * localidades de otra comarca, que ya se han desmarcado en updateFilters().
+	 * Sole owner of which options are shown (`hidden` attribute): an option is offered if, combined
+	 * with the other groups (see ignoredFor), it would yield results. Checked ones stay visible,
+	 * except localidades from another comarca, which have already been unchecked in updateFilters().
 	 */
 	const syncFilterOptions = () => {
 		const available = {};
@@ -281,8 +281,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	};
 
 	/**
-	 * Nombre accesible de cada botón de filtro: su etiqueta y, si hay opciones marcadas, cuántas
-	 * ("Modalidade educativa, 2 selecionadas"). Sin el texto de ejemplo visible.
+	 * Accessible name of each filter button: its label and, if options are checked, how many
+	 * ("Modalidade educativa, 2 selecionadas"). Without the visible placeholder text.
 	 */
 	const syncFilterStatus = () => {
 		document.querySelectorAll('.c-select').forEach((select) => {
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	const updateFilters = () => {
 		readFilters();
 
-		// Localidades marcadas que ya no encajan con las comarcas elegidas: se desmarcan en esta misma pasada.
+		// Checked localidades that no longer fit the chosen comarcas: unchecked in this same pass.
 		const incompatible = filterInputs.filter(
 			(cb) => cb.checked && groupOf(cb) === 'localidade' && !localidadeFitsComarcas(cb),
 		);
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	syncFilterOptions();
 	syncFilterStatus();
 
-	// 5. Panel de la lista (design D6). Cerrado es `inert`: ni foco ni lectores de pantalla.
+	// 5. List panel (design D6). When closed it is `inert`: no focus, no screen readers.
 	const listToggleBtn = document.getElementById('map-list-toggle');
 	const listPanel = document.getElementById('map-project-list');
 
@@ -348,8 +348,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	}
 
-	// 6. Estado de la portada (homepage.js): al volver al hero se cierra la lista; al terminar
-	// cada transición, Leaflet recalcula su tamaño.
+	// 6. Homepage state (homepage.js): returning to the hero closes the list; when each
+	// transition ends, Leaflet recalculates its size.
 	window.addEventListener('silveira:home-change', (e) => {
 		if (e.detail.state === 'collapsed') setListOpen(false);
 		if (e.detail.settled) map.invalidateSize();

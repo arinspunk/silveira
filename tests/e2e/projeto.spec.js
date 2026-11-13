@@ -1,10 +1,10 @@
-// Smoke test de la ficha de proyecto.
+// Smoke test for the project page.
 const { test, expect } = require('@playwright/test');
 const { watchErrors, expectNoPhpErrors } = require('./helpers');
 
 test('la ficha de un proyecto responde 200 sin errores', async ({ page }) => {
 	const watcher = watchErrors(page);
-	// third-party-assets: la librería del mapa solo se descarga en páginas con mapa.
+	// third-party-assets: the map library is only downloaded on pages with a map.
 	const leaflet = [];
 	page.on('request', (r) => /leaflet/i.test(r.url()) && leaflet.push(r.url()));
 

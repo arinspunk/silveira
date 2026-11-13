@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichas de evento y recurso (y de cualquier contenido sin plantilla propia).
+ * Single event and resource pages (and any content without its own template).
  *
  * @package Silveira
  */

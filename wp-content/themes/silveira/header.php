@@ -1,6 +1,6 @@
 <?php
 /**
- * Cabecera del theme.
+ * Theme header.
  *
  * @package Silveira
  */

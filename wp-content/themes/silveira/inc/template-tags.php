@@ -1,6 +1,6 @@
 <?php
 /**
- * Etiquetas de plantilla del theme.
+ * Theme template tags.
  *
  * @package Silveira
  */
@@ -14,12 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function silveira_hero() {
 	$title    = '';
-	$subtitle = __( 'Um ecossistema para o galego', 'silveira' ); // Subtítulo por defecto (Figma).
+	$subtitle = __( 'Um ecossistema para o galego', 'silveira' ); // Default subtitle (Figma).
 	$image    = '';
 
 	if ( is_archive() ) {
-		// Sin prefijo ("Archives:", "Categoria de Recurso:"…, ver silveira_archive_title_prefix) y sin el <span>
-		// con que WordPress envuelve el nombre: el hero lo muestra como texto.
+		// No prefix ("Archives:", "Categoria de Recurso:"…, see silveira_archive_title_prefix) and without the <span>
+		// WordPress wraps the name in: the hero shows it as plain text.
 		$title = wp_strip_all_tags( get_the_archive_title() );
 
 		if ( is_tax() || is_category() || is_tag() ) {
@@ -29,8 +29,8 @@ function silveira_hero() {
 		}
 	} elseif ( is_search() ) {
 
-		// Texto plano sin escapar: content-hero.php lo escapa una sola vez al pintarlo.
-		/* translators: %s: término de búsqueda. */
+		// Unescaped plain text: content-hero.php escapes it once when rendering.
+		/* translators: %s: search term. */
 		$title = sprintf( __( 'Resultados para: %s', 'silveira' ), get_search_query( false ) );
 	} elseif ( is_singular() ) {
 		$title = get_the_title();
@@ -94,7 +94,7 @@ function silveira_hero() {
 }
 
 /**
- * Paginación de los listados con textos del theme (los del núcleo saldrían en el idioma de WordPress).
+ * Listing pagination with the theme's texts (core ones would show in the WordPress language).
  */
 function silveira_posts_pagination() {
 	the_posts_pagination(
@@ -109,9 +109,9 @@ function silveira_posts_pagination() {
 
 add_filter( 'get_the_archive_title_prefix', 'silveira_archive_title_prefix' );
 /**
- * Títulos de archivo sin prefijo: el hero muestra solo el nombre ("Projetos", "Ames"…).
+ * Archive titles without prefix: the hero shows only the name ("Projetos", "Ames"…).
  *
- * @param string $prefix Prefijo por defecto.
+ * @param string $prefix Default prefix.
  * @return string
  */
 function silveira_archive_title_prefix( $prefix ) {
@@ -120,12 +120,12 @@ function silveira_archive_title_prefix( $prefix ) {
 }
 
 /**
- * Contexto que muestra la tarjeta de un contenido en los listados.
+ * Context shown by a content card in listings.
  *
- * Proyecto: modalidade y localidade (o comarca si no tiene localidade); evento: territorio; recurso: categoría.
+ * Projeto: modalidade and localidade (or comarca if it has no localidade); evento: territorio; recurso: category.
  *
- * @param WP_Post|int|null $post Contenido (por defecto, el actual).
- * @return string Texto plano, sin escapar.
+ * @param WP_Post|int|null $post Content (defaults to the current one).
+ * @return string Plain text, unescaped.
  */
 function silveira_card_context( $post = null ) {
 	$post = get_post( $post );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Carga de assets con Vite: servidor de desarrollo (HMR) o build con manifest.
+ * Asset loading with Vite: dev server (HMR) or build with manifest.
  *
  * @package Silveira
  */
@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Clave de entrada en manifest.json (Vite) y ruta lógica en modo dev. */
+/** Entry key in manifest.json (Vite) and logical path in dev mode. */
 define( 'SILVEIRA_VITE_ENTRY', 'src/main.js' );
 
 /**
- * ¿Cargar assets desde el servidor de desarrollo de Vite (HMR)?
+ * Load assets from the Vite dev server (HMR)?
  *
- * Se controla con la variable de entorno SILVEIRA_VITE_DEV (p. ej. en docker-compose / .env).
- * No usar WP_DEBUG para esto: son preocupaciones distintas.
+ * Controlled by the SILVEIRA_VITE_DEV environment variable (e.g. in docker-compose / .env).
+ * Do not use WP_DEBUG for this: they are separate concerns.
  *
  * @return bool
  */
@@ -30,9 +30,9 @@ function silveira_is_vite_dev() {
 }
 
 /**
- * URL base del servidor Vite (la usa el navegador en <script src>; misma máquina que el dev → 127.0.0.1).
+ * Vite server base URL (used by the browser in <script src>; same machine as the dev → 127.0.0.1).
  *
- * @return string Sin barra final.
+ * @return string Without trailing slash.
  */
 function silveira_vite_dev_server_url() {
 	$url = getenv( 'VITE_DEV_SERVER_URL' );
@@ -43,7 +43,7 @@ function silveira_vite_dev_server_url() {
 }
 
 /**
- * Ruta absoluta al manifest de Vite.
+ * Absolute path to the Vite manifest.
  *
  * @return string
  */
@@ -52,7 +52,7 @@ function silveira_vite_manifest_path() {
 }
 
 /**
- * Manifest decodificado o false si falta o es inválido.
+ * Decoded manifest, or false if missing or invalid.
  *
  * @return array<string, mixed>|false
  */
@@ -66,7 +66,7 @@ function silveira_vite_get_manifest() {
 		$manifest = false;
 		return $manifest;
 	}
-	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- fichero local del theme.
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local theme file.
 	$json     = file_get_contents( $path );
 	$data     = json_decode( $json, true );
 	$manifest = is_array( $data ) ? $data : false;
@@ -74,9 +74,9 @@ function silveira_vite_get_manifest() {
 }
 
 /**
- * URL pública a un fichero bajo assets/ del theme.
+ * Public URL to a file under the theme's assets/.
  *
- * @param string $relative Ruta relativa dentro de assets/ (p. ej. js/main-xxx.js).
+ * @param string $relative Path relative to assets/ (e.g. js/main-xxx.js).
  * @return string
  */
 function silveira_vite_asset_url( $relative ) {
@@ -84,9 +84,9 @@ function silveira_vite_asset_url( $relative ) {
 }
 
 /**
- * Ruta del sistema a un fichero bajo assets/ del theme.
+ * Filesystem path to a file under the theme's assets/.
  *
- * @param string $relative Ruta relativa dentro de assets/.
+ * @param string $relative Path relative to assets/.
  * @return string
  */
 function silveira_vite_asset_path( $relative ) {
@@ -94,16 +94,16 @@ function silveira_vite_asset_path( $relative ) {
 }
 
 /**
- * Base de URL del theme en el servidor de Vite (debe coincidir con vite.config base).
+ * Theme URL base on the Vite server (must match vite.config base).
  *
- * @return string Con barra inicial, sin barra final.
+ * @return string With leading slash, without trailing slash.
  */
 function silveira_vite_theme_base_path() {
 	return '/wp-content/themes/' . get_stylesheet();
 }
 
 /**
- * Scripts que deben cargarse como ES modules.
+ * Scripts that must load as ES modules.
  *
  * @return string[]
  */
@@ -114,10 +114,10 @@ function silveira_vite_module_script_handles() {
 add_action( 'wp_enqueue_scripts', 'silveira_enqueue_vite_assets', 20 );
 
 /**
- * Encola CSS/JS del theme: Vite dev o build según entorno.
+ * Enqueues theme CSS/JS: Vite dev or build depending on environment.
  */
 function silveira_enqueue_vite_assets() {
-	// Leaflet no se encola aquí: map.js lo importa (chunk de Vite) solo en páginas con mapa.
+	// Leaflet is not enqueued here: map.js imports it (Vite chunk) only on pages with a map.
 	if ( silveira_is_vite_dev() ) {
 		silveira_enqueue_vite_dev();
 		return;
@@ -126,7 +126,7 @@ function silveira_enqueue_vite_assets() {
 }
 
 /**
- * Modo desarrollo: @vite/client + entrada (HMR).
+ * Development mode: @vite/client + entry (HMR).
  */
 function silveira_enqueue_vite_dev() {
 	$origin = silveira_vite_dev_server_url();
@@ -140,7 +140,7 @@ function silveira_enqueue_vite_dev() {
 }
 
 /**
- * Modo producción: manifest + filemtime.
+ * Production mode: manifest + filemtime.
  */
 function silveira_enqueue_vite_prod() {
 	$manifest = silveira_vite_get_manifest();
@@ -186,11 +186,11 @@ function silveira_enqueue_vite_prod() {
 add_filter( 'script_loader_tag', 'silveira_vite_script_module_type', 10, 3 );
 
 /**
- * Marca scripts del theme como type="module" (Vite).
+ * Marks theme scripts as type="module" (Vite).
  *
- * @param string $tag    HTML del script.
- * @param string $handle Handle registrado.
- * @param string $src    URL del script.
+ * @param string $tag    Script HTML.
+ * @param string $handle Registered handle.
+ * @param string $src    Script URL.
  * @return string
  */
 function silveira_vite_script_module_type( $tag, $handle, $src ) {

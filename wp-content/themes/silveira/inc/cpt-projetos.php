@@ -6,10 +6,10 @@
  */
 
 /**
- * Registra custom post type: projeto.
+ * Registers custom post type: projeto.
  */
 function silveira_register_cpt_projeto() {
-	// Exclusiva Taxonomy: Modalidade.
+	// Exclusive Taxonomy: Modalidade.
 	$tax_labels = array(
 		'name'          => _x( 'Modalidades', 'Taxonomy General Name', 'silveira' ),
 		'singular_name' => _x( 'Modalidade', 'Taxonomy Singular Name', 'silveira' ),

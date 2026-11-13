@@ -1,6 +1,6 @@
-# Entorno aislado para el smoke test E2E (Playwright).
-# Uso: docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
-# Volúmenes propios (proyecto silveira-e2e), puerto 8081 y assets compilados (sin Vite dev).
+# Isolated environment for the E2E smoke test (Playwright).
+# Usage: docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml up -d --wait
+# Its own volumes (silveira-e2e project), port 8081 and built assets (no Vite dev).
 
 services:
   wordpress:

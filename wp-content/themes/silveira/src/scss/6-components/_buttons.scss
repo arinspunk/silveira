@@ -91,7 +91,7 @@
 			display: flex;
 			align-items: center;
 
-			// Iconos alternos (p. ej. el botón de la lista del mapa).
+			// Alternate icons (e.g. the map list button).
 			&[hidden] {
 				display: none;
 			}
@@ -129,7 +129,7 @@
 			opacity 0.2s ease-in-out,
 			visibility 0.2s ease-in-out;
 
-		// Visible con el mapa desbloqueado (estado de homepage.js) y mientras el footer está revelado.
+		// Visible while the map is unlocked (homepage.js state) and while the footer is revealed.
 		html:is([data-home='expanded']:not([data-home-busy='collapsed']), [data-home='footer']) & {
 			opacity: 1;
 			visibility: visible;
@@ -137,7 +137,7 @@
 		}
 
 		&.is-open {
-			// Se mueve hacia la izquierda la misma distancia que ocupa la lista
+			// Moves left by the same distance the list takes up
 			right: calc(min(100%, 476px) + 20px);
 		}
 	}

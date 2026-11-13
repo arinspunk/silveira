@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Recompila assets/ del theme y los añade al commit (lo llama lint-staged una vez por commit).
+# Rebuilds the theme's assets/ and adds them to the commit (called by lint-staged once per commit).
 set -eu
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

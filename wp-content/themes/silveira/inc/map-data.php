@@ -1,6 +1,6 @@
 <?php
 /**
- * Datos de proyectos para el mapa de la portada.
+ * Project data for the front page map.
  *
  * @package Silveira
  */
@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Normaliza un valor a texto plano: sin etiquetas y con entidades decodificadas.
+ * Normalizes a value to plain text: no tags and with entities decoded.
  *
- * El escape corresponde a quien pinta (map.js usa textContent).
+ * Escaping is up to the renderer (map.js uses textContent).
  *
- * @param mixed $value Valor de origen (string, null o false).
+ * @param mixed $value Source value (string, null or false).
  * @return string
  */
 function silveira_map_plain_text( $value ) {
@@ -25,9 +25,9 @@ function silveira_map_plain_text( $value ) {
 }
 
 /**
- * Sanea una URL para el mapa; devuelve '' si no es válida o no es http/https.
+ * Sanitizes a URL for the map; returns '' if it is invalid or not http/https.
  *
- * @param mixed $value URL de origen.
+ * @param mixed $value Source URL.
  * @return string
  */
 function silveira_map_url( $value ) {
@@ -38,7 +38,7 @@ function silveira_map_url( $value ) {
 }
 
 /**
- * Proyectos publicados con coordenadas, listos para el mapa.
+ * Published projects with coordinates, ready for the map.
  *
  * @return array<int, array<string, mixed>>
  */
@@ -48,7 +48,7 @@ function silveira_get_map_points() {
 			'post_type'      => 'projeto',
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
-			// Orden estable: con la misma fecha, MySQL puede devolver los proyectos en cualquier orden.
+			// Stable order: with equal dates, MySQL may return projects in any order.
 			'orderby'        => array(
 				'date' => 'DESC',
 				'ID'   => 'DESC',
@@ -68,8 +68,8 @@ function silveira_get_map_points() {
 			continue;
 		}
 
-		// Categorías para filtrar.
-		// get_the_terms() usa la caché de términos que WP_Query ya ha cargado (sin consultas por proyecto).
+		// Categories for filtering.
+		// get_the_terms() uses the term cache WP_Query has already primed (no per-project queries).
 		$modalidades_obj = get_the_terms( $post_id, 'modalidade_projeto' );
 		$modalidades     = ( $modalidades_obj && ! is_wp_error( $modalidades_obj ) ) ? wp_list_pluck( $modalidades_obj, 'slug' ) : array();
 		$mod_name        = $modalidades ? $modalidades_obj[0]->name : '';
@@ -88,7 +88,7 @@ function silveira_get_map_points() {
 					continue;
 				}
 
-				// Incluir también a comarca pai para os filtros.
+				// Also include the parent comarca for the filters.
 				$parent = get_term( $term->parent, 'territorio' );
 				if ( $parent instanceof WP_Term ) {
 					$territorio_slugs[] = $parent->slug;
@@ -130,9 +130,9 @@ function silveira_get_map_points() {
 add_action( 'wp_enqueue_scripts', 'silveira_enqueue_map_points', 30 );
 
 /**
- * Entrega los puntos del mapa ligados al script principal (solo en la portada).
+ * Passes the map points attached to the main script (front page only).
  *
- * JSON_HEX_* impide que el contenido cierre el <script> o rompa atributos.
+ * JSON_HEX_* prevents the content from closing the <script> or breaking attributes.
  */
 function silveira_enqueue_map_points() {
 	if ( ! is_front_page() ) {
@@ -161,9 +161,9 @@ function silveira_enqueue_map_points() {
 }
 
 /**
- * Textos del mapa para map.js, ya traducidos (gettext, dominio silveira).
+ * Map texts for map.js, already translated (gettext, silveira domain).
  *
- * Los plurales van como dos plantillas con %d (singular y plural) porque JS no tiene _n().
+ * Plurals are sent as two %d templates (singular and plural) because JS has no _n().
  *
  * @return array<string, string>
  */
@@ -173,18 +173,18 @@ function silveira_map_i18n() {
 		'showList'         => __( 'Ver a lista', 'silveira' ),
 		'hideList'         => __( 'Acochar a lista', 'silveira' ),
 		'noResults'        => __( 'Nom há projetos para estes filtros.', 'silveira' ),
-		/* translators: %d: número de opçons marcadas num filtro (1). */
+		/* translators: %d: number of options checked in a filter (1). */
 		'selectedSingular' => _n( '%d selecionada', '%d selecionadas', 1, 'silveira' ),
-		/* translators: %d: número de opçons marcadas num filtro (2 ou mais). */
+		/* translators: %d: number of options checked in a filter (2 or more). */
 		'selectedPlural'   => _n( '%d selecionada', '%d selecionadas', 2, 'silveira' ),
 	);
 }
 
 /**
- * Proveedor de teselas del mapa de la portada.
+ * Tile provider for the front page map.
  *
- * La atribución es HTML del sitio (no de las personas editoras): Leaflet la inserta tal cual.
- * Para usar otro proveedor, filtra `silveira_map_tiles` con su URL, atribución y zoom máximo.
+ * The attribution is site HTML (not editor content): Leaflet inserts it as is.
+ * To use another provider, filter `silveira_map_tiles` with its URL, attribution and max zoom.
  *
  * @return array{url: string, attribution: string, maxZoom: int}
  */
@@ -196,9 +196,9 @@ function silveira_map_tiles() {
 	);
 
 	/**
-	 * Filtra el proveedor de teselas del mapa.
+	 * Filters the map tile provider.
 	 *
-	 * @param array<string, mixed> $tiles url (con {z}/{x}/{y}), attribution (HTML) y maxZoom; las claves que falten toman el valor por defecto.
+	 * @param array<string, mixed> $tiles url (with {z}/{x}/{y}), attribution (HTML) and maxZoom; missing keys take the default value.
 	 */
 	$tiles = array_merge( $defaults, (array) apply_filters( 'silveira_map_tiles', $defaults ) );
 

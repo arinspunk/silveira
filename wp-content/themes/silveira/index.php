@@ -1,6 +1,6 @@
 <?php
 /**
- * Plantilla de reserva: páginas, búsqueda, blog y 404.
+ * Fallback template: pages, search, blog and 404.
  *
  * @package Silveira
  */

@@ -1,5 +1,5 @@
-// Smoke test E2E contra el entorno aislado (docker-compose.e2e.yml, http://localhost:8081).
-// Levantar y sembrar antes: npm run e2e:up && npm run e2e:seed
+// E2E smoke test against the isolated environment (docker-compose.e2e.yml, http://localhost:8081).
+// Start and seed it first: npm run e2e:up && npm run e2e:seed
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({

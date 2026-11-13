@@ -16,7 +16,7 @@
 	position: relative;
 	overflow: hidden;
 
-	// Franja que asoma con el mapa expandido (solo portada, solo con JS): abre y cierra el footer.
+	// Strip showing with the map expanded (front page only, with JS): opens and closes the footer.
 	&__reveal {
 		display: none;
 		position: absolute;
