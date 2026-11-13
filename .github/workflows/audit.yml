@@ -1,10 +1,10 @@
 name: Audit
 
-# composer audit semanal: detecta avisos de seguridad publicados aunque nadie abra una PR.
-# GitHub envía un email si falla. Mismo comando que el paso del job php en ci.yml.
+# Weekly composer audit: catches published security advisories even when nobody opens a PR.
+# GitHub sends an email if it fails. Same command as the step in the php job in ci.yml.
 on:
   schedule:
-    - cron: '0 6 * * 1' # lunes 06:00 UTC
+    - cron: '0 6 * * 1' # Monday 06:00 UTC
   workflow_dispatch:
 
 permissions:

@@ -1,6 +1,6 @@
 <?php
 /**
- * Tarjeta de un contenido en los listados (archivos, búsqueda), sobre el componente c-stacked-card.
+ * Content card for listings (archives, search), built on the c-stacked-card component.
  *
  * @package Silveira
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Integración con ACF (opcional): acceso a campos, rutas de ACF Local JSON y aviso en el admin si falta.
+ * ACF integration (optional): field access, ACF Local JSON paths and an admin notice if it is missing.
  *
  * @package Silveira
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * ¿Está ACF activo?
+ * Is ACF active?
  *
  * @return bool
  */
@@ -19,12 +19,12 @@ function silveira_has_acf() {
 }
 
 /**
- * Valor de un campo de ACF, o null si ACF no está activo.
+ * Value of an ACF field, or null if ACF is not active.
  *
- * Único punto del theme que llama a get_field(): así, sin ACF, las plantillas omiten esos datos en vez de dar un error fatal.
+ * The only place in the theme that calls get_field(): without ACF, templates skip that data instead of a fatal error.
  *
- * @param string    $name    Nombre del campo.
- * @param int|false $post_id ID del post (false: el post actual).
+ * @param string    $name    Field name.
+ * @param int|false $post_id Post ID (false: the current post).
  * @return mixed
  */
 function silveira_field( $name, $post_id = false ) {
@@ -34,7 +34,7 @@ function silveira_field( $name, $post_id = false ) {
 	return get_field( $name, $post_id );
 }
 
-// Los plugins se cargan antes que el theme: aquí ya se sabe si ACF está activo.
+// Plugins load before the theme: by now we know whether ACF is active.
 if ( silveira_has_acf() ) {
 	add_filter( 'acf/settings/save_json', 'silveira_acf_json_save_point' );
 	add_filter( 'acf/settings/load_json', 'silveira_acf_json_load_point' );
@@ -43,7 +43,7 @@ if ( silveira_has_acf() ) {
 }
 
 /**
- * Aviso en el admin, solo para quien puede activar plugins, cuando ACF no está activo.
+ * Admin notice, only for users who can activate plugins, when ACF is not active.
  */
 function silveira_acf_missing_notice() {
 	if ( ! current_user_can( 'activate_plugins' ) ) {
@@ -58,7 +58,7 @@ function silveira_acf_missing_notice() {
 /**
  * Filter: ACF Local JSON save path.
  *
- * @param string $path Ruta por defecto (se ignora).
+ * @param string $path Default path (ignored).
  * @return string
  */
 function silveira_acf_json_save_point( $path ) {
@@ -69,7 +69,7 @@ function silveira_acf_json_save_point( $path ) {
 /**
  * Filter: ACF Local JSON load path.
  *
- * @param string[] $paths Rutas de carga.
+ * @param string[] $paths Load paths.
  * @return string[]
  */
 function silveira_acf_json_load_point( $paths ) {

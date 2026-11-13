@@ -2,72 +2,72 @@
 
 ## Purpose
 
-Permite acotar los proyectos del mapa de la portada por modalidade educativa, comarca y localidade, mostrando solo combinaciones posibles y siendo operable con ratón, táctil y teclado.
+Lets visitors narrow down the projects on the front-page map by educational modalidade, comarca and localidade, showing only possible combinations and being operable with mouse, touch and keyboard.
 
 ## Requirements
 
 ### Requirement: Filter options reflect the territory hierarchy
-El filtro "Comarca" SHALL listar solo territorios de primer nivel con proyectos, y el filtro "Localidade" SHALL listar solo territorios que tienen una comarca padre y proyectos.
+The "Comarca" filter SHALL list only top-level territories with projects, and the "Localidade" filter SHALL list only territories that have a parent comarca and projects.
 
 #### Scenario: Comarca without localidades
-- **WHEN** existe la comarca "Deza" con proyectos asignados directamente y sin localidades hijas
-- **THEN** "Deza" aparece en "Comarca" y no aparece en "Localidade"
+- **WHEN** the comarca "Deza" exists with projects assigned directly and no child localidades
+- **THEN** "Deza" appears in "Comarca" and does not appear in "Localidade"
 
 #### Scenario: Localidade option
-- **WHEN** existe la localidade "Lalín" hija de "Deza" con proyectos
-- **THEN** "Lalín" aparece solo en "Localidade"
+- **WHEN** the localidade "Lalín", child of "Deza", exists with projects
+- **THEN** "Lalín" appears only in "Localidade"
 
 ### Requirement: Filters combine across groups and within groups
-Dentro de un mismo filtro las opciones marcadas SHALL combinarse como O; entre filtros distintos SHALL combinarse como Y.
+Within the same filter, checked options SHALL be combined with OR; across different filters they SHALL be combined with AND.
 
 #### Scenario: Two modalidades and one comarca
-- **WHEN** se marcan las modalidades "Escola" y "Obradoiro" y la comarca "Deza"
-- **THEN** el mapa y la lista muestran los proyectos de Deza que son Escola u Obradoiro
+- **WHEN** the modalidades "Escola" and "Obradoiro" and the comarca "Deza" are checked
+- **THEN** the map and the list show the Deza projects that are Escola or Obradoiro
 
 ### Requirement: Only compatible options are offered
-Cada filtro SHALL ocultar las opciones que no producirían resultados combinadas con las selecciones de los otros filtros; las opciones marcadas SHALL permanecer visibles salvo lo indicado para localidades. Las opciones de "Comarca" SHALL depender solo de la modalidade, no de la localidade marcada: la localidade es un refinamiento dentro de la comarca, y elegir otra comarca desmarca las localidades incompatibles.
+Each filter SHALL hide the options that would produce no results combined with the selections in the other filters; checked options SHALL remain visible except as stated for localidades. The "Comarca" options SHALL depend only on the modalidade, not on the checked localidade: the localidade is a refinement within the comarca, and choosing another comarca unchecks the incompatible localidades.
 
 #### Scenario: Localidades limited by comarca
-- **WHEN** se marca la comarca "Deza"
-- **THEN** "Localidade" muestra solo localidades de Deza con proyectos compatibles con las demás selecciones
+- **WHEN** the comarca "Deza" is checked
+- **THEN** "Localidade" shows only Deza localidades with projects compatible with the other selections
 
 #### Scenario: Incompatible localidade is unchecked
-- **WHEN** está marcada la localidade "Lalín" (Deza) y se marca solo la comarca "Ordes"
-- **THEN** "Lalín" se desmarca y deja de mostrarse, y el mapa refleja la nueva selección
+- **WHEN** the localidade "Lalín" (Deza) is checked and only the comarca "Ordes" is checked
+- **THEN** "Lalín" is unchecked and no longer shown, and the map reflects the new selection
 
 ### Requirement: Empty result is explained
-Cuando la combinación de filtros no devuelve ningún proyecto, la lista lateral SHALL mostrar un mensaje indicando que no hay proyectos para esos filtros.
+When the combination of filters returns no project, the side list SHALL show a message saying there are no projects for those filters.
 
 #### Scenario: No matches
-- **WHEN** los filtros activos no coinciden con ningún proyecto
-- **THEN** no hay marcadores y la lista lateral muestra el mensaje de sin resultados
+- **WHEN** the active filters match no project
+- **THEN** there are no markers and the side list shows the no-results message
 
 ### Requirement: Filter dropdowns are keyboard and screen-reader operable
-Cada desplegable de filtro SHALL poder abrirse y cerrarse con teclado, exponer su estado expandido a tecnologías de asistencia y permitir marcar opciones con teclado.
+Each filter dropdown SHALL be openable and closable with the keyboard, expose its expanded state to assistive technologies and allow options to be checked with the keyboard.
 
 #### Scenario: Open with keyboard
-- **WHEN** el foco está en el desplegable "Comarca" y se pulsa Enter o Espacio
-- **THEN** se abre, su estado expandido pasa a verdadero y el foco va a la primera opción visible
+- **WHEN** focus is on the "Comarca" dropdown and Enter or Space is pressed
+- **THEN** it opens, its expanded state becomes true and focus moves to the first visible option
 
 #### Scenario: Close with Escape
-- **WHEN** un desplegable está abierto y se pulsa Escape
-- **THEN** se cierra y el foco vuelve a su botón
+- **WHEN** a dropdown is open and Escape is pressed
+- **THEN** it closes and focus returns to its button
 
 #### Scenario: Only one open at a time
-- **WHEN** "Comarca" está abierto y se abre "Modalidade educativa"
-- **THEN** "Comarca" se cierra
+- **WHEN** "Comarca" is open and "Modalidade educativa" is opened
+- **THEN** "Comarca" closes
 
 ### Requirement: Filter buttons announce their selection
-El botón de cada desplegable de filtro SHALL tener como nombre accesible su etiqueta y, si hay opciones marcadas, cuántas, sin incluir el texto de ejemplo visible.
+Each filter dropdown button SHALL have as its accessible name its label and, if options are checked, how many, without including the visible placeholder text.
 
 #### Scenario: Nothing selected
-- **WHEN** un lector de pantalla llega al botón de "Modalidade educativa" sin opciones marcadas
-- **THEN** lo anuncia como "Modalidade educativa", sin "Que procuras?"
+- **WHEN** a screen reader reaches the "Modalidade educativa" button with no options checked
+- **THEN** it announces it as "Modalidade educativa", without "Que procuras?"
 
 #### Scenario: Options selected
-- **WHEN** se marcan dos modalidades y el foco vuelve al botón
-- **THEN** lo anuncia como "Modalidade educativa, 2 selecionadas"
+- **WHEN** two modalidades are checked and focus returns to the button
+- **THEN** it announces it as "Modalidade educativa, 2 selecionadas"
 
 #### Scenario: Incompatible localidade is unchecked
-- **WHEN** el sistema desmarca una localidade incompatible con las comarcas elegidas
-- **THEN** el número anunciado por el botón de "Localidade" se actualiza
+- **WHEN** the system unchecks a localidade that is incompatible with the chosen comarcas
+- **THEN** the number announced by the "Localidade" button is updated

@@ -6,7 +6,7 @@
  */
 
 /**
- * Registra custom post type: evento.
+ * Registers custom post type: evento.
  */
 function silveira_register_cpt_evento() {
 	$labels = array(

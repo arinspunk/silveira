@@ -282,6 +282,10 @@ docker compose --profile tools run --rm wpcli wp silveira geocode             # 
 
 The output shows a table with the time of each request, the result and the coordinates, and a summary of how many were geocoded and which failed. Projects that already have coordinates are never touched.
 
+## Deployment
+
+There is no production server yet. When there is one, follow [`docs/deploy.md`](docs/deploy.md): server requirements, which theme files to copy, first-time setup (ACF, site language, permalinks, `SILVEIRA_NOMINATIM_EMAIL`), one-off data steps (resource categories, rewrite flush, batch geocoding) and post-deploy checks.
+
 ## WP-CLI (optional)
 
 **Resources without a category.** Every `recurso` gets the `geral` category when saved without one (`default_term` plus a hook for the REST API). Resources created before that change keep no category until they are saved again; to fix them all at once (run it once after deploying):

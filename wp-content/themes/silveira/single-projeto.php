@@ -1,6 +1,6 @@
 <?php
 /**
- * Ficha de proyecto.
+ * Single project page.
  *
  * @package Silveira
  */

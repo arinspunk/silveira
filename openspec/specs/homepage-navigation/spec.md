@@ -2,75 +2,75 @@
 
 ## Purpose
 
-Define la interacción de la portada con tres estados (contraído con hero, mapa expandido y footer revelado) y cómo se pasa entre ellos con ratón, táctil y teclado, de forma accesible.
+Defines the front-page interaction with three states (collapsed with hero, expanded map and revealed footer) and how to move between them with mouse, touch and keyboard, accessibly.
 
 ## Requirements
 
 ### Requirement: Map expands from pointer, touch and keyboard
-Desde el estado contraído, el sistema SHALL pasar a mapa expandido cuando se desplaza hacia abajo con rueda o gesto, se pulsa un filtro o un marcador, el foco entra en los filtros o en el mapa, o se pulsa `PageDown`, `Space` o flecha abajo fuera de un campo de formulario.
+From the collapsed state, the system SHALL switch to the expanded map when the visitor scrolls down with the wheel or a gesture, clicks a filter or a marker, focus enters the filters or the map, or `PageDown`, `Space` or the down arrow is pressed outside a form field.
 
 #### Scenario: Keyboard user tabs into filters
-- **WHEN** con la portada contraída una persona usuaria de teclado tabula hasta el primer filtro
-- **THEN** el mapa se expande y el filtro enfocado permanece visible y enfocado
+- **WHEN** with the front page collapsed a keyboard user tabs to the first filter
+- **THEN** the map expands and the focused filter remains visible and focused
 
 #### Scenario: PageDown
-- **WHEN** con la portada contraída y el foco en el documento se pulsa `PageDown`
-- **THEN** el mapa se expande
+- **WHEN** with the front page collapsed and focus on the document `PageDown` is pressed
+- **THEN** the map expands
 
 #### Scenario: Wheel (existing behaviour)
-- **WHEN** con la portada contraída se gira la rueda hacia abajo
-- **THEN** el mapa se expande
+- **WHEN** with the front page collapsed the wheel is turned down
+- **THEN** the map expands
 
 ### Requirement: Map collapses back to the hero
-Desde mapa expandido, el sistema SHALL volver al estado contraído al desplazar hacia arriba con rueda o gesto sobre la barra de filtros o la cabecera, o al pulsar `PageUp` u `Home` fuera de un campo de formulario y fuera del mapa.
+From the expanded map, the system SHALL return to the collapsed state when the visitor scrolls up with the wheel or a gesture over the filter bar or the header, or presses `PageUp` or `Home` outside a form field and outside the map.
 
 #### Scenario: Home key
-- **WHEN** con el mapa expandido y el foco en un filtro se pulsa `Home`
-- **THEN** la portada vuelve al estado contraído
+- **WHEN** with the map expanded and focus on a filter `Home` is pressed
+- **THEN** the front page returns to the collapsed state
 
 ### Requirement: Footer is reachable by every input method
-Desde mapa expandido, el sistema SHALL revelar el footer al pasar el ratón por su zona visible, al tocar o deslizar hacia arriba sobre la franja visible del footer en táctil, al entrar el foco en cualquiera de sus elementos, o al pulsar `End`.
+From the expanded map, the system SHALL reveal the footer when the mouse moves over its visible area, when the visible strip of the footer is tapped or swiped up on touch devices, when focus enters any of its elements, or when `End` is pressed.
 
 #### Scenario: Touch device
-- **WHEN** en un móvil con el mapa expandido se toca la franja visible del footer
-- **THEN** el footer se revela completo y sus enlaces se pueden pulsar
+- **WHEN** on a phone with the map expanded the visible strip of the footer is tapped
+- **THEN** the whole footer is revealed and its links can be tapped
 
 #### Scenario: Keyboard focus enters footer
-- **WHEN** una persona usuaria de teclado tabula desde el último elemento del mapa hacia el primer enlace del footer
-- **THEN** el footer se revela y el enlace enfocado es visible
+- **WHEN** a keyboard user tabs from the last element of the map to the first footer link
+- **THEN** the footer is revealed and the focused link is visible
 
 #### Scenario: Footer closes
-- **WHEN** el footer está revelado y el foco sale de él hacia arriba, se pulsa `PageUp`, o se desplaza hacia arriba con rueda o gesto
-- **THEN** el footer se oculta y la portada vuelve a mapa expandido
+- **WHEN** the footer is revealed and focus leaves it upwards, `PageUp` is pressed, or the visitor scrolls up with the wheel or a gesture
+- **THEN** the footer is hidden and the front page returns to the expanded map
 
 ### Requirement: Focused elements are always visible
-El sistema SHALL garantizar que el elemento con el foco nunca queda fuera de la zona visible ni tapado por el estado actual de la portada.
+The system SHALL ensure that the focused element is never outside the visible area or covered by the current state of the front page.
 
 #### Scenario: Shift+Tab from map to header
-- **WHEN** con el mapa expandido se tabula hacia atrás hasta un enlace de la cabecera
-- **THEN** el enlace es visible y enfocado
+- **WHEN** with the map expanded the user tabs backwards to a header link
+- **THEN** the link is visible and focused
 
 ### Requirement: Hidden project list is not focusable
-Cuando el panel de la lista de proyectos está cerrado, sus elementos SHALL NOT poder recibir el foco ni ser anunciados por lectores de pantalla; el botón que lo abre SHALL exponer si el panel está abierto o cerrado.
+When the project list panel is closed, its elements SHALL NOT be able to receive focus or be announced by screen readers; the button that opens it SHALL expose whether the panel is open or closed.
 
 #### Scenario: Tabbing with closed panel
-- **WHEN** el panel de la lista está cerrado y se tabula por la portada
-- **THEN** el foco nunca entra en elementos de la lista
+- **WHEN** the list panel is closed and the user tabs through the front page
+- **THEN** focus never enters elements of the list
 
 #### Scenario: Toggle state announced
-- **WHEN** un lector de pantalla enfoca el botón de la lista tras abrirla
-- **THEN** anuncia que está expandido
+- **WHEN** a screen reader focuses the list button after opening the list
+- **THEN** it announces that it is expanded
 
 ### Requirement: Reduced motion
-Si la persona usuaria tiene activada la preferencia de movimiento reducido, los cambios entre estados SHALL ser inmediatos y la portada SHALL aceptar la siguiente acción sin periodo de espera.
+If the user has the reduced motion preference enabled, changes between states SHALL be immediate and the front page SHALL accept the next action without a waiting period.
 
 #### Scenario: Rapid keyboard navigation with reduced motion
-- **WHEN** con movimiento reducido activo se pulsa `PageDown` y a continuación `End`
-- **THEN** el mapa se expande y el footer se revela de inmediato, sin ignorar la segunda tecla
+- **WHEN** with reduced motion enabled `PageDown` and then `End` are pressed
+- **THEN** the map expands and the footer is revealed immediately, without ignoring the second key
 
 ### Requirement: Works without JavaScript
-Si el JavaScript de la portada no se carga, todo el contenido de la portada (hero, filtros, mapa y footer) SHALL ser alcanzable con el scroll nativo del navegador.
+If the front page's JavaScript does not load, all of the front page's content (hero, filters, map and footer) SHALL be reachable with the browser's native scrolling.
 
 #### Scenario: Script blocked
-- **WHEN** se carga la portada con JavaScript desactivado
-- **THEN** se puede desplazar la página hasta el footer y sus enlaces funcionan
+- **WHEN** the front page is loaded with JavaScript disabled
+- **THEN** the page can be scrolled down to the footer and its links work

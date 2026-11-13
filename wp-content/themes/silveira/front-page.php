@@ -22,7 +22,7 @@ get_header();
 					<span class="c-select__label" id="filter-modalidade-label"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
 					<span class="c-select__value"><?php esc_html_e( 'Que procuras?', 'silveira' ); ?></span>
 					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
-					<?php // Nombre accesible: etiqueta y, si hay opciones marcadas, cuántas (map.js lo actualiza). ?>
+					<?php // Accessible name: label and, if options are checked, how many (map.js updates it). ?>
 					<span class="screen-reader-text" id="filter-modalidade-status"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
 				</button>
 
@@ -53,7 +53,7 @@ get_header();
 					<span class="c-select__label" id="filter-comarca-label"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
 					<span class="c-select__value"><?php esc_html_e( 'Em que zona?', 'silveira' ); ?></span>
 					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
-					<?php // Nombre accesible: etiqueta y, si hay opciones marcadas, cuántas (map.js lo actualiza). ?>
+					<?php // Accessible name: label and, if options are checked, how many (map.js updates it). ?>
 					<span class="screen-reader-text" id="filter-comarca-status"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
 				</button>
 
@@ -85,13 +85,13 @@ get_header();
 					<span class="c-select__label" id="filter-localidade-label"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
 					<span class="c-select__value"><?php esc_html_e( 'Em que vila?', 'silveira' ); ?></span>
 					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
-					<?php // Nombre accesible: etiqueta y, si hay opciones marcadas, cuántas (map.js lo actualiza). ?>
+					<?php // Accessible name: label and, if options are checked, how many (map.js updates it). ?>
 					<span class="screen-reader-text" id="filter-localidade-status"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
 				</button>
 
 				<div class="c-select__dropdown" id="filter-localidade-panel" role="group" aria-labelledby="filter-localidade-label">
 					<?php
-					// Localidades: territorios con comarca pai (as comarcas sem localidades só saem em "Comarca").
+					// Localidades: territorio terms with a parent comarca (comarcas without localidades only appear under "Comarca").
 					$silveira_localidades = array_filter(
 						get_terms(
 							array(
@@ -130,7 +130,7 @@ get_header();
 			<span class="c-btn__icon o-icon o-icon--xs" aria-hidden="true" data-icon-when="open" hidden>arrow_forward</span>
 		</button>
 		
-		<!-- Slide out panel (inert mientras está cerrado; lo abre map.js) -->
+		<!-- Slide out panel (inert while closed; map.js opens it) -->
 		<div class="c-map-panel" id="map-project-list" inert>
 			<ul class="c-project-list">
 				<!-- Injected via map.js -->

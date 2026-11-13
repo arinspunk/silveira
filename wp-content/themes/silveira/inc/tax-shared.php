@@ -6,7 +6,7 @@
  */
 
 /**
- * Registra shared taxonomies.
+ * Registers shared taxonomies.
  */
 function silveira_register_shared_taxonomies() {
 	$labels = array(
@@ -35,7 +35,7 @@ function silveira_register_shared_taxonomies() {
 		'show_tagcloud'     => false,
 		'show_in_rest'      => true,
 	);
-	// Asociar 'territorio' tanto a 'projeto' como a 'evento'.
+	// Attach 'territorio' to both 'projeto' and 'evento'.
 	register_taxonomy( 'territorio', array( 'projeto', 'evento' ), $args );
 }
 add_action( 'init', 'silveira_register_shared_taxonomies', 0 );

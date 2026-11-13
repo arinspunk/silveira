@@ -1,6 +1,6 @@
 <?php
 /**
- * Archivos de todos los contenidos (proyectos, eventos, recursos) y taxonomías (territorio, categoría de recurso).
+ * Archives for all content types (projects, events, resources) and taxonomies (territorio, resource category).
  *
  * @package Silveira
  */

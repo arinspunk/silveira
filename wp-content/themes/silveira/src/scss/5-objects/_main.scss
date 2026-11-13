@@ -2,14 +2,15 @@
  * 5-OBJECTS / MAIN
  * Structural layout wrapper for page content.
  *
- * Portada: los estados los pone homepage.js en `html[data-home]` (collapsed | expanded | footer) y mide
- * --sil-hero-height y --sil-footer-height. Sin JS no hay atributo y la página usa el scroll nativo.
+ * Front page: homepage.js sets the states on `html[data-home]` (collapsed | expanded | footer) and
+ * measures --sil-hero-height and --sil-footer-height. Without JS there is no attribute and the page
+ * uses native scrolling.
  */
 
-// El borde superior de la barra de filtros queda bajo el borde inferior de la cabecera.
+// The top edge of the filter bar sits below the bottom edge of the header.
 $border-overlap: 1px;
 
-// Altura del footer que asoma con el mapa expandido (la reserva .c-map).
+// Height of the footer strip showing with the map expanded (.c-map reserves it).
 $footer-peek: 40px;
 
 html[data-home] body {
@@ -17,7 +18,7 @@ html[data-home] body {
 }
 
 html[data-home] .l-site-content {
-	// Desplazamiento con el mapa expandido: el hero sale por arriba.
+	// Offset with the map expanded: the hero slides out at the top.
 	--sil-home-expanded-y: calc(-1 * var(--sil-hero-height, 230px) - #{$border-overlap});
 
 	transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
@@ -27,7 +28,7 @@ html[data-home='expanded'] .l-site-content {
 	transform: translateY(var(--sil-home-expanded-y));
 }
 
-// Footer revelado: además, sube todo lo que no asomaba del footer.
+// Footer revealed: additionally, the rest of the footer that was hidden moves up.
 html[data-home='footer'] .l-site-content {
 	transform: translateY(
 		calc(var(--sil-home-expanded-y) - var(--sil-footer-height, 400px) + #{$footer-peek})

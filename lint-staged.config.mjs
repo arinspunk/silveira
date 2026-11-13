@@ -1,6 +1,6 @@
 /**
- * lint-staged (pre-commit). Se ejecuta en serie (--concurrent false en .husky/pre-commit)
- * para que el build de assets/ vaya después de los fixers de src/.
+ * lint-staged (pre-commit). Runs serially (--concurrent false in .husky/pre-commit)
+ * so the assets/ build runs after the src/ fixers.
  */
 export default {
 	'wp-content/themes/silveira/src/**/*.{js,mjs,cjs}': [
@@ -19,7 +19,7 @@ export default {
 		'cd wp-content/themes/silveira && npx prettier --write',
 	],
 	'wp-content/themes/silveira/**/*.php': 'bash scripts/lint-staged-phpcs.sh',
-	// Una sola ejecución por commit: la función ignora la lista de ficheros.
+	// A single run per commit: the function ignores the file list.
 	'wp-content/themes/silveira/{src/**,vite.config.js,package-lock.json}': () =>
 		'bash scripts/build-assets.sh',
 };

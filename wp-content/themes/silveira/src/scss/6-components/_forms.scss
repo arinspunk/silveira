@@ -26,7 +26,7 @@
 		background-color: var(--sil-violeta-050);
 	}
 
-	// Botón que abre el panel: ocupa toda la caja (el aspecto es el del .c-select).
+	// Button that opens the panel: fills the whole box (its look comes from .c-select).
 	&__trigger {
 		appearance: none;
 		display: flex;
@@ -109,7 +109,7 @@
 	padding: 0 16px;
 	cursor: pointer;
 
-	// Opciones ocultadas por los filtros (map.js usa el atributo hidden).
+	// Options hidden by the filters (map.js uses the hidden attribute).
 	&[hidden] {
 		display: none;
 	}

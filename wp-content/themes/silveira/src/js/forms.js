@@ -31,14 +31,14 @@ export const initSelects = () => {
 		const { trigger, panel } = parts(select);
 		if (!trigger || !panel) return;
 
-		// Enter y Espacio son nativos del botón y llegan aquí como click.
+		// Enter and Space are native to the button and arrive here as a click.
 		trigger.addEventListener('click', (e) => {
 			const open = !isOpen(select);
 			selects.forEach((other) => {
 				if (other !== select) setOpen(other, false);
 			});
 			setOpen(select, open);
-			// Abierto con teclado (click sin puntero: detail === 0): el foco va a la primera opción visible.
+			// Opened via keyboard (click without pointer: detail === 0): focus the first visible option.
 			if (open && e.detail === 0) firstVisibleOption(select)?.focus();
 		});
 
@@ -51,8 +51,8 @@ export const initSelects = () => {
 		});
 	});
 
-	// Clic fuera de un desplegable: se cierra. No se usa stopPropagation, para que el clic siga
-	// llegando a los demás listeners (p. ej. el que expande el mapa en map.js).
+	// Click outside a dropdown closes it. No stopPropagation, so the click still reaches the
+	// other listeners (e.g. the one that expands the map in map.js).
 	document.addEventListener('click', (e) => {
 		selects.forEach((select) => {
 			if (isOpen(select) && !select.contains(e.target)) setOpen(select, false);

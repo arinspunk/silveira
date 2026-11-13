@@ -1,11 +1,11 @@
 <?php
 /**
- * Geocodificación de proyectos con Nominatim (OpenStreetMap).
+ * Project geocoding with Nominatim (OpenStreetMap).
  *
- * - silveira_geocode_address(): busca una dirección y devuelve coordenadas o WP_Error.
- * - Al guardar un proyecto (acf/save_post) se decide si geocodificar según la meta privada
- *   `_silveira_geocode` (dirección y coordenadas del último geocoding), sin pisar coordenadas manuales.
- * - Si falla, la persona editora ve un aviso tras guardar (editor de bloques y clásico).
+ * - silveira_geocode_address(): looks up an address and returns coordinates or WP_Error.
+ * - When a project is saved (acf/save_post), whether to geocode is decided from the private meta
+ *   `_silveira_geocode` (address and coordinates of the last geocoding), never overwriting manual coordinates.
+ * - On failure, the editor sees a notice after saving (block and classic editor).
  *
  * @package Silveira
  */
@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Meta privada con el resultado del último geocoding: address, lat, lng, at. */
+/** Private meta holding the last geocoding result: address, lat, lng, at. */
 const SILVEIRA_GEOCODE_META = '_silveira_geocode';
 
-/** Tolerancia para comparar coordenadas guardadas con las del último geocoding. */
+/** Tolerance for comparing saved coordinates with those of the last geocoding. */
 const SILVEIRA_GEOCODE_EPSILON = 1e-6;
 
 if ( silveira_has_acf() ) {
@@ -28,37 +28,37 @@ if ( silveira_has_acf() ) {
 }
 
 /**
- * Quita de la dirección las palabras de ruido de locales y pisos, solo como palabras completas
- * ("Localidade" se conserva), y colapsa espacios y comas repetidas.
+ * Strips noise words for premises and floors from the address, only as whole words
+ * ("Localidade" is kept), and collapses repeated spaces and commas.
  *
- * @param string $address Dirección tal como la escribió la persona editora.
- * @return string Dirección normalizada (la que se busca y se guarda en la meta).
+ * @param string $address Address as typed by the editor.
+ * @return string Normalized address (the one looked up and stored in the meta).
  */
 function silveira_geocode_normalize_address( $address ) {
 	$noise = '(?:local|baixo|bajo|planta|piso|esquerda|esquerdo|direita|dereita|derecha|izquierda)';
-	// Límites de palabra con letras Unicode: \b no trata "ú" o "ñ" como letras.
+	// Word boundaries with Unicode letters: \b does not treat "ú" or "ñ" as letters.
 	$clean = (string) preg_replace( '/(?<![\p{L}\p{N}])' . $noise . '(?![\p{L}\p{N}])\.?/iu', '', (string) $address );
 	$clean = (string) preg_replace( '/\s+/u', ' ', $clean );
-	$clean = (string) preg_replace( '/\s*,(?:\s*,)*\s*/u', ', ', $clean ); // Comas repetidas o con espacios: una sola coma y un espacio.
+	$clean = (string) preg_replace( '/\s*,(?:\s*,)*\s*/u', ', ', $clean ); // Repeated or spaced commas: a single comma and one space.
 	return trim( $clean, " ,\t\n\r\0\x0B" );
 }
 
 /**
- * Caja de búsqueda: Galiza incluida la Galiza exterior (Eo-Navia, Bierzo, As Portelas, Seabra).
+ * Search box: Galiza including the outer Galiza (Eo-Navia, Bierzo, As Portelas, Seabra).
  *
- * @return float[] [oeste, norte, este, sur], como el parámetro viewbox de Nominatim.
+ * @return float[] [west, north, east, south], like Nominatim's viewbox parameter.
  */
 function silveira_geocode_viewbox() {
 	/**
-	 * Filtra la caja geográfica en que se aceptan resultados del geocoding.
+	 * Filters the geographic box within which geocoding results are accepted.
 	 *
-	 * @param float[] $viewbox [oeste, norte, este, sur].
+	 * @param float[] $viewbox [west, north, east, south].
 	 */
 	return array_map( 'floatval', (array) apply_filters( 'silveira_geocode_viewbox', array( -9.35, 43.85, -6.10, 41.80 ) ) );
 }
 
 /**
- * User-Agent con que el sitio se identifica ante Nominatim (exigido por su política de uso).
+ * User-Agent the site identifies itself with to Nominatim (required by its usage policy).
  *
  * @return string
  */
@@ -67,13 +67,13 @@ function silveira_geocode_user_agent() {
 }
 
 /**
- * Busca las coordenadas de una dirección en Nominatim.
+ * Looks up the coordinates of an address in Nominatim.
  *
- * Códigos de error: silveira_geocode_empty, silveira_geocode_http (red o tiempo límite),
- * silveira_geocode_status (HTTP != 200), silveira_geocode_invalid (respuesta no válida),
- * silveira_geocode_not_found (sin resultados), silveira_geocode_outside (fuera de la caja).
+ * Error codes: silveira_geocode_empty, silveira_geocode_http (network or timeout),
+ * silveira_geocode_status (HTTP != 200), silveira_geocode_invalid (invalid response),
+ * silveira_geocode_not_found (no results), silveira_geocode_outside (outside the box).
  *
- * @param string $address Dirección (se normaliza aquí).
+ * @param string $address Address (normalized here).
  * @return array{lat: float, lng: float}|WP_Error
  */
 function silveira_geocode_address( $address ) {
@@ -137,12 +137,12 @@ function silveira_geocode_address( $address ) {
 }
 
 /**
- * ¿Hay que geocodificar el proyecto al guardar? Tabla de decisión (design D1).
+ * Should the project be geocoded on save? Decision table (design D1).
  *
- * @param string     $address Dirección normalizada.
- * @param mixed      $lat     Latitud guardada.
- * @param mixed      $lng     Longitud guardada.
- * @param array|null $last    Meta del último geocoding, o null si no hay.
+ * @param string     $address Normalized address.
+ * @param mixed      $lat     Saved latitude.
+ * @param mixed      $lng     Saved longitude.
+ * @param array|null $last    Last geocoding meta, or null if none.
  * @return bool
  */
 function silveira_geocode_should_run( $address, $lat, $lng, $last ) {
@@ -150,24 +150,24 @@ function silveira_geocode_should_run( $address, $lat, $lng, $last ) {
 		return false;
 	}
 	if ( ! is_numeric( $lat ) || ! is_numeric( $lng ) ) {
-		return true; // Sin coordenadas.
+		return true; // No coordinates.
 	}
 	if ( ! is_array( $last ) || ! isset( $last['address'], $last['lat'], $last['lng'] ) ) {
-		return false; // Coordenadas sin geocoding previo conocido: se tratan como manuales.
+		return false; // Coordinates with no known previous geocoding: treated as manual.
 	}
 	if ( $address === $last['address'] ) {
-		return false; // Misma dirección.
+		return false; // Same address.
 	}
-	// Dirección nueva: solo si las coordenadas siguen siendo las del último geocoding (no se fijaron a mano).
+	// New address: only if the coordinates are still those of the last geocoding (not set by hand).
 	return abs( (float) $lat - (float) $last['lat'] ) < SILVEIRA_GEOCODE_EPSILON
 		&& abs( (float) $lng - (float) $last['lng'] ) < SILVEIRA_GEOCODE_EPSILON;
 }
 
 /**
- * Geocodifica un proyecto y guarda coordenadas y meta. No consulta la tabla de decisión.
+ * Geocodes a project and saves coordinates and meta. Does not check the decision table.
  *
- * @param int    $post_id ID del proyecto.
- * @param string $address Dirección (sin normalizar o normalizada).
+ * @param int    $post_id Project ID.
+ * @param string $address Address (raw or normalized).
  * @return array{lat: float, lng: float}|WP_Error
  */
 function silveira_geocode_apply( $post_id, $address ) {
@@ -191,9 +191,9 @@ function silveira_geocode_apply( $post_id, $address ) {
 }
 
 /**
- * Geocoding al guardar un proyecto (acf/save_post, después de que ACF guarde los campos).
+ * Geocoding on project save (acf/save_post, after ACF saves the fields).
  *
- * @param int|string $post_id ID del post que guarda ACF.
+ * @param int|string $post_id ID of the post ACF is saving.
  */
 function silveira_geocode_project( $post_id ) {
 	if ( ! is_numeric( $post_id ) || get_post_type( (int) $post_id ) !== 'projeto' ) {
@@ -226,9 +226,9 @@ function silveira_geocode_project( $post_id ) {
 }
 
 /**
- * Texto del aviso según el motivo del fallo.
+ * Notice text depending on the failure reason.
  *
- * @param string $reason Código de error de silveira_geocode_address().
+ * @param string $reason Error code from silveira_geocode_address().
  * @return string
  */
 function silveira_geocode_notice_message( $reason ) {
@@ -239,10 +239,10 @@ function silveira_geocode_notice_message( $reason ) {
 }
 
 /**
- * Lee y borra el aviso pendiente de la persona usuaria actual para un proyecto.
+ * Reads and deletes the current user's pending notice for a project.
  *
- * @param int $post_id ID del proyecto.
- * @return string Mensaje, o cadena vacía si no hay aviso.
+ * @param int $post_id Project ID.
+ * @return string Message, or empty string if there is no notice.
  */
 function silveira_geocode_take_notice( $post_id ) {
 	$key    = 'silveira_geocode_notice_' . get_current_user_id();
@@ -255,7 +255,7 @@ function silveira_geocode_take_notice( $post_id ) {
 }
 
 /**
- * Editor clásico: el guardado recarga la página y el aviso sale en admin_notices.
+ * Classic editor: saving reloads the page and the notice shows in admin_notices.
  */
 function silveira_geocode_admin_notice() {
 	$screen = get_current_screen();
@@ -269,15 +269,15 @@ function silveira_geocode_admin_notice() {
 }
 
 /**
- * Editor de bloques: ACF guarda en una petición aparte, sin recargar; el script del editor
- * pide el aviso a esta ruta cuando termina de guardar las meta boxes.
+ * Block editor: ACF saves in a separate request, without reloading; the editor script
+ * requests the notice from this route once the meta boxes finish saving.
  */
 function silveira_geocode_register_notice_route() {
 	register_rest_route(
 		'silveira/v1',
 		'/geocode-notice/(?P<id>\d+)',
 		array(
-			'methods'             => 'POST', // Consume el aviso.
+			'methods'             => 'POST', // Consumes the notice.
 			'callback'            => static function ( WP_REST_Request $request ) {
 				return array( 'message' => silveira_geocode_take_notice( (int) $request['id'] ) );
 			},
@@ -289,7 +289,7 @@ function silveira_geocode_register_notice_route() {
 }
 
 /**
- * Script del editor de bloques para proyectos: muestra el aviso de geocoding tras guardar.
+ * Block editor script for projects: shows the geocoding notice after saving.
  */
 function silveira_geocode_enqueue_editor_notice() {
 	$screen = get_current_screen();

@@ -10,7 +10,7 @@
 	flex-direction: column;
 	gap: 16px;
 
-	// Mensaje cuando los filtros no dejan ningún proyecto (map.js).
+	// Message shown when the filters leave no projects (map.js).
 	&__empty {
 		padding: 20px;
 		font-family: var(--sil-font-primary);

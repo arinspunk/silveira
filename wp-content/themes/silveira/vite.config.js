@@ -5,8 +5,8 @@ import { defineConfig } from 'vite';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ command }) => ({
-	// Build: rutas relativas, para que los url() del CSS (fuentes) apunten a assets/fonts/ desde assets/css/.
-	// Dev: ruta del theme, que usa functions.php para cargar @vite/client y la entrada.
+	// Build: relative paths, so CSS url()s (fonts) point to assets/fonts/ from assets/css/.
+	// Dev: the theme path, used by functions.php to load @vite/client and the entry.
 	base: command === 'build' ? './' : '/wp-content/themes/silveira/',
 	build: {
 		outDir: 'assets',

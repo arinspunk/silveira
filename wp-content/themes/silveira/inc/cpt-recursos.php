@@ -6,7 +6,7 @@
  */
 
 /**
- * Registra custom post type: recurso.
+ * Registers custom post type: recurso.
  */
 function silveira_register_cpt_recurso() {
 	// Taxonomy: Categoria do Recurso.
@@ -33,7 +33,7 @@ function silveira_register_cpt_recurso() {
 		'show_tagcloud'     => false,
 		'show_in_rest'      => true,
 		'rewrite'           => array( 'slug' => 'recursos' ),
-		// Todo recurso tiene categoría: sin ninguna, WordPress le asigna «Geral» (y crea el término si no existe).
+		// Every recurso has a category: with none, WordPress assigns «Geral» (and creates the term if missing).
 		'default_term'      => array(
 			'name' => __( 'Geral', 'silveira' ),
 			'slug' => 'geral',
@@ -83,7 +83,7 @@ add_action( 'init', 'silveira_register_cpt_recurso', 0 );
 /**
  * Filter post_type_link to swap %categoria_recurso% with the actual term slug.
  *
- * @param string  $post_link Permalink del post.
+ * @param string  $post_link Post permalink.
  * @param WP_Post $post      Post.
  * @return string
  */
@@ -93,7 +93,7 @@ function silveira_recurso_post_link( $post_link, $post ) {
 		if ( $terms && ! is_wp_error( $terms ) ) {
 			return str_replace( '%categoria_recurso%', $terms[0]->slug, $post_link );
 		} else {
-			// Fallback si el recurso no tiene categoría asignada.
+			// Fallback if the recurso has no category assigned.
 			return str_replace( '%categoria_recurso%', 'geral', $post_link );
 		}
 	}
@@ -102,10 +102,10 @@ function silveira_recurso_post_link( $post_link, $post ) {
 add_filter( 'post_type_link', 'silveira_recurso_post_link', 1, 2 );
 
 /**
- * Asigna la categoría por defecto («geral») a un recurso que ha quedado sin ninguna.
+ * Assigns the default category («geral») to a recurso left without any.
  *
- * `default_term` cubre la creación sin categorías, pero no el caso en que la API REST (el editor de bloques)
- * envía la lista vacía de forma explícita, p. ej. al desmarcar la última categoría.
+ * `default_term` covers creation without categories, but not the case where the REST API (the block editor)
+ * explicitly sends an empty list, e.g. when unchecking the last category.
  *
  * @param WP_Post|int $post Recurso.
  */
@@ -126,9 +126,9 @@ function silveira_recurso_ensure_category( $post ) {
 add_action( 'rest_after_insert_recurso', 'silveira_recurso_ensure_category' );
 
 /**
- * Igual que silveira_recurso_ensure_category() para guardados fuera de la API REST.
+ * Same as silveira_recurso_ensure_category() for saves outside the REST API.
  *
- * @param int $post_id ID del recurso.
+ * @param int $post_id Recurso ID.
  */
 function silveira_recurso_ensure_category_on_save( $post_id ) {
 	if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {

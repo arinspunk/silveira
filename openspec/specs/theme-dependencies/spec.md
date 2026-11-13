@@ -2,28 +2,28 @@
 
 ## Purpose
 
-Define cómo se comporta el sitio cuando falta un plugin del que depende el theme (ACF), para que nunca produzca un error fatal y avise a quien administra el sitio.
+Defines how the site behaves when a plugin the theme depends on (ACF) is missing, so that it never produces a fatal error and warns whoever administers the site.
 
 ## Requirements
 
 ### Requirement: Public site works without ACF
-Cuando ACF no está activo, todas las páginas públicas SHALL renderizarse sin errores fatales, omitiendo solo la información que proviene de campos ACF.
+When ACF is not active, every public page SHALL render without fatal errors, omitting only the information that comes from ACF fields.
 
 #### Scenario: Front page without ACF
-- **WHEN** ACF está desactivado y un visitante abre la portada
-- **THEN** la página carga con hero, filtros y mapa, y el mapa no muestra marcadores
+- **WHEN** ACF is deactivated and a visitor opens the front page
+- **THEN** the page loads with hero, filters and map, and the map shows no markers
 
 #### Scenario: Project page without ACF
-- **WHEN** ACF está desactivado y un visitante abre la ficha de un proyecto
-- **THEN** la página muestra título, contenido y territorios, sin lema ni dirección, y sin errores
+- **WHEN** ACF is deactivated and a visitor opens a project page
+- **THEN** the page shows title, content and territories, without lema or address, and without errors
 
 ### Requirement: Administrators are warned when ACF is missing
-Cuando ACF no está activo, el panel de administración SHALL mostrar un aviso a los usuarios con capacidad de gestionar plugins indicando que los campos de proyecto no están disponibles.
+When ACF is not active, the admin panel SHALL show a notice to users who can manage plugins saying that the project fields are not available.
 
 #### Scenario: Admin notice
-- **WHEN** ACF está desactivado y una persona administradora entra en el escritorio
-- **THEN** ve un aviso que nombra ACF como plugin requerido
+- **WHEN** ACF is deactivated and an administrator opens the dashboard
+- **THEN** they see a notice naming ACF as a required plugin
 
 #### Scenario: No notice for editors
-- **WHEN** ACF está desactivado y entra un usuario sin capacidad `activate_plugins`
-- **THEN** no se muestra el aviso
+- **WHEN** ACF is deactivated and a user without the `activate_plugins` capability logs in
+- **THEN** the notice is not shown

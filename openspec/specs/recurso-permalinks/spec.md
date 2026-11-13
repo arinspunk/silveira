@@ -2,32 +2,32 @@
 
 ## Purpose
 
-Define la estructura de URLs de los recursos y sus categorías, garantizando que todo recurso publicado tenga una URL que resuelve.
+Defines the URL structure of resources and their categories, ensuring that every published resource has a URL that resolves.
 
 ## Requirements
 
 ### Requirement: Every recurso has a category
-Al guardar un recurso sin ninguna categoría asignada, el sistema SHALL asignarle la categoría `geral`, creándola si no existe.
+When a resource is saved without any category, the system SHALL assign it the `geral` category, creating it if it does not exist.
 
 #### Scenario: Recurso saved without category
-- **WHEN** se publica un recurso sin marcar ninguna categoría
-- **THEN** el recurso queda asignado a la categoría `geral`
+- **WHEN** a resource is published without any category checked
+- **THEN** the resource is assigned to the `geral` category
 
 #### Scenario: Recurso with category
-- **WHEN** se publica un recurso con la categoría `guias`
-- **THEN** no se le añade `geral`
+- **WHEN** a resource is published with the `guias` category
+- **THEN** `geral` is not added to it
 
 ### Requirement: Recurso URLs resolve
-La URL de un recurso SHALL tener la forma `/recursos/<categoria>/<recurso>/` y abrir su ficha; `/recursos/<categoria>/` SHALL abrir el archivo de la categoría y `/recursos/` el archivo general.
+A resource's URL SHALL have the form `/recursos/<categoria>/<recurso>/` and open its page; `/recursos/<categoria>/` SHALL open the category archive and `/recursos/` the general archive.
 
 #### Scenario: Single recurso
-- **WHEN** un visitante abre el enlace de un recurso de la categoría `guias`
-- **THEN** la URL es `/recursos/guias/<slug>/` y se muestra la ficha con estado 200
+- **WHEN** a visitor opens the link of a resource in the `guias` category
+- **THEN** the URL is `/recursos/guias/<slug>/` and its page is shown with status 200
 
 #### Scenario: Category and general archives
-- **WHEN** un visitante abre `/recursos/guias/` o `/recursos/`
-- **THEN** se muestra el listado correspondiente con estado 200
+- **WHEN** a visitor opens `/recursos/guias/` or `/recursos/`
+- **THEN** the corresponding listing is shown with status 200
 
 #### Scenario: Paginated category archive
-- **WHEN** una categoría tiene más recursos que los mostrados por página y se abre `/recursos/guias/page/2/`
-- **THEN** se muestra la segunda página del archivo, no un 404
+- **WHEN** a category has more resources than are shown per page and `/recursos/guias/page/2/` is opened
+- **THEN** the second page of the archive is shown, not a 404

@@ -2,61 +2,61 @@
 
 ## Purpose
 
-Define la estructura común de las páginas de listado y de ficha de los contenidos del sitio (proyectos, eventos, recursos y territorios), para que sean coherentes y accesibles.
+Defines the common structure of the listing and detail pages for the site's content (projects, events, resources and territories), so that they are consistent and accessible.
 
 ## Requirements
 
 ### Requirement: One main heading per page
-Cada página pública SHALL tener exactamente un encabezado de nivel 1, que corresponde al título de la página mostrado en el hero.
+Every public page SHALL have exactly one level-1 heading, which is the page title shown in the hero.
 
 #### Scenario: Project page
-- **WHEN** un visitante abre la ficha de un proyecto
-- **THEN** la página contiene un único `h1` con el título del proyecto
+- **WHEN** a visitor opens a project page
+- **THEN** the page contains a single `h1` with the project title
 
 #### Scenario: Archive page
-- **WHEN** un visitante abre el archivo de proyectos con 10 proyectos
-- **THEN** la página contiene un único `h1` y cada proyecto se presenta con un encabezado de nivel inferior
+- **WHEN** a visitor opens the project archive with 10 projects
+- **THEN** the page contains a single `h1` and each project is presented with a lower-level heading
 
 #### Scenario: Not found page
-- **WHEN** un visitante abre una URL que no existe
-- **THEN** la página responde 404 y contiene un único `h1` que indica que la página no se ha encontrado
+- **WHEN** a visitor opens a URL that does not exist
+- **THEN** the page responds 404 and contains a single `h1` saying that the page was not found
 
 ### Requirement: Heading levels do not skip
-Dentro del contenido de las plantillas del theme, los encabezados SHALL descender de nivel de uno en uno.
+Within the content of the theme's templates, headings SHALL go down one level at a time.
 
 #### Scenario: Project sidebar
-- **WHEN** se inspecciona la barra lateral de la ficha de un proyecto
-- **THEN** sus títulos ("Endereço", "Território") son de nivel 2
+- **WHEN** the sidebar of a project page is inspected
+- **THEN** its headings ("Endereço", "Território") are level 2
 
 ### Requirement: Archives list items as cards
-Las páginas de archivo de proyectos, eventos, recursos y de cualquier territorio o categoría SHALL mostrar cada elemento como una tarjeta con título enlazado a su ficha, imagen destacada si existe, contexto y extracto, con paginación cuando haya más elementos que los de una página.
+The archive pages for projects, events, resources and any territory or category SHALL show each item as a card with a title linked to its page, the featured image if there is one, context and excerpt, with pagination when there are more items than fit on one page.
 
 #### Scenario: Project archive
-- **WHEN** un visitante abre `/projeto/`
-- **THEN** ve tarjetas con título enlazado, modalidade y territorio, y extracto, sin el contenido completo de cada proyecto
+- **WHEN** a visitor opens `/projeto/`
+- **THEN** they see cards with a linked title, modalidade and territory, and excerpt, without the full content of each project
 
 #### Scenario: Territory archive
-- **WHEN** un visitante abre el archivo de un territorio con proyectos y eventos
-- **THEN** ve tarjetas de ambos tipos, cada una enlazando a su ficha
+- **WHEN** a visitor opens the archive of a territory with projects and events
+- **THEN** they see cards of both types, each linking to its page
 
 #### Scenario: Archive title
-- **WHEN** un visitante abre `/projeto/` o el archivo de un territorio
-- **THEN** el título del hero es solo el nombre del archivo (p. ej. "Projetos" o el nombre del territorio), como texto, sin prefijos como "Archives:" ni etiquetas HTML visibles
+- **WHEN** a visitor opens `/projeto/` or a territory archive
+- **THEN** the hero title is just the archive name (e.g. "Projetos" or the territory name), as text, without prefixes such as "Archives:" or visible HTML tags
 
 #### Scenario: Empty archive
-- **WHEN** un archivo no tiene elementos
-- **THEN** se muestra el mensaje de "nada encontrado"
+- **WHEN** an archive has no items
+- **THEN** the "nothing found" message is shown
 
 ### Requirement: Every content page has a hero inside the main region
-Las fichas de proyecto, evento y recurso y todas las páginas de archivo SHALL mostrar el hero con el título de la página dentro de la región principal del documento.
+Project, event and resource pages and all archive pages SHALL show the hero with the page title inside the document's main region.
 
 #### Scenario: Event page
-- **WHEN** un visitante abre la ficha de un evento
-- **THEN** ve el hero con el título y la imagen destacada del evento, contenido en `<main>`
+- **WHEN** a visitor opens an event page
+- **THEN** they see the hero with the event's title and featured image, inside `<main>`
 
 ### Requirement: Comments are not offered on projects
-La ficha de proyecto SHALL NOT mostrar formulario ni listado de comentarios.
+The project page SHALL NOT show a comment form or comment list.
 
 #### Scenario: Project page
-- **WHEN** un visitante abre la ficha de un proyecto
-- **THEN** no aparece ninguna sección de comentarios
+- **WHEN** a visitor opens a project page
+- **THEN** no comments section appears

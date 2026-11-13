@@ -6,17 +6,17 @@
 .c-map {
 	width: 100%;
 
-	// Hasta el borde inferior de la pantalla, dejando asomar 40px de footer (ver _main.scss). Las alturas
-	// las mide homepage.js; sin JS se usan las de escritorio.
+	// Reaches the bottom of the screen, leaving 40px of footer showing (see _main.scss). Heights are
+	// measured by homepage.js; without JS, the desktop values apply.
 	height: calc(100vh - var(--sil-header-height, 50px) - var(--sil-filter-height, 72px) - 40px);
 	height: calc(100dvh - var(--sil-header-height, 50px) - var(--sil-filter-height, 72px) - 40px);
-	min-height: 240px; // Más alto empujaría la franja del footer fuera de pantalla en móviles bajos
+	min-height: 240px; // Any taller would push the footer strip off-screen on short phones
 	position: relative;
 	z-index: 1; // Below header/dropdowns
 	background-color: var(--sil-violeta-050);
 
-	// Bloqueado en el hero, con el footer revelado y mientras se sale del hero; los marcadores siguen
-	// respondiendo para expandirlo.
+	// Locked in the hero, while the footer is revealed and while leaving the hero; markers still
+	// respond so the map can be expanded.
 	html[data-home='collapsed'] &,
 	html[data-home='footer'] &,
 	html[data-home-busy='collapsed'] & {

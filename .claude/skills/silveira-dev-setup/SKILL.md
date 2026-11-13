@@ -1,93 +1,93 @@
 ---
 name: silveira-dev-setup
-description: Prepara y comprueba el entorno de desarrollo de silveira (hooks de Git, Node 22, dependencias del theme, PHPCS/PHPStan vía Docker, stack local de WordPress) y reproduce la CI en local. Úsala al empezar a trabajar en un clon, antes del primer commit de una sesión, cuando un hook o la CI fallen, o cuando haga falta levantar el sitio para verificar cambios.
+description: Prepares and checks the silveira development environment (Git hooks, Node 22, theme dependencies, PHPCS/PHPStan via Docker, local WordPress stack) and reproduces CI locally. Use it when starting work on a clone, before the first commit of a session, when a hook or CI fails, or when the site needs to be brought up to verify changes.
 ---
 
-# Entorno de desarrollo de silveira
+# silveira development environment
 
-El host **no tiene PHP**: todo lo PHP va por Docker. `assets/` está versionado y la CI comprueba que coincide con `src/`.
+The host **has no PHP**: everything PHP goes through Docker. `assets/` is versioned and CI checks that it matches `src/`.
 
-## 1. Comprobar el clon (siempre, antes del primer commit)
+## 1. Check the clone (always, before the first commit)
 
 ```bash
-git config --get core.hooksPath          # debe ser .husky/_
-ls node_modules/.bin/lint-staged         # deps de la raíz
-ls wp-content/themes/silveira/node_modules/.bin/vite   # deps del theme
+git config --get core.hooksPath          # must be .husky/_
+ls node_modules/.bin/lint-staged         # root deps
+ls wp-content/themes/silveira/node_modules/.bin/vite   # theme deps
 node -v                                  # v22.x (.nvmrc)
 docker info >/dev/null && echo docker-ok
 ```
 
-Si falta algo, arreglarlo:
+If something is missing, fix it:
 
 ```bash
 nvm use                                   # Node 22
-npm install                               # raíz: instala husky y activa los hooks
+npm install                               # root: installs husky and enables the hooks
 (cd wp-content/themes/silveira && npm ci)
 docker run --rm -v "$PWD/wp-content/themes/silveira":/app -w /app composer:2 composer install -q
 ```
 
-**Sin `core.hooksPath` no se ejecuta ningún hook**: ni lint, ni PHPCS, ni el rebuild de `assets/`. No afirmar que un commit "pasó por el hook" sin haberlo comprobado.
+**Without `core.hooksPath` no hook runs**: no lint, no PHPCS, no `assets/` rebuild. Don't claim that a commit "went through the hook" without having checked.
 
-## 2. Qué hace el hook pre-commit
+## 2. What the pre-commit hook does
 
-`lint-staged.config.mjs`, en serie (`--concurrent false`):
+`lint-staged.config.mjs`, sequentially (`--concurrent false`):
 - JS/config → ESLint `--fix` + Prettier; CSS/SCSS → Stylelint `--fix` + Prettier.
-- PHP → `scripts/lint-staged-phpcs.sh`: PHP local → Docker `composer:2` → aviso visible y exit 0.
-- `src/**`, `vite.config.js` o `package-lock.json` staged → `scripts/build-assets.sh` (build + `git add assets/`), una vez por commit.
+- PHP → `scripts/lint-staged-phpcs.sh`: local PHP → Docker `composer:2` → visible warning and exit 0.
+- `src/**`, `vite.config.js` or `package-lock.json` staged → `scripts/build-assets.sh` (build + `git add assets/`), once per commit.
 
-Consecuencia: no hace falta tarea de build en los changes; el commit incluye `assets/`. Si se commitea con `--no-verify`, la CI fallará por `assets/` desfasado.
+Consequence: changes don't need a build task; the commit includes `assets/`. If you commit with `--no-verify`, CI will fail because `assets/` is out of date.
 
-## 3. Reproducir la CI en local
+## 3. Reproduce CI locally
 
-Desde `wp-content/themes/silveira`:
+From `wp-content/themes/silveira`:
 
 ```bash
 npm ci && npm run validate && npm run format:check && npm run build
-git status --porcelain -- assets/        # debe salir vacío
+git status --porcelain -- assets/        # must print nothing
 docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && composer audit --locked --abandoned=report && composer run lint && composer run analyse'
 ```
 
-- PHPCS (WPCS, text domain y prefijo `silveira`) y PHPStan nivel 5 cubren todo el theme; **0 errores, sin baseline**. Variables de plantilla con prefijo `silveira_`.
-- `composer audit` es un paso bloqueante del job `php` (y hay una ejecución semanal en `audit.yml`). Si falla, actualizar solo el paquete afectado en un change pequeño, subiendo su restricción en `composer.json`, con `composer update <paquete>` acotado (sin `--with-dependencies` si no hace falta).
-- `composer run lint:fix` (phpcbf) para lo automático; si es un reformateo masivo, commit propio y añadir su hash a `.git-blame-ignore-revs`.
-- Para que el build en Linux sea idéntico: mismo lockfile y Node 22. Se puede verificar en un clon limpio con `docker run node:22`.
+- PHPCS (WPCS, text domain and prefix `silveira`) and PHPStan level 5 cover the whole theme; **0 errors, no baseline**. Template variables prefixed with `silveira_`.
+- `composer audit` is a blocking step of the `php` job (and there is a weekly run in `audit.yml`). If it fails, update only the affected package in a small change, raising its constraint in `composer.json`, with a scoped `composer update <package>` (without `--with-dependencies` unless needed).
+- `composer run lint:fix` (phpcbf) for the automatic fixes; if it is a mass reformat, its own commit and add its hash to `.git-blame-ignore-revs`.
+- For the Linux build to be identical: same lockfile and Node 22. It can be checked in a clean clone with `docker run node:22`.
 
-## 4. Levantar el sitio local para verificar
-
-```bash
-docker compose up -d                       # http://silveira.localhost (puerto 80 fijo por WP_HOME)
-docker compose --profile tools run --rm -T wpcli wp <comando>   # WP-CLI: siempre con el prefijo "wp"
-```
-
-- **Si el puerto 80 está ocupado por otro proyecto, preguntar antes de parar sus contenedores** y volver a arrancarlos al terminar.
-- Ejecutar `docker compose` **desde la raíz de este repo**: desde otro directorio (p. ej. un clon temporal) crea un proyecto nuevo con sus propios contenedores y volúmenes.
-- Si los volúmenes son nuevos, WordPress está sin instalar: `wp core install`, `wp theme activate silveira`, `wp plugin install advanced-custom-fields --activate` (el theme usa `get_field`), `wp rewrite structure '/%postname%/'`, y sembrar proyectos con `projeto_latitude`/`projeto_longitude` vía `wp eval-file -` (con `update_field` no se dispara el geocoding).
-- Modo dev de Vite: `SILVEIRA_VITE_DEV=1 docker compose up -d wordpress` y `npm run dev` en el theme; volver a `0` al terminar.
-
-## 5. Verificar cambios sin regresiones
-
-Para cambios "sin cambio funcional" (lint, reformateo, refactor): capturar HTML normalizado (sin `?ver=`, hashes de Vite ni nonces) y capturas de pantalla de portada, ficha de proyecto, archivos, singles, taxonomía, Kitchen Sink y 404 **antes y después**, y compararlos. Capturar dos veces el "antes" para confirmar que es determinista. La portada se compara por HTML (los tiles del mapa no son deterministas). Playwright (`playwright-core` con `channel: 'chrome'`) instalado en el scratchpad, nunca en el repo.
-
-## 6. Smoke test E2E (Playwright)
-
-Entorno aislado (proyecto Compose `silveira-e2e`, puerto **8081**, volúmenes propios, assets compilados): no necesita el puerto 80 ni toca la base de datos de desarrollo.
+## 4. Bring up the local site to verify
 
 ```bash
-npm run e2e:up && npm run e2e:seed && npm run test:e2e   # desde la raíz
-npm run e2e:down                                         # al terminar (borra sus volúmenes)
+docker compose up -d                       # http://silveira.localhost (port 80 fixed by WP_HOME)
+docker compose --profile tools run --rm -T wpcli wp <command>   # WP-CLI: always with the "wp" prefix
 ```
 
-- El test usa `assets/` compilado: tras cambiar `src/`, `npm run build` en el theme antes de ejecutarlo.
-- Si un change modifica el marcado o el comportamiento del mapa o de la portada, actualizar `tests/e2e/` (y el seed si hace falta) en el mismo change.
-- Para comprobar que un test detecta una regresión: introducirla temporalmente, recompilar, ver el fallo y restaurar `src/` y `assets/` desde `HEAD` (`git restore --source=HEAD` + `git clean` de los `assets/` nuevos).
-- En la CI los tests corren dentro de `mcr.microsoft.com/playwright:v<versión>-noble` (`docker run --network host`), sin apt ni `playwright install`. La versión sale de `@playwright/test` en el `package.json` de la raíz, que debe ser exacta (`X.Y.Z`); para subir Playwright basta con cambiarla y `npm install`. En local no cambia nada: `npm run test:e2e` usa el navegador del host.
-- Si `e2e` falla en el paso «Descargar imagen de Playwright», es un fallo de infraestructura, no de los tests: relanzar el job (`gh run rerun <id> --failed`).
-- `tests/e2e/helpers.js` tiene una excepción temporal (`KNOWN_MISSING`) para los 404 de las fuentes del diseño; la quita `self-hosted-fonts`.
+- **If port 80 is used by another project, ask before stopping its containers** and start them again when done.
+- Run `docker compose` **from the root of this repo**: from another directory (e.g. a temporary clone) it creates a new project with its own containers and volumes.
+- If the volumes are new, WordPress is not installed: `wp core install`, `wp theme activate silveira`, `wp plugin install advanced-custom-fields --activate` (the theme uses `get_field`), `wp rewrite structure '/%postname%/'`, and seed projects with `projeto_latitude`/`projeto_longitude` via `wp eval-file -` (`update_field` doesn't trigger geocoding).
+- Vite dev mode: `SILVEIRA_VITE_DEV=1 docker compose up -d wordpress` and `npm run dev` in the theme; set it back to `0` when done.
 
-## 7. Git y GitHub
+## 5. Verify changes without regressions
 
-- Merges a `main` siempre con merge commit (`--no-ff` o "Create a merge commit"); nunca squash ni rebase (rompería `.git-blame-ignore-revs`).
-- `main` está protegida: exige los checks `frontend`, `php` y `e2e`; el admin puede saltársela para merges locales.
-- GitHub borra la rama de la PR al mergear ("Automatically delete head branches"); después, `git switch main && git pull && git branch -d <rama>` en local.
-- Changes de OpenSpec: una rama y una PR por change. El archivado (`openspec/changes/archive/YYYY-MM-DD-<nombre>/`, con sync de specs si las hay) va como **último commit de esa misma rama**, con la CI en verde antes del merge; nunca en una PR aparte.
-- La CI solo se ejecuta en PRs y en pushes a `main`; un push a otra rama no la dispara.
+For "no functional change" changes (lint, reformatting, refactoring): capture normalized HTML (without `?ver=`, Vite hashes or nonces) and screenshots of the front page, project page, archives, singles, taxonomy, Kitchen Sink and 404 **before and after**, and compare them. Capture the "before" twice to confirm it is deterministic. The front page is compared by HTML (the map tiles are not deterministic). Playwright (`playwright-core` with `channel: 'chrome'`) installed in the scratchpad, never in the repo.
+
+## 6. E2E smoke test (Playwright)
+
+Isolated environment (Compose project `silveira-e2e`, port **8081**, its own volumes, compiled assets): it doesn't need port 80 and doesn't touch the development database.
+
+```bash
+npm run e2e:up && npm run e2e:seed && npm run test:e2e   # from the root
+npm run e2e:down                                         # when done (deletes its volumes)
+```
+
+- The test uses the compiled `assets/`: after changing `src/`, run `npm run build` in the theme before running it.
+- If a change modifies the markup or behaviour of the map or the front page, update `tests/e2e/` (and the seed if needed) in the same change.
+- To check that a test detects a regression: introduce it temporarily, rebuild, see the failure and restore `src/` and `assets/` from `HEAD` (`git restore --source=HEAD` + `git clean` of the new `assets/`).
+- In CI the tests run inside `mcr.microsoft.com/playwright:v<version>-noble` (`docker run --network host`), without apt or `playwright install`. The version comes from `@playwright/test` in the root `package.json`, which must be exact (`X.Y.Z`); to upgrade Playwright, change it and run `npm install`. Nothing changes locally: `npm run test:e2e` uses the host's browser.
+- If `e2e` fails in the «Descargar imagen de Playwright» step, it is an infrastructure failure, not a test failure: re-run the job (`gh run rerun <id> --failed`).
+- `tests/e2e/helpers.js` has a temporary exception (`KNOWN_MISSING`) for the 404s of the design fonts; `self-hosted-fonts` removes it.
+
+## 7. Git and GitHub
+
+- Merges into `main` always with a merge commit (`--no-ff` or "Create a merge commit"); never squash or rebase (it would break `.git-blame-ignore-revs`).
+- `main` is protected: it requires the `frontend`, `php` and `e2e` checks; the admin can bypass it for local merges.
+- GitHub deletes the PR branch on merge ("Automatically delete head branches"); afterwards, `git switch main && git pull && git branch -d <branch>` locally.
+- OpenSpec changes: one branch and one PR per change. The archive (`openspec/changes/archive/YYYY-MM-DD-<name>/`, with spec sync if there are specs) goes as the **last commit of that same branch**, with CI green before the merge; never in a separate PR.
+- CI only runs on PRs and on pushes to `main`; a push to another branch doesn't trigger it.

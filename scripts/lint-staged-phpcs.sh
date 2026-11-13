@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
-# PHPCS sobre los PHP staged del theme (lo llama lint-staged desde la raíz).
-# Cascada: PHP local + vendor/ -> Docker (composer:2) -> aviso visible y exit 0 (la CI bloqueará).
+# PHPCS on the theme's staged PHP files (called by lint-staged from the repo root).
+# Fallback chain: local PHP + vendor/ -> Docker (composer:2) -> visible warning and exit 0 (CI will block).
 set -eu
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 THEME="$ROOT/wp-content/themes/silveira"
 STD="phpcs.xml.dist"
 
-# lint-staged pasa rutas absolutas; las convertimos a relativas al theme.
+# lint-staged passes absolute paths; convert them to paths relative to the theme.
 FILES=""
 for f in "$@"; do
 	case "$f" in
@@ -19,7 +19,7 @@ for f in "$@"; do
 done
 [ -z "$FILES" ] && exit 0
 
-# 1. PHP local.
+# 1. Local PHP.
 if command -v php >/dev/null 2>&1 && php -r 'exit(0);' >/dev/null 2>&1 && [ -x "$THEME/vendor/bin/phpcs" ]; then
 	cd "$THEME"
 	# shellcheck disable=SC2086
@@ -34,7 +34,7 @@ if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
 		"$STD" $FILES
 fi
 
-# 3. Ni PHP ni Docker.
+# 3. Neither PHP nor Docker.
 cat >&2 <<'MSG'
 
   ⚠️  silveira: PHPCS NO se ha ejecutado (no hay PHP local ni Docker disponible).

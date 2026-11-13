@@ -5,8 +5,8 @@
 // Font Families
 $font-primary: 'Isaac', sans-serif;
 
-// Isaac (src/fonts/, woff2). Estilos incluidos: Regular, Italic, Bold y Bold Italic.
-// El peso 500 no existe en la familia: el navegador usa la Regular.
+// Isaac (src/fonts/, woff2). Included styles: Regular, Italic, Bold and Bold Italic.
+// Weight 500 does not exist in the family: the browser falls back to Regular.
 @font-face {
 	font-family: Isaac;
 	src: url('/src/fonts/Isaac-Regular.woff2') format('woff2');

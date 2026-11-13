@@ -1,6 +1,6 @@
 <?php
 /**
- * Setup del theme: soportes, menús, flush de reglas y clases BEM de los menús.
+ * Theme setup: supports, menus, rewrite flush and BEM classes for menus.
  *
  * @package Silveira
  */
@@ -11,10 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'after_setup_theme', 'silveira_setup' );
 /**
- * Setup del theme: soportes y menús.
+ * Theme setup: supports and menus.
  */
 function silveira_setup() {
-	// Los textos fuente ya están en la norma del sitio; esto permite sobrescribirlos con languages/<locale>.mo.
+	// Source strings already follow the site's language norm; this allows overriding them with languages/<locale>.mo.
 	load_theme_textdomain( 'silveira', get_theme_file_path( 'languages' ) );
 
 	add_theme_support( 'title-tag' );
@@ -40,10 +40,10 @@ function silveira_rewrite_flush() {
 }
 
 /**
- * Bloque BEM del menú según el contexto en que se pinta (argumento propio `silveira_context` de wp_nav_menu()).
+ * BEM block for the menu based on where it is rendered (custom `silveira_context` argument of wp_nav_menu()).
  *
- * @param stdClass $args Argumentos de wp_nav_menu().
- * @return string 'c-header', 'c-footer' o '' si el menú no indica contexto.
+ * @param stdClass $args wp_nav_menu() arguments.
+ * @return string 'c-header', 'c-footer' or '' if the menu has no context.
  */
 function silveira_nav_menu_block( $args ) {
 	$context = isset( $args->silveira_context ) ? $args->silveira_context : '';
@@ -56,11 +56,11 @@ function silveira_nav_menu_block( $args ) {
 
 add_filter( 'nav_menu_css_class', 'silveira_nav_menu_item_class', 10, 3 );
 /**
- * Filter: clases BEM en los <li> del menú según su contexto (header o footer).
+ * Filter: BEM classes on the menu <li> elements based on their context (header or footer).
  *
- * @param string[] $classes Clases del elemento.
- * @param WP_Post  $item    Elemento del menú.
- * @param stdClass $args    Argumentos de wp_nav_menu().
+ * @param string[] $classes Item classes.
+ * @param WP_Post  $item    Menu item.
+ * @param stdClass $args    wp_nav_menu() arguments.
  * @return string[]
  */
 function silveira_nav_menu_item_class( $classes, $item, $args ) {
@@ -74,11 +74,11 @@ function silveira_nav_menu_item_class( $classes, $item, $args ) {
 
 add_filter( 'nav_menu_link_attributes', 'silveira_nav_menu_link_class', 10, 3 );
 /**
- * Filter: clases BEM en los <a> del menú según su contexto (header o footer).
+ * Filter: BEM classes on the menu <a> elements based on their context (header or footer).
  *
- * @param array<string, string> $atts Atributos del enlace.
- * @param WP_Post               $item Elemento del menú.
- * @param stdClass              $args Argumentos de wp_nav_menu().
+ * @param array<string, string> $atts Link attributes.
+ * @param WP_Post               $item Menu item.
+ * @param stdClass              $args wp_nav_menu() arguments.
  * @return array<string, string>
  */
 function silveira_nav_menu_link_class( $atts, $item, $args ) {
