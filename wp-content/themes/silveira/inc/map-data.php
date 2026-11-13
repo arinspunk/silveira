@@ -144,9 +144,44 @@ function silveira_enqueue_map_points() {
 		JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 	);
 
+	$config = wp_json_encode(
+		array( 'tiles' => silveira_map_tiles() ),
+		JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+	);
+
 	wp_add_inline_script(
 		'silveira-main',
-		'window.silveiraMapPoints = ' . ( false === $json ? '[]' : $json ) . ';',
+		'window.silveiraMapPoints = ' . ( false === $json ? '[]' : $json ) . ';'
+			. 'window.silveiraMapConfig = ' . ( false === $config ? '{}' : $config ) . ';',
 		'before'
+	);
+}
+
+/**
+ * Proveedor de teselas del mapa de la portada.
+ *
+ * La atribución es HTML del sitio (no de las personas editoras): Leaflet la inserta tal cual.
+ * Para usar otro proveedor, filtra `silveira_map_tiles` con su URL, atribución y zoom máximo.
+ *
+ * @return array{url: string, attribution: string, maxZoom: int}
+ */
+function silveira_map_tiles() {
+	$defaults = array(
+		'url'         => 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+		'attribution' => '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+		'maxZoom'     => 19,
+	);
+
+	/**
+	 * Filtra el proveedor de teselas del mapa.
+	 *
+	 * @param array<string, mixed> $tiles url (con {z}/{x}/{y}), attribution (HTML) y maxZoom; las claves que falten toman el valor por defecto.
+	 */
+	$tiles = array_merge( $defaults, (array) apply_filters( 'silveira_map_tiles', $defaults ) );
+
+	return array(
+		'url'         => (string) $tiles['url'],
+		'attribution' => (string) $tiles['attribution'],
+		'maxZoom'     => (int) $tiles['maxZoom'],
 	);
 }

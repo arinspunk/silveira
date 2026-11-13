@@ -8,6 +8,9 @@ const PROJECTS_ON_MAP = 4; // 3 normales + el de XSS; el proyecto sin coordenada
 test.describe('Portada', () => {
 	test('carga sin errores y pinta mapa, lista, popup y filtro', async ({ page }) => {
 		const watcher = watchErrors(page);
+		// third-party-assets: Leaflet sale del propio sitio, nunca de un CDN.
+		const cdn = [];
+		page.on('request', (r) => r.url().includes('unpkg.com') && cdn.push(r.url()));
 
 		const response = await page.goto('/');
 		expect(response.status()).toBe(200);
@@ -21,6 +24,10 @@ test.describe('Portada', () => {
 		await expect(items).toHaveCount(PROJECTS_ON_MAP);
 		await expect(items.filter({ hasText: 'Escola de Ames' })).toHaveCount(1);
 		await expect(page.getByText('Projeto sem coordenadas')).toHaveCount(0);
+		expect(cdn, 'sin peticiones a CDNs de librerías').toEqual([]);
+		await expect(
+			page.locator('.leaflet-control-attribution a[href="https://www.openstreetmap.org/copyright"]'),
+		).toHaveCount(1);
 
 		// Pulsar el marcador de un proyecto concreto abre su popup y expande el mapa. Se elige por su id
 		// (no "el primero": el orden y el solape de marcadores dependen de los datos) y se dispara el clic

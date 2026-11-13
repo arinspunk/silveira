@@ -117,15 +117,7 @@ add_action( 'wp_enqueue_scripts', 'silveira_enqueue_vite_assets', 20 );
  * Encola CSS/JS del theme: Vite dev o build según entorno.
  */
 function silveira_enqueue_vite_assets() {
-	// Leaflet Map Assets.
-	wp_register_style( 'leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', array(), '1.9.4' );
-	wp_register_script( 'leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', array(), '1.9.4', true );
-
-	if ( is_front_page() ) {
-		wp_enqueue_style( 'leaflet' );
-		wp_enqueue_script( 'leaflet' );
-	}
-
+	// Leaflet no se encola aquí: map.js lo importa (chunk de Vite) solo en páginas con mapa.
 	if ( silveira_is_vite_dev() ) {
 		silveira_enqueue_vite_dev();
 		return;
