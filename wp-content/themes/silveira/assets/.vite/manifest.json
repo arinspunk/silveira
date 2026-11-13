@@ -1,4 +1,13 @@
 {
+  "_leaflet-src-CzM8vlq-.js": {
+    "file": "js/leaflet-src-CzM8vlq-.js",
+    "name": "leaflet-src",
+    "isDynamicEntry": true
+  },
+  "node_modules/leaflet/dist/leaflet.css": {
+    "file": "css/leaflet-CIGW-MKW.css",
+    "src": "node_modules/leaflet/dist/leaflet.css"
+  },
   "src/fonts/Isaac-Bold.woff2": {
     "file": "fonts/Isaac-Bold-BpFguklQ.woff2",
     "src": "src/fonts/Isaac-Bold.woff2"
@@ -20,10 +29,13 @@
     "src": "src/fonts/material-symbols-subset.woff2"
   },
   "src/main.js": {
-    "file": "js/main-CVR4anyb.js",
+    "file": "js/main-BaYYiK_G.js",
     "name": "main",
     "src": "src/main.js",
     "isEntry": true,
+    "dynamicImports": [
+      "_leaflet-src-CzM8vlq-.js"
+    ],
     "css": [
       "css/main-BuqhptPh.css"
     ],

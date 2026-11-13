@@ -129,6 +129,24 @@ npm run icons:subset    # downloads the new subset once from Google Fonts
 
 Then commit the list and the `woff2` (the hook rebuilds `assets/`). An icon missing from the subset shows up as its name in plain text; the Kitchen Sink page lists every icon so it's easy to spot.
 
+## Map library and tiles
+
+**Leaflet** (`leaflet` in the theme's `package.json`, pinned to an exact version) is bundled by Vite, not loaded from a CDN. `map.js` imports it dynamically only when the page has a map, so Vite emits it as separate chunks (`assets/js/leaflet-src-*.js`, `assets/css/leaflet-*.css`) that only the front page downloads.
+
+**Tiles** come from OpenStreetMap by default, with the required attribution linked to its copyright page. To use another provider, filter `silveira_map_tiles` (e.g. in a small plugin); keys you leave out keep their default:
+
+```php
+add_filter( 'silveira_map_tiles', function ( $tiles ) {
+	return array(
+		'url'         => 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+		'attribution' => '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		'maxZoom'     => 20,
+	);
+} );
+```
+
+The attribution is inserted as HTML, so it must come from code, never from editor-entered content.
+
 ## Git hooks (Husky)
 
 Hooks live at the **repository root** and are installed by `npm install` at the root. **`pre-commit`** runs **lint-staged** (config in `lint-staged.config.mjs`) sequentially on the staged files:

@@ -104,9 +104,21 @@ const buildListItem = (point) => {
 	]);
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+/** Teselas por defecto si PHP no inyecta configuración (ver silveira_map_tiles()). */
+const DEFAULT_TILES = {
+	url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+	attribution:
+		'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	maxZoom: 19,
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
 	const mapContainer = document.getElementById('map');
-	if (!mapContainer || typeof L === 'undefined') return;
+	if (!mapContainer) return;
+
+	// Leaflet solo en páginas con mapa: Vite lo separa en un chunk propio (JS + CSS) dentro de assets/.
+	const [leaflet] = await Promise.all([import('leaflet'), import('leaflet/dist/leaflet.css')]);
+	const L = leaflet.default ?? leaflet;
 
 	// 1. Initialize Map
 	// Centered in Galicia
@@ -118,9 +130,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-	// 2. Add Tiles
-	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; OpenStreetMap contributors',
+	// 2. Add Tiles (proveedor configurable desde PHP con el filtro silveira_map_tiles)
+	const tiles = { ...DEFAULT_TILES, ...(window.silveiraMapConfig?.tiles || {}) };
+	L.tileLayer(tiles.url, {
+		attribution: tiles.attribution,
+		maxZoom: tiles.maxZoom,
 	}).addTo(map);
 
 	// 3. Markers Management
