@@ -6,3 +6,6 @@
 
 # style(php): apply phpcbf (WPCS) to the whole theme
 6392f43c195e5bcc2bf8dc2872262145cb4624d3
+
+# style: format root JS with the shared Prettier config
+bb108c9d5ca20d04ac7cbbd58391b4f69b62a58a

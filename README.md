@@ -30,7 +30,7 @@ WordPress project with a classic theme in `wp-content/themes/silveira/`, **Vite*
 
 3. **Install Node dependencies**
 
-   **Repository root** (Husky + lint-staged):
+   **Repository root** (Husky, lint-staged, Playwright and Prettier):
 
    ```bash
    npm install
@@ -43,7 +43,7 @@ WordPress project with a classic theme in `wp-content/themes/silveira/`, **Vite*
    npm install
    ```
 
-   **Why two `node_modules`?** The **repository root** only installs **Husky** and **lint-staged** (Git runs hooks from the root). The **theme** installs **Vite**, ESLint, Prettier, Stylelint, etc. The pre-commit tasks `cd` into the theme before running them, so they use the **theme’s** `node_modules` without duplicating them at the root. This split is intentional.
+   **Why two `node_modules`?** The **repository root** only installs **Husky** and **lint-staged** (Git runs hooks from the root), **Playwright** and **Prettier** for the root JS (`tests/`, `playwright.config.js`, `lint-staged.config.mjs`). The **theme** installs **Vite**, ESLint, Prettier, Stylelint, etc. The pre-commit tasks for theme files `cd` into the theme before running them, so they use the **theme’s** `node_modules` without duplicating them at the root. Both use the same **`.prettierrc.json`** at the repo root, and the root `prettier` is pinned to the exact version locked in the theme (CI fails if they differ; to bump it, run `npm install --save-dev --save-exact prettier@<theme version>` at the root). This split is intentional.
 
    > **The root `npm install` is what installs the Git hooks.** Without it, commits run no checks at all and `assets/` is not rebuilt.
 
@@ -153,8 +153,9 @@ Hooks live at the **repository root** and are installed by `npm install` at the 
 
 1. **JS / config files**: ESLint `--fix` + Prettier (theme’s `node_modules`).
 2. **CSS / SCSS**: Stylelint `--fix` + Prettier.
-3. **PHP** (`scripts/lint-staged-phpcs.sh`): PHPCS with local PHP if available; otherwise **through Docker** (`composer:2`, installs `vendor/` on first run). If neither PHP nor Docker is available it prints a visible warning and lets the commit through — CI will still block it.
-4. **Assets** (`scripts/build-assets.sh`): if the commit touches `src/**`, `vite.config.js` or `package-lock.json`, runs `npm run build` once and adds `assets/` to the same commit. Commits that don't touch those files skip the build.
+3. **Root JS** (`tests/**/*.js`, `playwright.config.js`, `lint-staged.config.mjs`): Prettier (root `node_modules`).
+4. **PHP** (`scripts/lint-staged-phpcs.sh`): PHPCS with local PHP if available; otherwise **through Docker** (`composer:2`, installs `vendor/` on first run). If neither PHP nor Docker is available it prints a visible warning and lets the commit through — CI will still block it.
+5. **Assets** (`scripts/build-assets.sh`): if the commit touches `src/**`, `vite.config.js` or `package-lock.json`, runs `npm run build` once and adds `assets/` to the same commit. Commits that don't touch those files skip the build.
 
 Tip: `docker pull composer:2` once so the first PHP commit isn't slow.
 
@@ -181,9 +182,15 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request and on pu
 |-----|--------|
 | `frontend` | `npm ci`, `npm run validate` (ESLint + Stylelint), `npm run format:check` (Prettier), `npm run build`, then fails if `assets/` differs from the committed one (changed, new or deleted files). On failure it uploads the generated `assets/` as an artifact for diagnosis. |
 | `php` | PHP 8.2, `composer install`, `composer audit` (security advisories in PHP dependencies; abandoned packages are only reported), `composer run lint` (PHPCS), `composer run analyse` (PHPStan). |
-| `e2e` | Isolated WordPress (Docker, port 8081, compiled `assets/`), seeded test data, Playwright smoke test run inside the official `mcr.microsoft.com/playwright` image (no `apt`, no `playwright install`). On failure it uploads the Playwright report. See [Smoke test (E2E)](#smoke-test-e2e). |
+| `e2e` | Root formatting (fails if the root and theme `package-lock.json` lock different Prettier versions, then root `npm run format:check`), isolated WordPress (Docker, port 8081, compiled `assets/`), seeded test data, Playwright smoke test run inside the official `mcr.microsoft.com/playwright` image (no `apt`, no `playwright install`). On failure it uploads the Playwright report. See [Smoke test (E2E)](#smoke-test-e2e). |
 
-To reproduce locally, from `wp-content/themes/silveira`:
+To reproduce locally, from the repo root (root JS formatting, part of `e2e`):
+
+```bash
+npm ci && npm run format:check
+```
+
+From `wp-content/themes/silveira`:
 
 ```bash
 npm ci && npm run validate && npm run format:check && npm run build
@@ -235,7 +242,8 @@ GitHub's blame view applies this file automatically.
 |------|-------------|
 | `docker-compose.yml` | WordPress, MariaDB, optional `wpcli` (`tools` profile) |
 | `wp-content/themes/silveira/` | Theme: Vite entry `src/main.js`, build output `assets/` |
-| `package.json` (root) | Husky, lint-staged and Playwright → **`node_modules/` at repo root** |
+| `package.json` (root) | Husky, lint-staged, Playwright and Prettier → **`node_modules/` at repo root** |
+| `.prettierrc.json` | Prettier config shared by the theme and the root JS |
 | `wp-content/themes/silveira/src/fonts/`, `src/material-symbols-icons.txt`, `scripts/icons-subset.mjs` | Self-hosted fonts and the icon subset (see [Fonts and icons](#fonts-and-icons)) |
 | `wp-content/themes/silveira/package.json` | Vite + linters + build scripts → **`node_modules/` under the theme** |
 | `lint-staged.config.mjs` | Pre-commit tasks (lint, PHPCS, assets build) |
