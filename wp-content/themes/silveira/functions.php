@@ -19,3 +19,7 @@ require_once get_theme_file_path( 'inc/acf.php' );
 require_once get_theme_file_path( 'inc/map-data.php' );
 require_once get_theme_file_path( 'inc/template-tags.php' );
 require_once get_theme_file_path( 'inc/geocoding.php' );
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once get_theme_file_path( 'inc/geocoding-cli.php' );
+}
