@@ -23,7 +23,7 @@
 
 ## 5. Close
 
-- [ ] 5.1 Push the branch, open the PR and verify that `frontend`, `php` and `e2e` are green and that the `e2e` log shows the new format step
+- [x] 5.1 Push the branch, open the PR and verify that `frontend`, `php` and `e2e` are green and that the `e2e` log shows the new format step
 
 ## Workflow follow-up
 
