@@ -27,7 +27,7 @@ const names = [
 
 for (const n of names) {
 	if (!/^[a-z0-9_]+$/.test(n)) {
-		throw new Error(`Nombre de icono no válido en ${listFile}: "${n}"`);
+		throw new Error(`Invalid icon name in ${listFile}: "${n}"`);
 	}
 }
 
@@ -35,15 +35,15 @@ const cssUrl = `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlin
 const css = await (await fetch(cssUrl, { headers: { 'User-Agent': UA } })).text();
 const fontUrl = css.match(/url\((https:[^)]+)\)\s*format\('woff2'\)/)?.[1];
 if (!fontUrl) {
-	throw new Error(`Google Fonts no devolvió un woff2:\n${css.slice(0, 500)}`);
+	throw new Error(`Google Fonts did not return a woff2:\n${css.slice(0, 500)}`);
 }
 
 const res = await fetch(fontUrl, { headers: { 'User-Agent': UA } });
 if (!res.ok) {
-	throw new Error(`Descarga fallida (${res.status}): ${fontUrl}`);
+	throw new Error(`Download failed (${res.status}): ${fontUrl}`);
 }
 const buf = Buffer.from(await res.arrayBuffer());
 await writeFile(outFile, buf);
 console.log(
-	`${names.length} iconos → ${path.relative(root, outFile)} (${(buf.length / 1024).toFixed(1)} KB)`,
+	`${names.length} icons → ${path.relative(root, outFile)} (${(buf.length / 1024).toFixed(1)} KB)`,
 );

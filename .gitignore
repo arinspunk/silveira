@@ -3,10 +3,10 @@ node_modules/
 vendor/
 .DS_Store
 
-# Theme silveira (Vite): la salida compilada en wp-content/themes/silveira/assets/ se VERSIONA
-# para despliegues sin Node en el servidor. No añadir assets/ ni assets/.vite/manifest.json aquí.
-# Cachés de linters/análisis concretos del theme: wp-content/themes/silveira/.gitignore
-# Playwright (smoke test E2E)
+# silveira theme (Vite): the build output in wp-content/themes/silveira/assets/ IS VERSIONED
+# for deployments without Node on the server. Do not add assets/ or assets/.vite/manifest.json here.
+# Theme-specific linter/analysis caches: wp-content/themes/silveira/.gitignore
+# Playwright (E2E smoke test)
 /playwright-report/
 /test-results/
 /blob-report/

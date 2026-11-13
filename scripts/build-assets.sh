@@ -6,10 +6,10 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 THEME="$ROOT/wp-content/themes/silveira"
 
 if [ ! -d "$THEME/node_modules" ]; then
-	echo "silveira: faltan dependencias del theme; ejecuta: cd wp-content/themes/silveira && npm ci" >&2
+	echo "silveira: theme dependencies are missing; run: cd wp-content/themes/silveira && npm ci" >&2
 	exit 1
 fi
 
-echo "silveira: recompilando assets/ (npm run build)…"
+echo "silveira: rebuilding assets/ (npm run build)…"
 (cd "$THEME" && npm run build --silent)
 git -C "$ROOT" add -A wp-content/themes/silveira/assets

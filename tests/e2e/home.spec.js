@@ -5,8 +5,8 @@ const { watchErrors, expectNoPhpErrors } = require('./helpers');
 
 const PROJECTS_ON_MAP = 4; // 3 regular + the XSS one; the project without coordinates is not shown.
 
-test.describe('Portada', () => {
-	test('carga sin errores y pinta mapa, lista, popup y filtro', async ({ page }) => {
+test.describe('Front page', () => {
+	test('loads without errors and renders map, list, popup and filter', async ({ page }) => {
 		const watcher = watchErrors(page);
 		// third-party-assets: Leaflet is served by the site itself, never from a CDN.
 		const cdn = [];
@@ -24,7 +24,7 @@ test.describe('Portada', () => {
 		await expect(items).toHaveCount(PROJECTS_ON_MAP);
 		await expect(items.filter({ hasText: 'Escola de Ames' })).toHaveCount(1);
 		await expect(page.getByText('Projeto sem coordenadas')).toHaveCount(0);
-		expect(cdn, 'sin peticiones a CDNs de librerías').toEqual([]);
+		expect(cdn, 'no requests to library CDNs').toEqual([]);
 		await expect(
 			page.locator('.leaflet-control-attribution a[href="https://www.openstreetmap.org/copyright"]'),
 		).toHaveCount(1);
@@ -68,7 +68,7 @@ test.describe('Portada', () => {
 	});
 
 	// homepage-scroll-a11y: the homepage is keyboard-navigable and the closed list gets no focus.
-	test('teclado: expande el mapa, abre el footer y respeta la lista cerrada', async ({ page }) => {
+	test('keyboard: expands the map, opens the footer and respects the closed list', async ({ page }) => {
 		const watcher = watchErrors(page);
 		const html = page.locator('html');
 
@@ -110,7 +110,7 @@ test.describe('Portada', () => {
 	});
 
 	// harden-map-output regression: HTML in the title and lema is not interpreted.
-	test('el contenido con HTML del proyecto se muestra como texto sin ejecutar nada', async ({
+	test('project content with HTML is shown as text without running anything', async ({
 		page,
 	}) => {
 		const watcher = watchErrors(page); // includes dialogs: an alert() would fail the test
@@ -151,7 +151,7 @@ test.describe('Portada', () => {
 				await expect(card.locator('.c-map-card__subhead')).toHaveText('');
 			}
 		}
-		expect(found, 'no se encontró el popup del proyecto XSS').toBe(true);
+		expect(found, 'the XSS project popup was not found').toBe(true);
 
 		// Nothing was executed or injected anywhere in the document.
 		expect(await page.evaluate(() => window.__xss)).toBeUndefined();
