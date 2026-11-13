@@ -2,67 +2,67 @@
 
 ## Purpose
 
-Obtiene automáticamente las coordenadas de cada proyecto a partir de su dirección para situarlo en el mapa, sin pisar coordenadas fijadas a mano y avisando cuando no es posible.
+Automatically obtains the coordinates of each project from its address to place it on the map, without overwriting coordinates set by hand and warning when it is not possible.
 
 ## Requirements
 
 ### Requirement: Coordinates are obtained for new addresses
-Al guardar un proyecto con dirección y sin coordenadas, el sistema SHALL obtener latitud y longitud de la dirección y guardarlas en el proyecto.
+When a project with an address and no coordinates is saved, the system SHALL obtain the latitude and longitude of the address and save them in the project.
 
 #### Scenario: New project with address
-- **WHEN** se publica un proyecto con dirección "Rúa do Vilar 10, Santiago de Compostela" y sin coordenadas
-- **THEN** el proyecto queda con coordenadas situadas en Santiago de Compostela
+- **WHEN** a project is published with the address "Rúa do Vilar 10, Santiago de Compostela" and no coordinates
+- **THEN** the project ends up with coordinates located in Santiago de Compostela
 
 ### Requirement: Address noise words are removed as whole words only
-Antes de buscar, el sistema SHALL eliminar de la dirección las palabras de ruido de locales y pisos solo cuando aparecen como palabras completas.
+Before searching, the system SHALL remove from the address the noise words for premises and floors only when they appear as whole words.
 
 #### Scenario: Word containing a noise word
-- **WHEN** la dirección es "Rúa da Localidade 3, Lalín"
-- **THEN** la búsqueda conserva "Localidade" íntegra
+- **WHEN** the address is "Rúa da Localidade 3, Lalín"
+- **THEN** the search keeps "Localidade" intact
 
 #### Scenario: Standalone noise word
-- **WHEN** la dirección es "Rúa Nova 5, Baixo, Ourense"
-- **THEN** la búsqueda se hace sin la palabra "Baixo"
+- **WHEN** the address is "Rúa Nova 5, Baixo, Ourense"
+- **THEN** the search is done without the word "Baixo"
 
 ### Requirement: Changed addresses are re-geocoded
-Cuando cambia la dirección de un proyecto y sus coordenadas son las obtenidas en el último geocoding, el sistema SHALL recalcular las coordenadas.
+When a project's address changes and its coordinates are the ones obtained in the last geocoding, the system SHALL recalculate the coordinates.
 
 #### Scenario: Address edited
-- **WHEN** un proyecto geocodificado en Lugo cambia su dirección a una de Vigo y se guarda
-- **THEN** sus coordenadas pasan a estar en Vigo
+- **WHEN** a project geocoded in Lugo changes its address to one in Vigo and is saved
+- **THEN** its coordinates move to Vigo
 
 ### Requirement: Manually set coordinates are preserved
-Cuando las coordenadas de un proyecto difieren de las obtenidas en su último geocoding, el sistema SHALL considerarlas fijadas a mano y no sobrescribirlas, aunque cambie la dirección.
+When a project's coordinates differ from those obtained in its last geocoding, the system SHALL consider them set by hand and not overwrite them, even if the address changes.
 
 #### Scenario: Manual adjustment then address edit
-- **WHEN** alguien corrige a mano las coordenadas y después cambia la dirección
-- **THEN** se mantienen las coordenadas corregidas a mano
+- **WHEN** someone corrects the coordinates by hand and then changes the address
+- **THEN** the hand-corrected coordinates are kept
 
 ### Requirement: Results outside Galiza are rejected
-El sistema SHALL aceptar solo resultados dentro de la zona geográfica de Galiza, incluida la Galiza exterior (Eo-Navia, Bierzo, As Portelas, Seabra); si no hay ninguno, el proyecto conserva sus coordenadas actuales.
+The system SHALL accept only results within the geographic area of Galiza, including the Galiza exterior (Eo-Navia, Bierzo, As Portelas, Seabra); if there are none, the project keeps its current coordinates.
 
 #### Scenario: Ambiguous place name
-- **WHEN** la dirección solo coincide con un lugar homónimo fuera de Galiza
-- **THEN** no se guardan coordenadas nuevas y se muestra el aviso de fallo
+- **WHEN** the address only matches a place with the same name outside Galiza
+- **THEN** no new coordinates are saved and the failure notice is shown
 
 #### Scenario: Project in the Galiza exterior
-- **WHEN** se guarda un proyecto con dirección en Ponferrada (Bierzo), A Póvoa de Seabra o Navia
-- **THEN** se guardan las coordenadas encontradas y el proyecto aparece en el mapa
+- **WHEN** a project is saved with an address in Ponferrada (Bierzo), A Póvoa de Seabra or Navia
+- **THEN** the coordinates found are saved and the project appears on the map
 
 ### Requirement: Editors are told when geocoding fails
-Si la búsqueda falla (error de red, respuesta no válida o sin resultados), el sistema SHALL mostrar un aviso en la pantalla de edición del proyecto tras guardar, sin impedir el guardado.
+If the search fails (network error, invalid response or no results), the system SHALL show a notice on the project's edit screen after saving, without preventing the save.
 
 #### Scenario: Address not found
-- **WHEN** se guarda un proyecto con una dirección que no produce resultados
-- **THEN** el proyecto se guarda y la persona editora ve un aviso indicando que hay que revisar la dirección o introducir coordenadas a mano
+- **WHEN** a project is saved with an address that produces no results
+- **THEN** the project is saved and the editor sees a notice saying that the address should be reviewed or the coordinates entered by hand
 
 #### Scenario: Service unavailable
-- **WHEN** el servicio de geocoding no responde en el tiempo límite
-- **THEN** el proyecto se guarda sin cambios en coordenadas y se muestra el aviso
+- **WHEN** the geocoding service does not respond within the time limit
+- **THEN** the project is saved without changes to its coordinates and the notice is shown
 
 ### Requirement: Bulk geocoding respects the provider rate limit
-El sistema SHALL ofrecer un comando de administración que geocodifica los proyectos sin coordenadas haciendo como máximo una petición por segundo e informando de los resultados.
+The system SHALL offer an administration command that geocodes the projects without coordinates, making at most one request per second and reporting the results.
 
 #### Scenario: Backfill
-- **WHEN** se ejecuta el comando con 5 proyectos sin coordenadas
-- **THEN** se hacen 5 peticiones separadas al menos un segundo y se informa de cuántos se geocodificaron y cuáles fallaron
+- **WHEN** the command is run with 5 projects without coordinates
+- **THEN** 5 requests are made at least one second apart and it reports how many were geocoded and which failed

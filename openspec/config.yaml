@@ -6,15 +6,12 @@ schema: spec-driven
 # Keep general project documentation and discoverable codebase facts out.
 # Example:
 #   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
-context: |
-  Escribe todos los artefactos (proposal, design, specs, tasks) en castellano; los nombres de requisitos y escenarios de las specs van en inglés.
-  Los textos visibles del sitio y las etiquetas del admin van en galego reintegrado, variante "umha"/"-çom"/"nom", siempre con gettext y text domain `silveira`. La revisión lingüística es posterior y no bloquea ningún change.
-  El equipo no tiene PHP en el host: los comandos PHP (composer, PHPCS, PHPStan) se ejecutan con Docker (`composer:2`) y WP-CLI con `docker compose --profile tools run --rm wpcli`.
-  `wp-content/themes/silveira/assets/` está versionado porque el servidor de producción no tiene Node. El hook pre-commit lo regenera y la CI comprueba que coincide con `src/`; los changes no necesitan tareas propias de build.
-  Aplica los changes de uno en uno y en orden, mergeando cada uno antes de empezar el siguiente, para evitar conflictos en `assets/`.
-  Si un change modifica el marcado o el comportamiento del mapa o de la portada, debe incluir una tarea para mantener al día el smoke test de Playwright (`tests/e2e/`).
+  Write all artifacts (proposal, design, specs, tasks) in English; requirement and scenario names in specs are in English too. Changes archived before this rule (openspec/changes/archive/) stay in Spanish as history.
+  The site's visible text and the admin labels are in galego reintegrado, "umha"/"-çom"/"nom" variant, always through gettext with the `silveira` text domain. When an artifact quotes that text (e.g. a button label in a scenario), quote it as it appears on the site. The linguistic review happens later and does not block any change.
+  The team has no PHP on the host: PHP commands (composer, PHPCS, PHPStan) run with Docker (`composer:2`) and WP-CLI with `docker compose --profile tools run --rm wpcli`.
+  `wp-content/themes/silveira/assets/` is versioned because the production server has no Node. The pre-commit hook rebuilds it and CI checks that it matches `src/`; changes don't need their own build tasks.
+  Apply changes one at a time and in order, merging each one before starting the next, to avoid conflicts in `assets/`.
+  If a change modifies the markup or behaviour of the map or the front page, it must include a task to keep the Playwright smoke test (`tests/e2e/`) up to date.
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

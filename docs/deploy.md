@@ -1,23 +1,23 @@
-# Despliegue a producción
+# Deploying to production
 
-Runbook para cuando exista un servidor de producción. Hoy el proyecto solo corre en local (Docker); este documento recoge lo que los changes de OpenSpec dejaron hecho en la base de datos local y hay que repetir en cualquier entorno nuevo.
+Runbook for when there is a production server. Today the project only runs locally (Docker); this document collects what the OpenSpec changes left done in the local database and has to be repeated in any new environment.
 
-Los comandos usan `wp` tal cual (WP-CLI en el servidor). En local, anteponer `docker compose --profile tools run --rm wpcli`.
+The commands use `wp` as is (WP-CLI on the server). Locally, prefix them with `docker compose --profile tools run --rm wpcli`.
 
-## 1. Requisitos del servidor
+## 1. Server requirements
 
-- PHP 8.2 (la versión con la que se prueba en local y en la CI).
-- WordPress 6.0 o superior y MySQL/MariaDB.
+- PHP 8.2 (the version tested locally and in CI).
+- WordPress 6.0 or later and MySQL/MariaDB.
 - HTTPS.
-- WP-CLI (recomendado; los pasos 4 y 5 lo usan).
-- Salida HTTPS hacia `nominatim.openstreetmap.org` (geocoding de proyectos) y, en el navegador de los visitantes, hacia `tile.openstreetmap.org` (teselas del mapa).
-- **No hace falta Node ni Composer**: `assets/` va compilado en el repo y `vendor/` solo tiene herramientas de desarrollo.
+- WP-CLI (recommended; steps 4 and 5 use it).
+- Outbound HTTPS to `nominatim.openstreetmap.org` (project geocoding) and, from visitors' browsers, to `tile.openstreetmap.org` (map tiles).
+- **Neither Node nor Composer is needed**: `assets/` is compiled in the repo and `vendor/` only holds development tools.
 
-## 2. Qué se copia del tema
+## 2. What to copy from the theme
 
-Solo `main` con los tres checks de la CI en verde (`frontend`, `php`, `e2e`).
+Only `main` with the three CI checks green (`frontend`, `php`, `e2e`).
 
-Del directorio `wp-content/themes/silveira/` se despliega todo **salvo** las herramientas de desarrollo:
+From `wp-content/themes/silveira/` deploy everything **except** the development tools:
 
 ```bash
 rsync -av --delete \
@@ -25,77 +25,77 @@ rsync -av --delete \
   --exclude scripts --exclude '.*' \
   --exclude 'composer.*' --exclude 'package*.json' \
   --exclude '*.config.js' --exclude phpcs.xml.dist --exclude phpstan.neon.dist \
-  wp-content/themes/silveira/ usuario@servidor:/ruta/a/wp-content/themes/silveira/
+  wp-content/themes/silveira/ user@server:/path/to/wp-content/themes/silveira/
 ```
 
-Imprescindibles: los `.php`, `inc/`, `template-parts/`, `acf-json/`, `assets/` (con `assets/.vite/manifest.json`) y `style.css`.
+Essential: the `.php` files, `inc/`, `template-parts/`, `acf-json/`, `assets/` (with `assets/.vite/manifest.json`) and `style.css`.
 
-No definir la variable de entorno `SILVEIRA_VITE_DEV` en el servidor (o dejarla a `0`): con ella el tema intenta cargar los assets del servidor de Vite.
+Do not define the `SILVEIRA_VITE_DEV` environment variable on the server (or leave it at `0`): with it, the theme tries to load the assets from the Vite dev server.
 
-## 3. Primera instalación
+## 3. First-time setup
 
-1. Instalar WordPress y el idioma del sitio:
+1. Install WordPress and the site language:
    ```bash
    wp language core install gl_ES --activate
    ```
-2. Instalar y activar ACF (el mapa y las fichas usan sus campos; sin él el sitio funciona, pero el mapa queda vacío y aparece un aviso en el admin):
+2. Install and activate ACF (the map and the project pages use its fields; without it the site works, but the map is empty and a notice appears in the admin):
    ```bash
    wp plugin install advanced-custom-fields --activate
    ```
-   Los campos se cargan desde `acf-json/`; no hay que importarlos.
-3. Activar el tema y fijar los enlaces permanentes:
+   The fields are loaded from `acf-json/`; there is nothing to import.
+3. Activate the theme and set the permalinks:
    ```bash
    wp theme activate silveira
    wp rewrite structure '/%postname%/'
    ```
-4. En `wp-config.php`:
+4. In `wp-config.php`:
    ```php
-   define( 'SILVEIRA_NOMINATIM_EMAIL', 'contacto@dominio' ); // contacto para la política de Nominatim
+   define( 'SILVEIRA_NOMINATIM_EMAIL', 'contact@domain' ); // contact for Nominatim's usage policy
    define( 'WP_DEBUG', false );
    ```
-5. Asignar un menú a la ubicación **Menu principal** (Apariencia → Menús). Se usa en la cabecera y en el pie.
+5. Assign a menu to the **Menu principal** location (Appearance → Menus). It is used in the header and in the footer.
 
-## 4. Contenido
+## 4. Content
 
-**Si se migra la base de datos local:**
+**If the local database is migrated:**
 
 ```bash
-# en local
+# locally
 docker compose --profile tools run --rm wpcli wp db export /var/www/html/silveira.sql
-# en el servidor, tras importar el dump y copiar wp-content/uploads/
-wp search-replace 'http://silveira.localhost' 'https://dominio' --all-tables --precise
+# on the server, after importing the dump and copying wp-content/uploads/
+wp search-replace 'http://silveira.localhost' 'https://domain' --all-tables --precise
 ```
 
-**En cualquier caso, una vez:**
+**In any case, once:**
 
-1. Dar la categoría `geral` a los recursos que no tengan ninguna (los nuevos ya la reciben al guardarse):
+1. Give the `geral` category to resources that have none (new ones already get it when saved):
    ```bash
    wp eval 'foreach ( get_posts( array( "post_type" => "recurso", "post_status" => "any", "numberposts" => -1 ) ) as $p ) { silveira_recurso_ensure_category( $p ); }'
    ```
-2. Regenerar las reglas de enlaces permanentes:
+2. Regenerate the permalink rules:
    ```bash
    wp rewrite flush
    ```
-3. Geocodificar los proyectos sin coordenadas (1 petición por segundo):
+3. Geocode the projects without coordinates (1 request per second):
    ```bash
-   wp silveira geocode --dry-run   # solo lista, sin peticiones
+   wp silveira geocode --dry-run   # list only, no requests
    wp silveira geocode
    ```
-   Revisar en el mapa los que no se encuentren y corregirlos a mano en el editor.
+   Check on the map the ones that are not found and fix them by hand in the editor.
 
-## 5. Comprobación tras desplegar
+## 5. Post-deploy checks
 
-- **Portada:** el mapa muestra los proyectos; los filtros abren, filtran y muestran el mensaje si no hay resultados; con teclado se expande el mapa y se llega al pie.
-- **Un archivo** (p. ej. `/projeto/`) y **una ficha** de proyecto, evento y recurso: un único título, sin prefijos.
-- **Una búsqueda** con resultados y otra sin ellos.
-- **Pestaña Red del navegador:** solo peticiones al propio dominio y a `tile.openstreetmap.org`; ninguna a `unpkg.com`, `fonts.googleapis.com` ni `fonts.gstatic.com`.
-- **Admin:** al guardar un proyecto con dirección se obtienen coordenadas o aparece el aviso de fallo.
+- **Front page:** the map shows the projects; the filters open, filter and show the message when there are no results; with the keyboard the map expands and the footer can be reached.
+- **An archive** (e.g. `/projeto/`) and **a page** for a project, an event and a resource: a single title, without prefixes.
+- **A search** with results and another without.
+- **Browser Network tab:** only requests to the site's own domain and to `tile.openstreetmap.org`; none to `unpkg.com`, `fonts.googleapis.com` or `fonts.gstatic.com`.
+- **Admin:** saving a project with an address gets coordinates or shows the failure notice.
 
-## 6. Despliegues siguientes
+## 6. Later deployments
 
-1. Mergear en `main` con la CI en verde.
-2. Repetir el `rsync` del paso 2.
-3. `wp rewrite flush` si el cambio toca tipos de contenido, taxonomías o enlaces permanentes.
-4. Repetir la comprobación del paso 5.
+1. Merge into `main` with CI green.
+2. Repeat the `rsync` from step 2.
+3. `wp rewrite flush` if the change touches content types, taxonomies or permalinks.
+4. Repeat the checks from step 5.
 
-Para poder volver atrás, conservar una copia del tema anterior en el servidor (o etiquetar en git cada versión desplegada) antes del `rsync`.
+To be able to roll back, keep a copy of the previous theme on the server (or tag each deployed version in git) before the `rsync`.

@@ -2,57 +2,57 @@
 
 ## Purpose
 
-Define qué recursos de terceros puede solicitar el navegador al visitar el sitio y garantiza que los recursos propios (iconos, tipografías, librerías) se sirven desde el propio sitio.
+Defines which third-party resources the browser may request when visiting the site and ensures that the site's own resources (icons, typefaces, libraries) are served from the site itself.
 
 ## Requirements
 
 ### Requirement: Icons and typefaces are served from the site
-La fuente de iconos y las tipografías del theme SHALL servirse desde el dominio del sitio; el navegador SHALL NOT solicitarlas a servicios de fuentes de terceros.
+The theme's icon font and typefaces SHALL be served from the site's domain; the browser SHALL NOT request them from third-party font services.
 
 #### Scenario: Any page
-- **WHEN** se carga cualquier página pública con las herramientas de red del navegador abiertas
-- **THEN** no hay peticiones a `fonts.googleapis.com` ni `fonts.gstatic.com`, ni `preconnect` a esos dominios en el HTML
+- **WHEN** any public page is loaded with the browser's network tools open
+- **THEN** there are no requests to `fonts.googleapis.com` or `fonts.gstatic.com`, and no `preconnect` to those domains in the HTML
 
 #### Scenario: Icons render
-- **WHEN** se carga una página con iconos (flechas, `location_on`, `expand_more`)
-- **THEN** los iconos se ven como glifos, no como el texto de su nombre
+- **WHEN** a page with icons (arrows, `location_on`, `expand_more`) is loaded
+- **THEN** the icons are shown as glyphs, not as the text of their name
 
 ### Requirement: Design typefaces are applied
-Los textos del sitio SHALL mostrarse con la tipografía del diseño, Isaac, con sus estilos reales de negrita y cursiva, mostrando texto con la fuente de reserva mientras se descarga.
+The site's text SHALL be shown in the design typeface, Isaac, with its real bold and italic styles, showing text in the fallback font while it downloads.
 
 #### Scenario: Body text
-- **WHEN** se carga una página y se inspecciona la fuente renderizada de un párrafo
-- **THEN** la fuente usada es Isaac
+- **WHEN** a page is loaded and the rendered font of a paragraph is inspected
+- **THEN** the font used is Isaac
 
 #### Scenario: Emphasis
-- **WHEN** se inspecciona la fuente renderizada del lema de una ficha de proyecto (cursiva) y de una etiqueta de modalidade (negrita)
-- **THEN** se usan los ficheros Isaac Italic e Isaac Bold respectivamente, no estilos sintetizados por el navegador
+- **WHEN** the rendered font of a project page's lema (italic) and of a modalidade tag (bold) is inspected
+- **THEN** the Isaac Italic and Isaac Bold files are used respectively, not styles synthesized by the browser
 
 ### Requirement: JavaScript libraries are served from the site
-Las librerías de JavaScript y CSS que usa el theme SHALL servirse desde el dominio del sitio; el navegador SHALL NOT solicitarlas a CDNs de terceros.
+The JavaScript and CSS libraries used by the theme SHALL be served from the site's domain; the browser SHALL NOT request them from third-party CDNs.
 
 #### Scenario: Any page
-- **WHEN** se carga cualquier página pública con las herramientas de red del navegador abiertas
-- **THEN** no hay peticiones a `unpkg.com` ni a otros CDNs de librerías
+- **WHEN** any public page is loaded with the browser's network tools open
+- **THEN** there are no requests to `unpkg.com` or other library CDNs
 
 ### Requirement: Map library loads only where there is a map
-El código y estilos de la librería de mapas SHALL cargarse solo en páginas que contienen un mapa.
+The map library's code and styles SHALL be loaded only on pages that contain a map.
 
 #### Scenario: Page without map
-- **WHEN** se carga la ficha de un proyecto
-- **THEN** no se descarga el código ni la hoja de estilos de la librería de mapas
+- **WHEN** a project page is loaded
+- **THEN** neither the map library's code nor its stylesheet is downloaded
 
 #### Scenario: Front page
-- **WHEN** se carga la portada
-- **THEN** el mapa se muestra con sus controles y marcadores como antes
+- **WHEN** the front page is loaded
+- **THEN** the map is shown with its controls and markers as before
 
 ### Requirement: Map tiles are attributed and configurable
-El mapa SHALL mostrar la atribución exigida por el proveedor de teselas, con enlace a su página de licencia, y el proveedor SHALL poder cambiarse por configuración del sitio sin modificar el JavaScript.
+The map SHALL show the attribution required by the tile provider, linked to its license page, and the provider SHALL be changeable through site configuration without modifying the JavaScript.
 
 #### Scenario: Default provider
-- **WHEN** se carga la portada sin configuración adicional
-- **THEN** el mapa usa teselas de OpenStreetMap y muestra "© OpenStreetMap contributors" enlazado a la página de copyright de OpenStreetMap
+- **WHEN** the front page is loaded without additional configuration
+- **THEN** the map uses OpenStreetMap tiles and shows "© OpenStreetMap contributors" linked to the OpenStreetMap copyright page
 
 #### Scenario: Alternative provider
-- **WHEN** se configura otro proveedor con su URL de teselas y su atribución
-- **THEN** el mapa pide las teselas a ese proveedor y muestra su atribución
+- **WHEN** another provider is configured with its tile URL and attribution
+- **THEN** the map requests the tiles from that provider and shows its attribution
