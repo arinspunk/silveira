@@ -46,8 +46,8 @@ function silveira_register_cpt_projeto() {
 		'update_item'        => __( 'Atualizar Projeto', 'silveira' ),
 		'view_item'          => __( 'Ver Projeto', 'silveira' ),
 		'search_items'       => __( 'Buscar Projeto', 'silveira' ),
-		'not_found'          => __( 'Não encontrado', 'silveira' ),
-		'not_found_in_trash' => __( 'Não encontrado na lixeira', 'silveira' ),
+		'not_found'          => __( 'Nom encontrado', 'silveira' ),
+		'not_found_in_trash' => __( 'Nom encontrado no lixo', 'silveira' ),
 	);
 	$cpt_args   = array(
 		'label'               => __( 'Projeto', 'silveira' ),

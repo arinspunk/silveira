@@ -43,7 +43,7 @@
 			</div>
 
 			<div class="o-col-6">
-				<nav class="c-footer__nav" aria-label="<?php esc_attr_e( 'Footer navigation', 'silveira' ); ?>">
+				<nav class="c-footer__nav" aria-label="<?php esc_attr_e( 'Navegaçom do rodapé', 'silveira' ); ?>">
 					<?php
 					wp_nav_menu(
 						array(

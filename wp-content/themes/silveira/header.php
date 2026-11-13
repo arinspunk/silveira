@@ -32,7 +32,7 @@
 			</div>
 
 			<div class="o-col-6 c-header__nav-wrapper">
-				<nav class="c-header__nav" aria-label="<?php esc_attr_e( 'Main navigation', 'silveira' ); ?>">
+				<nav class="c-header__nav" aria-label="<?php esc_attr_e( 'Navegaçom principal', 'silveira' ); ?>">
 					<?php
 					wp_nav_menu(
 						array(

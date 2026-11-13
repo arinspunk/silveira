@@ -14,12 +14,15 @@ add_action( 'after_setup_theme', 'silveira_setup' );
  * Setup del theme: soportes y menús.
  */
 function silveira_setup() {
+	// Los textos fuente ya están en la norma del sitio; esto permite sobrescribirlos con languages/<locale>.mo.
+	load_theme_textdomain( 'silveira', get_theme_file_path( 'languages' ) );
+
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'custom-logo' );
 
 	register_nav_menus(
 		array(
-			'main' => esc_html__( 'Main Menu', 'silveira' ),
+			'main' => esc_html__( 'Menu principal', 'silveira' ),
 		)
 	);
 }
