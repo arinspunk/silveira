@@ -6,6 +6,9 @@ schema: spec-driven
 # Keep general project documentation and discoverable codebase facts out.
 # Example:
 #   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+context: |
   Write all artifacts (proposal, design, specs, tasks) in English; requirement and scenario names in specs are in English too. Changes archived before this rule (openspec/changes/archive/) stay in Spanish as history.
   The site's visible text and the admin labels are in galego reintegrado, "umha"/"-çom"/"nom" variant, always through gettext with the `silveira` text domain. When an artifact quotes that text (e.g. a button label in a scenario), quote it as it appears on the site. The linguistic review happens later and does not block any change.
   The team has no PHP on the host: PHP commands (composer, PHPCS, PHPStan) run with Docker (`composer:2`) and WP-CLI with `docker compose --profile tools run --rm wpcli`.
