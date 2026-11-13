@@ -20,7 +20,7 @@
 
 - [x] 4.1 Dar a los botones de filtro el nombre accesible de design D6 (`aria-labelledby` con etiqueta + estado, `.screen-reader-text`, actualización en `map.js`, textos con `_n` vía `silveiraI18n`); verificar en el árbol de accesibilidad de Chrome que el nombre es "Modalidade educativa" sin nada marcado, "Modalidade educativa, 1 selecionada" con una y "…, 2 selecionadas" con dos, que se actualiza al desmarcar una localidade incompatible, y que el aspecto de la barra no cambia
 - [x] 4.2 Añadir al smoke test una comprobación del nombre accesible del botón de Modalidade antes y después de marcar una opción (`getByRole('button', { name: … })`); verificar que pasa en local y en la CI
-- [ ] 4.3 Comprobar con VoiceOver (Chrome, Cmd+F5) que se anuncia la etiqueta con el número de seleccionadas y sin "Que procuras?" (lo hace el propietario del repo)
+- [x] 4.3 Comprobar con VoiceOver (Chrome, Cmd+F5) que se anuncia la etiqueta con el número de seleccionadas y sin "Que procuras?" (lo hace el propietario del repo)
 
 ## 5. Build
 
