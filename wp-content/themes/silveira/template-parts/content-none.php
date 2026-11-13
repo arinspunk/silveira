@@ -19,7 +19,7 @@
 				printf(
 					wp_kses(
 						/* translators: 1: link to WP admin new post page. */
-						__( 'Pronto para publicar o seu primeiro post? <a href="%1$s">Comece aqui</a>.', 'silveira' ),
+						__( 'Queres publicar a tua primeira entrada? <a href="%1$s">Começa aqui</a>.', 'silveira' ),
 						array(
 							'a' => array(
 								'href' => array(),
@@ -31,10 +31,10 @@
 				?>
 			</p>
 		<?php elseif ( is_search() ) : ?>
-			<p><?php esc_html_e( 'Desculpe, mas nada corresponde aos seus termos de busca. Por favor, tente novamente con palavras-chave diferentes.', 'silveira' ); ?></p>
+			<p><?php esc_html_e( 'Desculpa, mas nada corresponde à tua procura. Tenta de novo com outras palavras.', 'silveira' ); ?></p>
 			<?php get_search_form(); ?>
 		<?php else : ?>
-			<p><?php esc_html_e( 'Parece que não conseguimos encontrar o que você está procurando. Talvez a busca pueda ayudar.', 'silveira' ); ?></p>
+			<p><?php esc_html_e( 'Parece que nom conseguimos encontrar o que procuras. Talvez umha procura te poda ajudar.', 'silveira' ); ?></p>
 			<?php get_search_form(); ?>
 		<?php endif; ?>
 	</div>

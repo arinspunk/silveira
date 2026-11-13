@@ -43,6 +43,15 @@ const safeUrl = (value) => {
 const icon = (className, name) => el('span', { className }, [name]);
 
 /**
+ * Texto de la interfaz, traducido en PHP (silveira_map_i18n()); el fallback es el texto fuente.
+ *
+ * @param {string} key
+ * @param {string} fallback
+ * @returns {string}
+ */
+const t = (key, fallback) => window.silveiraI18n?.[key] || fallback;
+
+/**
  * Popup de un marcador.
  *
  * @param {object} point
@@ -67,7 +76,7 @@ const buildPopup = (point) => {
 		url &&
 			el('div', { className: 'c-map-card__actions' }, [
 				el('a', { className: 'c-btn c-btn--secondary c-btn--l', attrs: { href: url } }, [
-					'Ver projeto',
+					t('viewProject', 'Ver projeto'),
 				]),
 			]),
 	]);
@@ -156,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		if (projectListContainer && filteredPoints.length === 0) {
 			projectListContainer.append(
 				el('li', { className: 'c-project-list__empty' }, [
-					projectListContainer.dataset.emptyText || '',
+					t('noResults', 'Nom há projetos para estes filtros.'),
 				]),
 			);
 		}
@@ -271,6 +280,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 		});
 	};
 
+	/**
+	 * Nombre accesible de cada botón de filtro: su etiqueta y, si hay opciones marcadas, cuántas
+	 * ("Modalidade educativa, 2 selecionadas"). Sin el texto de ejemplo visible.
+	 */
+	const syncFilterStatus = () => {
+		document.querySelectorAll('.c-select').forEach((select) => {
+			const status = select.querySelector(`#${select.id}-status`);
+			const label = select.querySelector('.c-select__label')?.textContent.trim() || '';
+			if (!status) return;
+			const count = select.querySelectorAll('.c-checkbox__input:checked').length;
+			const template =
+				count === 1
+					? t('selectedSingular', '%d selecionada')
+					: t('selectedPlural', '%d selecionadas');
+			status.textContent = count ? `${label}, ${template.replace('%d', String(count))}` : label;
+		});
+	};
+
 	const updateFilters = () => {
 		readFilters();
 
@@ -287,12 +314,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 		renderMarkers(points.filter((p) => matchesAll(p)));
 		syncFilterOptions();
+		syncFilterStatus();
 	};
 
 	filterInputs.forEach((cb) => {
 		cb.addEventListener('change', updateFilters);
 	});
 	syncFilterOptions();
+	syncFilterStatus();
 
 	// 5. Panel de la lista (design D6). Cerrado es `inert`: ni foco ni lectores de pantalla.
 	const listToggleBtn = document.getElementById('map-list-toggle');
@@ -306,7 +335,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 		listToggleBtn.setAttribute('aria-expanded', String(open));
 		const label = listToggleBtn.querySelector('.c-btn__label');
 		if (label) {
-			label.textContent = open ? listToggleBtn.dataset.labelClose : listToggleBtn.dataset.labelOpen;
+			label.textContent = open ? t('hideList', 'Acochar a lista') : t('showList', 'Ver a lista');
 		}
 		listToggleBtn.querySelectorAll('[data-icon-when]').forEach((iconEl) => {
 			iconEl.hidden = iconEl.dataset.iconWhen !== (open ? 'open' : 'closed');

@@ -22,7 +22,7 @@ function silveira_register_shared_taxonomies() {
 		'update_item'       => __( 'Atualizar Território', 'silveira' ),
 		'view_item'         => __( 'Ver Território', 'silveira' ),
 		'search_items'      => __( 'Buscar Territórios', 'silveira' ),
-		'not_found'         => __( 'Não encontrado', 'silveira' ),
+		'not_found'         => __( 'Nom encontrado', 'silveira' ),
 		'no_terms'          => __( 'Sem territórios', 'silveira' ),
 	);
 	$args   = array(

@@ -47,12 +47,19 @@ test.describe('Portada', () => {
 		await page.locator('.leaflet-popup-close-button').click();
 
 		// Filtrar por modalidade "Escola" deja solo sus dos proyectos.
+		// i18n-reintegrado: el nombre accesible es la etiqueta (sin "Que procuras?") y, al marcar, cuántas.
+		await expect(
+			page.getByRole('button', { name: 'Modalidade educativa', exact: true }),
+		).toBeVisible();
 		await page.locator('#filter-modalidade .c-select__trigger').click();
 		await expect(page.locator('#filter-modalidade .c-select__trigger')).toHaveAttribute(
 			'aria-expanded',
 			'true',
 		);
 		await page.locator('#filter-modalidade').getByText('Escola', { exact: true }).click();
+		await expect(
+			page.getByRole('button', { name: 'Modalidade educativa, 1 selecionada', exact: true }),
+		).toBeVisible();
 		await expect(markers).toHaveCount(2);
 		await expect(items).toHaveCount(2);
 		await expect(items.filter({ hasText: 'Obradoiro de Ames' })).toHaveCount(0);

@@ -18,10 +18,12 @@ get_header();
 		<!-- Modalidade -->
 		<div class="c-filter-bar__item">
 			<div class="c-select" id="filter-modalidade">
-				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-modalidade-panel">
+				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-modalidade-panel" aria-labelledby="filter-modalidade-status">
 					<span class="c-select__label" id="filter-modalidade-label"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
 					<span class="c-select__value"><?php esc_html_e( 'Que procuras?', 'silveira' ); ?></span>
 					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+					<?php // Nombre accesible: etiqueta y, si hay opciones marcadas, cuántas (map.js lo actualiza). ?>
+					<span class="screen-reader-text" id="filter-modalidade-status"><?php esc_html_e( 'Modalidade educativa', 'silveira' ); ?></span>
 				</button>
 
 				<div class="c-select__dropdown" id="filter-modalidade-panel" role="group" aria-labelledby="filter-modalidade-label">
@@ -47,10 +49,12 @@ get_header();
 		<!-- Comarca (Parent Territorio) -->
 		<div class="c-filter-bar__item">
 			<div class="c-select" id="filter-comarca">
-				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-comarca-panel">
+				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-comarca-panel" aria-labelledby="filter-comarca-status">
 					<span class="c-select__label" id="filter-comarca-label"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
 					<span class="c-select__value"><?php esc_html_e( 'Em que zona?', 'silveira' ); ?></span>
 					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+					<?php // Nombre accesible: etiqueta y, si hay opciones marcadas, cuántas (map.js lo actualiza). ?>
+					<span class="screen-reader-text" id="filter-comarca-status"><?php esc_html_e( 'Comarca', 'silveira' ); ?></span>
 				</button>
 
 				<div class="c-select__dropdown" id="filter-comarca-panel" role="group" aria-labelledby="filter-comarca-label">
@@ -77,10 +81,12 @@ get_header();
 		<!-- Localidade (Child Territorio) -->
 		<div class="c-filter-bar__item">
 			<div class="c-select" id="filter-localidade">
-				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-localidade-panel">
+				<button type="button" class="c-select__trigger" aria-expanded="false" aria-controls="filter-localidade-panel" aria-labelledby="filter-localidade-status">
 					<span class="c-select__label" id="filter-localidade-label"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
 					<span class="c-select__value"><?php esc_html_e( 'Em que vila?', 'silveira' ); ?></span>
 					<span class="c-select__action o-icon o-icon--sm" aria-hidden="true">expand_more</span>
+					<?php // Nombre accesible: etiqueta y, si hay opciones marcadas, cuántas (map.js lo actualiza). ?>
+					<span class="screen-reader-text" id="filter-localidade-status"><?php esc_html_e( 'Localidade', 'silveira' ); ?></span>
 				</button>
 
 				<div class="c-select__dropdown" id="filter-localidade-panel" role="group" aria-labelledby="filter-localidade-label">
@@ -118,7 +124,7 @@ get_header();
 		<div id="map" class="c-map__container"></div>
 		
 		<!-- Floating toggle button -->
-		<button type="button" class="c-btn c-btn--secondary c-btn--l c-btn--has-icon c-btn--map-toggle" id="map-list-toggle" aria-controls="map-project-list" aria-expanded="false" data-label-open="<?php esc_attr_e( 'Ver a lista', 'silveira' ); ?>" data-label-close="<?php esc_attr_e( 'Acochar a lista', 'silveira' ); ?>">
+		<button type="button" class="c-btn c-btn--secondary c-btn--l c-btn--has-icon c-btn--map-toggle" id="map-list-toggle" aria-controls="map-project-list" aria-expanded="false">
 			<span class="c-btn__icon o-icon o-icon--xs" aria-hidden="true" data-icon-when="closed">arrow_back</span>
 			<span class="c-btn__label"><?php esc_html_e( 'Ver a lista', 'silveira' ); ?></span>
 			<span class="c-btn__icon o-icon o-icon--xs" aria-hidden="true" data-icon-when="open" hidden>arrow_forward</span>
@@ -126,7 +132,7 @@ get_header();
 		
 		<!-- Slide out panel (inert mientras está cerrado; lo abre map.js) -->
 		<div class="c-map-panel" id="map-project-list" inert>
-			<ul class="c-project-list" data-empty-text="<?php esc_attr_e( 'Nom há projetos para estes filtros.', 'silveira' ); ?>">
+			<ul class="c-project-list">
 				<!-- Injected via map.js -->
 			</ul>
 		</div>

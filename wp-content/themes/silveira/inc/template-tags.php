@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function silveira_hero() {
 	$title    = '';
-	$subtitle = 'Um ecosistema para o galego'; // Default from Figma.
+	$subtitle = __( 'Um ecossistema para o galego', 'silveira' ); // Subtítulo por defecto (Figma).
 	$image    = '';
 
 	if ( is_archive() ) {
@@ -29,8 +29,9 @@ function silveira_hero() {
 		}
 	} elseif ( is_search() ) {
 
+		// Texto plano sin escapar: content-hero.php lo escapa una sola vez al pintarlo.
 		/* translators: %s: término de búsqueda. */
-		$title = sprintf( esc_html__( 'Resultados para: %s', 'silveira' ), get_search_query() );
+		$title = sprintf( __( 'Resultados para: %s', 'silveira' ), get_search_query( false ) );
 	} elseif ( is_singular() ) {
 		$title = get_the_title();
 		$image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
@@ -88,6 +89,20 @@ function silveira_hero() {
 			'title'    => $title,
 			'subtitle' => $subtitle,
 			'image'    => $image ? $image : '', // Fallback to empty if no image.
+		)
+	);
+}
+
+/**
+ * Paginación de los listados con textos del theme (los del núcleo saldrían en el idioma de WordPress).
+ */
+function silveira_posts_pagination() {
+	the_posts_pagination(
+		array(
+			'prev_text'          => __( 'Anterior', 'silveira' ),
+			'next_text'          => __( 'Seguinte', 'silveira' ),
+			'screen_reader_text' => __( 'Navegaçom entre páginas', 'silveira' ),
+			'aria_label'         => __( 'Páginas', 'silveira' ),
 		)
 	);
 }

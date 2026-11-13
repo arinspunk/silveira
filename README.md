@@ -247,6 +247,18 @@ GitHub's blame view applies this file automatically.
 | `.nvmrc` | Node version (22) for local and CI |
 | `.git-blame-ignore-revs` | Reformatting commits hidden from `git blame` |
 
+## Site language
+
+The theme's interface text (templates, content types, admin notices and the map's JavaScript) is written directly in **galego reintegrado** ("umha"/"-çom"/"nom" variant) and goes through gettext with the `silveira` text domain, so a `languages/<locale>.mo` file in the theme can override any string. WordPress core and plugin text follow the WordPress site language.
+
+**Installation setting:** set *Settings → General → Site Language* to *Galego* (`gl_ES`), so pages declare `lang="gl-ES"` and core/plugin texts are Galician too:
+
+```bash
+docker compose --profile tools run --rm wpcli wp language core install gl_ES --activate
+```
+
+New interface text must be written in the same variant and wrapped in `__()`/`esc_html__()`… with the `silveira` domain; text for `map.js` is passed from PHP in `silveira_map_i18n()`.
+
 ## Project geocoding (Nominatim)
 
 When a project is saved, its address (`projeto_endereco`) is turned into coordinates with [Nominatim](https://nominatim.org/) (OpenStreetMap), searching only inside Galiza including the Galiza exterior (box `-9.35,43.85,-6.10,41.80`, filterable with `silveira_geocode_viewbox`):

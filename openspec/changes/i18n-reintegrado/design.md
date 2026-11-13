@@ -37,6 +37,7 @@ Hoy el `<button class="c-select__trigger">` no tiene nombre explícito, así que
 - El tema no tiene utilidad de texto oculto: se añade `.screen-reader-text` (la clase convencional de WordPress) en la capa de utilidades del SCSS.
 - `map.js` actualiza los tres `status` cuando cambia una casilla y cuando `syncFilterOptions` desmarca localidades incompatibles. Los textos singular/plural llegan por `window.silveiraI18n` (D2) como plantillas con `%d`.
 - La forma "selecionada(s)" se marca como dudosa en el inventario (D5) para la revisión lingüística.
+- *Ajuste en la implementación:* Chrome une los ids de `aria-labelledby` con un espacio, así que etiqueta + ", 2 selecionadas" daba "Modalidade educativa , 2 selecionadas". Por eso `aria-labelledby` apunta solo al `<span>` de estado, que contiene el nombre completo: la etiqueta, o la etiqueta seguida de ", N selecionada(s)". PHP lo pinta ya con la etiqueta (nombre correcto sin JS) y `map.js` lo actualiza. El resultado anunciado es el mismo que se describe arriba.
 
 ## Risks / Trade-offs
 

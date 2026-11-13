@@ -21,8 +21,8 @@ function silveira_register_cpt_evento() {
 		'update_item'        => __( 'Atualizar Evento', 'silveira' ),
 		'view_item'          => __( 'Ver Evento', 'silveira' ),
 		'search_items'       => __( 'Buscar Evento', 'silveira' ),
-		'not_found'          => __( 'Não encontrado', 'silveira' ),
-		'not_found_in_trash' => __( 'Não encontrado na lixeira', 'silveira' ),
+		'not_found'          => __( 'Nom encontrado', 'silveira' ),
+		'not_found_in_trash' => __( 'Nom encontrado no lixo', 'silveira' ),
 	);
 	$args   = array(
 		'label'               => __( 'Evento', 'silveira' ),

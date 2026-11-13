@@ -15,8 +15,8 @@ function silveira_register_cpt_recurso() {
 		'singular_name'     => _x( 'Categoria de Recurso', 'Taxonomy Singular Name', 'silveira' ),
 		'menu_name'         => __( 'Categorias', 'silveira' ),
 		'all_items'         => __( 'Todas as Categorias', 'silveira' ),
-		'parent_item'       => __( 'Categoria Pai', 'silveira' ),
-		'parent_item_colon' => __( 'Categoria Pai:', 'silveira' ),
+		'parent_item'       => __( 'Categoria superior', 'silveira' ),
+		'parent_item_colon' => __( 'Categoria superior:', 'silveira' ),
 		'new_item_name'     => __( 'Nova Categoria', 'silveira' ),
 		'add_new_item'      => __( 'Adicionar Nova Categoria', 'silveira' ),
 		'edit_item'         => __( 'Editar Categoria', 'silveira' ),
@@ -54,8 +54,8 @@ function silveira_register_cpt_recurso() {
 		'update_item'        => __( 'Atualizar Recurso', 'silveira' ),
 		'view_item'          => __( 'Ver Recurso', 'silveira' ),
 		'search_items'       => __( 'Buscar Recurso', 'silveira' ),
-		'not_found'          => __( 'Não encontrado', 'silveira' ),
-		'not_found_in_trash' => __( 'Não encontrado na lixeira', 'silveira' ),
+		'not_found'          => __( 'Nom encontrado', 'silveira' ),
+		'not_found_in_trash' => __( 'Nom encontrado no lixo', 'silveira' ),
 	);
 	$cpt_args   = array(
 		'label'               => __( 'Recurso', 'silveira' ),

@@ -149,11 +149,34 @@ function silveira_enqueue_map_points() {
 		JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
 	);
 
+	$i18n = wp_json_encode( silveira_map_i18n(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT );
+
 	wp_add_inline_script(
 		'silveira-main',
 		'window.silveiraMapPoints = ' . ( false === $json ? '[]' : $json ) . ';'
-			. 'window.silveiraMapConfig = ' . ( false === $config ? '{}' : $config ) . ';',
+			. 'window.silveiraMapConfig = ' . ( false === $config ? '{}' : $config ) . ';'
+			. 'window.silveiraI18n = ' . ( false === $i18n ? '{}' : $i18n ) . ';',
 		'before'
+	);
+}
+
+/**
+ * Textos del mapa para map.js, ya traducidos (gettext, dominio silveira).
+ *
+ * Los plurales van como dos plantillas con %d (singular y plural) porque JS no tiene _n().
+ *
+ * @return array<string, string>
+ */
+function silveira_map_i18n() {
+	return array(
+		'viewProject'      => __( 'Ver projeto', 'silveira' ),
+		'showList'         => __( 'Ver a lista', 'silveira' ),
+		'hideList'         => __( 'Acochar a lista', 'silveira' ),
+		'noResults'        => __( 'Nom há projetos para estes filtros.', 'silveira' ),
+		/* translators: %d: número de opçons marcadas num filtro (1). */
+		'selectedSingular' => _n( '%d selecionada', '%d selecionadas', 1, 'silveira' ),
+		/* translators: %d: número de opçons marcadas num filtro (2 ou mais). */
+		'selectedPlural'   => _n( '%d selecionada', '%d selecionadas', 2, 'silveira' ),
 	);
 }
 
