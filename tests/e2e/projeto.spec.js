@@ -2,7 +2,7 @@
 const { test, expect } = require('@playwright/test');
 const { watchErrors, expectNoPhpErrors } = require('./helpers');
 
-test('la ficha de un proyecto responde 200 sin errores', async ({ page }) => {
+test('a project page responds 200 without errors', async ({ page }) => {
 	const watcher = watchErrors(page);
 	// third-party-assets: the map library is only downloaded on pages with a map.
 	const leaflet = [];
@@ -15,7 +15,7 @@ test('la ficha de un proyecto responde 200 sin errores', async ({ page }) => {
 	await expect(page.locator('h1').filter({ hasText: 'Escola de Ames' }).first()).toBeVisible();
 	await expect(page.getByText('Aprender em galego').first()).toBeVisible();
 	await page.waitForLoadState('networkidle');
-	expect(leaflet, 'la ficha no debe cargar Leaflet').toEqual([]);
+	expect(leaflet, 'the project page must not load Leaflet').toEqual([]);
 
 	watcher.assertClean();
 });

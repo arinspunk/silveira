@@ -33,15 +33,15 @@ jobs:
       - run: npm run format:check
       - run: npm run build
 
-      - name: assets/ coincide con src/
+      - name: assets/ matches src/
         run: |
           if ! git diff --exit-code --stat -- assets/ || [ -n "$(git status --porcelain -- assets/)" ]; then
             git status --porcelain -- assets/
-            echo "::error::assets/ no coincide con src/. Ejecuta 'npm run build' en wp-content/themes/silveira y commitea assets/ (el hook pre-commit lo hace solo si está instalado: 'npm install' en la raíz)."
+            echo "::error::assets/ does not match src/. Run 'npm run build' in wp-content/themes/silveira and commit assets/ (the pre-commit hook does it for you if it is installed: 'npm install' at the repo root)."
             exit 1
           fi
 
-      - name: Subir assets/ generados (diagnóstico)
+      - name: Upload generated assets/ (diagnostics)
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -66,7 +66,7 @@ jobs:
 
       - run: composer install --no-interaction --no-progress
 
-      - name: Avisos de seguridad en dependencias PHP
+      - name: Security advisories in PHP dependencies
         run: composer audit --locked --abandoned=report --no-interaction
 
       - run: composer run lint
@@ -89,43 +89,43 @@ jobs:
 
       - run: npm ci
 
-      - name: Levantar WordPress aislado (puerto 8081, assets compilados)
+      - name: Start isolated WordPress (port 8081, built assets)
         run: npm run e2e:up
 
-      - name: Sembrar datos de prueba
+      - name: Seed test data
         run: npm run e2e:seed
 
       # Tests run in the official Playwright image (browser and system dependencies
       # included): no apt or `playwright install`. The tag comes from package.json.
-      - name: Versión de Playwright (package.json)
+      - name: Playwright version (package.json)
         run: |
           PW_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")
           if ! [[ "$PW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::@playwright/test debe estar fijado a una versión exacta X.Y.Z en package.json (ahora: '$PW_VERSION'); la imagen mcr.microsoft.com/playwright se elige con esa versión."
+            echo "::error::@playwright/test must be pinned to an exact X.Y.Z version in package.json (currently: '$PW_VERSION'); the mcr.microsoft.com/playwright image is chosen from that version."
             exit 1
           fi
           echo "PW_IMAGE=mcr.microsoft.com/playwright:v$PW_VERSION-noble" >> "$GITHUB_ENV"
           echo "PW_VERSION=$PW_VERSION" >> "$GITHUB_ENV"
 
-      - name: Descargar imagen de Playwright
+      - name: Pull Playwright image
         timeout-minutes: 8
         run: |
           for i in 1 2 3; do
             if timeout 150 docker pull -q "$PW_IMAGE"; then exit 0; fi
-            echo "Intento $i de descargar $PW_IMAGE fallido."
+            echo "Attempt $i to pull $PW_IMAGE failed."
             [ "$i" -lt 3 ] && sleep 15
           done
-          echo "::error::No se pudo descargar $PW_IMAGE de mcr.microsoft.com tras 3 intentos. Es un fallo de infraestructura, no de los tests: relanza el job más tarde."
+          echo "::error::Could not pull $PW_IMAGE from mcr.microsoft.com after 3 attempts. This is an infrastructure failure, not a test failure: re-run the job later."
           exit 1
 
-      - name: Tests E2E (Playwright en Docker)
+      - name: E2E tests (Playwright in Docker)
         run: |
           docker run --rm --network host --ipc host \
             -v "$PWD":/work -w /work -e CI=true \
             "$PW_IMAGE" \
-            sh -c 'echo "Node $(node --version) en la imagen" && npx playwright --version && npx playwright test'
+            sh -c 'echo "Node $(node --version) in the image" && npx playwright --version && npx playwright test'
 
-      - name: Subir informe de Playwright
+      - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v4
         with:
@@ -135,6 +135,6 @@ jobs:
             test-results/
           retention-days: 7
 
-      - name: Logs de WordPress
+      - name: WordPress logs
         if: failure()
         run: docker compose -p silveira-e2e -f docker-compose.yml -f docker-compose.e2e.yml logs wordpress --tail 200

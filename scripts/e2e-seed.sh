@@ -29,7 +29,7 @@ add_filter(
 	function ( $pre, $args, $url ) {
 		if ( false !== strpos( $url, 'nominatim' ) ) {
 			$GLOBALS['e2e_nominatim']++;
-			return new WP_Error( 'e2e_blocked', 'Nominatim bloqueado en E2E' );
+			return new WP_Error( 'e2e_blocked', 'Nominatim blocked in E2E' );
 		}
 		return $pre;
 	},
@@ -93,13 +93,13 @@ foreach ( $projetos as $d ) {
 }
 
 if ( $GLOBALS['e2e_nominatim'] > 0 ) {
-	fwrite( STDERR, "e2e-seed: ERROR, {$GLOBALS['e2e_nominatim']} peticiones a Nominatim\n" );
+	fwrite( STDERR, "e2e-seed: ERROR, {$GLOBALS['e2e_nominatim']} requests to Nominatim\n" );
 	exit( 1 );
 }
-echo "e2e-seed: 0 peticiones a Nominatim\n";
+echo "e2e-seed: 0 requests to Nominatim\n";
 
 $count = wp_count_posts( 'projeto' )->publish;
-echo "e2e-seed: {$count} proyectos, " . wp_count_terms( array( 'taxonomy' => 'modalidade_projeto', 'hide_empty' => false ) ) . ' modalidades, ' . wp_count_terms( array( 'taxonomy' => 'territorio', 'hide_empty' => false ) ) . " territorios\n";
+echo "e2e-seed: {$count} projects, " . wp_count_terms( array( 'taxonomy' => 'modalidade_projeto', 'hide_empty' => false ) ) . ' modalidade_projeto terms, ' . wp_count_terms( array( 'taxonomy' => 'territorio', 'hide_empty' => false ) ) . " territorio terms\n";
 PHP
 
 wp rewrite flush >/dev/null

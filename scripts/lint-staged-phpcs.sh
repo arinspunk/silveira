@@ -37,9 +37,9 @@ fi
 # 3. Neither PHP nor Docker.
 cat >&2 <<'MSG'
 
-  ⚠️  silveira: PHPCS NO se ha ejecutado (no hay PHP local ni Docker disponible).
-      El commit continúa, pero la CI fallará si hay infracciones.
-      Arranca Docker Desktop o instala PHP y vuelve a probar.
+  ⚠️  silveira: PHPCS was NOT run (neither local PHP nor Docker is available).
+      The commit goes ahead, but CI will fail if there are violations.
+      Start Docker Desktop or install PHP and try again.
 
 MSG
 exit 0

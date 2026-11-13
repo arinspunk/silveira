@@ -204,8 +204,8 @@ get_header(); ?>
 
 	<!-- CARDS -->
 	<section class="sg-section">
-		<h2 class="sg-section__title">Cards (listados)</h2>
-		<p>Tarjeta <code>template-parts/card.php</code> (<code>c-stacked-card</code>) en la rejilla <code>.c-card-grid</code> de los archivos. Muestra los últimos contenidos publicados.</p>
+		<h2 class="sg-section__title">Cards (listings)</h2>
+		<p>Card <code>template-parts/card.php</code> (<code>c-stacked-card</code>) in the archives' <code>.c-card-grid</code> grid. Shows the latest published content.</p>
 
 		<div class="c-card-grid">
 			<?php

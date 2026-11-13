@@ -1,5 +1,5 @@
-# Commits de reformateo masivo (sin cambios funcionales).
-# Uso: git config blame.ignoreRevsFile .git-blame-ignore-revs
+# Bulk reformatting commits (no functional changes).
+# Usage: git config blame.ignoreRevsFile .git-blame-ignore-revs
 
 # style(theme): apply Prettier formatting to src and config files
 13d4a9c0bbd723e9501d27e69e9b957775182fa9

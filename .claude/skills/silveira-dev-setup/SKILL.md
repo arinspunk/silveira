@@ -81,7 +81,7 @@ npm run e2e:down                                         # when done (deletes it
 - If a change modifies the markup or behaviour of the map or the front page, update `tests/e2e/` (and the seed if needed) in the same change.
 - To check that a test detects a regression: introduce it temporarily, rebuild, see the failure and restore `src/` and `assets/` from `HEAD` (`git restore --source=HEAD` + `git clean` of the new `assets/`).
 - In CI the tests run inside `mcr.microsoft.com/playwright:v<version>-noble` (`docker run --network host`), without apt or `playwright install`. The version comes from `@playwright/test` in the root `package.json`, which must be exact (`X.Y.Z`); to upgrade Playwright, change it and run `npm install`. Nothing changes locally: `npm run test:e2e` uses the host's browser.
-- If `e2e` fails in the «Descargar imagen de Playwright» step, it is an infrastructure failure, not a test failure: re-run the job (`gh run rerun <id> --failed`).
+- If `e2e` fails in the «Pull Playwright image» step, it is an infrastructure failure, not a test failure: re-run the job (`gh run rerun <id> --failed`).
 - `tests/e2e/helpers.js` has a temporary exception (`KNOWN_MISSING`) for the 404s of the design fonts; `self-hosted-fonts` removes it.
 
 ## 7. Git and GitHub
