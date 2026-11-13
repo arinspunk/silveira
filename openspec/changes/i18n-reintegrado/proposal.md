@@ -21,6 +21,7 @@ Además, los textos de `map.js` no se pueden traducir, y los títulos de archivo
 - **Todos esos textos pasan por gettext con el text domain `silveira`**, y se carga el text domain del theme. Los textos de JavaScript llegan desde PHP ya traducidos.
 - **Títulos de archivo sin prefijo** en cualquier idioma de WordPress. El filtro lo introduce `consistent-templates`; aquí se verifica con WordPress en galego.
 - **Corrección del doble escapado** en el título de resultados de búsqueda.
+- **Nombre accesible de los filtros del mapa:** hoy el botón de cada desplegable se anuncia como "Modalidade educativa Que procuras?", porque incluye el texto de ejemplo. Pasa a anunciarse con la etiqueta y, si hay opciones marcadas, cuántas ("Modalidade educativa, 2 selecionadas"), con un texto traducible. El aspecto no cambia.
 - **Revisión lingüística posterior y no bloqueante:** el inventario de textos se envía a una persona que escriba la variante con soltura cuando haya disponibilidad. No impide aplicar ni archivar el change; sus correcciones se aplican después en un change de seguimiento.
 - **Fuera de alcance:**
   - la plantilla interna Kitchen Sink (guía de estilo, en inglés);
@@ -33,7 +34,7 @@ Además, los textos de `map.js` no se pueden traducir, y los títulos de archivo
 - `site-language`: idioma y norma lingüística de los textos que el theme muestra en el sitio público y en el admin, y su gestión como textos traducibles.
 
 ### Modified Capabilities
-<!-- Ninguna -->
+- `project-map-filters`: los botones de filtro anuncian su etiqueta y cuántas opciones hay marcadas, sin el texto de ejemplo.
 
 ## Impact
 
@@ -41,5 +42,6 @@ Además, los textos de `map.js` no se pueden traducir, y los títulos de archivo
 - **Plantillas:** `header.php`, `footer.php`, `index.php`, `front-page.php`, `template-parts/*.php` y las plantillas resultantes de `consistent-templates`.
 - **Lógica del theme:** `inc/template-tags.php` (o `functions.php`): hero, títulos de archivo y búsqueda.
 - **Datos para JS:** `inc/map-data.php`, o el lugar donde se inyecten los textos para JS.
-- **JS:** `src/js/map.js` y rebuild de `assets/`.
+- **JS:** `src/js/map.js` (también el estado de selección de los filtros) y rebuild de `assets/`.
+- **SCSS:** utilidad para texto solo para lectores de pantalla, si no existe (ver design D6).
 - **Orden recomendado:** el último, después de todos los demás changes, para cubrir también los textos que introducen (`map-filters-fixes`, `geocoding-reliability`, `consistent-templates`, `homepage-scroll-a11y`, `third-party-assets`).

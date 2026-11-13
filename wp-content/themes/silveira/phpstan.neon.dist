@@ -9,3 +9,4 @@ parameters:
 			- assets
 	scanFiles:
 		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+		- vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php

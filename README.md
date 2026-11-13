@@ -229,6 +229,29 @@ GitHub's blame view applies this file automatically.
 | `.nvmrc` | Node version (22) for local and CI |
 | `.git-blame-ignore-revs` | Reformatting commits hidden from `git blame` |
 
+## Project geocoding (Nominatim)
+
+When a project is saved, its address (`projeto_endereco`) is turned into coordinates with [Nominatim](https://nominatim.org/) (OpenStreetMap), searching only inside Galiza including the Galiza exterior (box `-9.35,43.85,-6.10,41.80`, filterable with `silveira_geocode_viewbox`):
+
+- A project **without coordinates** is geocoded.
+- When the **address changes**, it is geocoded again only if its coordinates are still the ones from the last geocoding (kept in the private meta `_silveira_geocode`). Coordinates edited by hand are never overwritten, and neither are those of projects saved before this feature.
+- If the address isn't found or the service fails, the project is saved anyway and the editor shows a warning.
+
+**Contact e-mail for Nominatim (recommended in production).** Nominatim's usage policy asks for a way to contact the site. Requests always send a `User-Agent` with the theme version and the site URL; to also send an e-mail, define this constant in `wp-config.php` (with Docker, in `WORDPRESS_CONFIG_EXTRA`):
+
+```php
+define( 'SILVEIRA_NOMINATIM_EMAIL', 'contacto@example.org' );
+```
+
+**Bulk geocoding.** To geocode every project that has an address and no coordinates (e.g. after importing projects), with at most one request per second as Nominatim requires:
+
+```bash
+docker compose --profile tools run --rm wpcli wp silveira geocode --dry-run   # list them, no requests
+docker compose --profile tools run --rm wpcli wp silveira geocode             # geocode and save
+```
+
+The output shows a table with the time of each request, the result and the coordinates, and a summary of how many were geocoded and which failed. Projects that already have coordinates are never touched.
+
 ## WP-CLI (optional)
 
 **Resources without a category.** Every `recurso` gets the `geral` category when saved without one (`default_term` plus a hook for the REST API). Resources created before that change keep no category until they are saved again; to fix them all at once (run it once after deploying):
